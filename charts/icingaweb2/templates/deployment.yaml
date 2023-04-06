@@ -1,0 +1,60 @@
+{{ if .Values.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    {{- include "icingaweb2.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "icingaweb2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "icingaweb2.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: icingaweb2
+          image: icinga/icingaweb2:2.11.4
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          env:
+            - name: icingaweb.enabledModules
+              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509,vspheredb  # TODO build this properly
+            {{- include "icingaweb2.config" . | indent 12 }} # TODO: Job for x509 migrations
+            {{- include "icingaweb2.resources" . | indent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+        {{- if .Values.modules.director.enabled }}      
+        - name: director
+          image: icinga/icingaweb2:2.11.4
+          command: []
+          args:
+            - /bin/bash
+            - -ce
+            - |
+              icingacli director migration run
+              (icingacli director kickstart required && icingacli director kickstart run && icingacli director config deploy) || true
+              icingacli director daemon run
+          env:
+            - name: icingaweb.enabledModules
+              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509,vspheredb
+            {{- include "icingaweb2.config" . | indent 12 }}
+            {{- include "icingaweb2.resources" . | indent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+        {{- end }}
+      volumes:
+        - name: data
+          emptyDir: {}
+{{- end -}}

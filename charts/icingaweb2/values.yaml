@@ -1,0 +1,65 @@
+enabled: true
+
+podAnnotations:
+
+service:
+  type: ClusterIP
+  port: 81
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: icingaweb.dbodky.me
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources: {}
+
+auth:
+  type: db
+  admin_user: icingaweb
+  admin_password: password
+
+modules:
+  audit:
+    enabled: true
+    log:
+      type: syslog
+      ident: icingaweb2-audit
+      facility: auth
+    stream:
+      enabled: true
+      format: json
+      path: /var/log/icingaweb2/audit.json
+  businessprocess: {}  # TODO add parsing of existing processes later
+  cube:
+    enabled: true
+  icingadb:
+    enabled: true
+    redis:
+      host: redis1
+      port: 6379
+  director:
+    enabled: true
+    kickstart: true
+  graphite:
+    enabled: true
+    graphite:
+      url: example.com
+      user: graphite
+      password: graphite
+      insecure: 1
+    ui:
+      default_time_range: 1
+      default_time_range_unit: hours
+      disable_no_graphs_found: 1
+    icinga:
+      graphite_writer_host_name_template: {}
+      graphite_writer_service_name_template: {}
+      customvar_obscured_check_command: {}
+  x509:
+    enabled: true
+    jobs: {}  # TODO: Add this
+    sni: {}  # TODO: Add this

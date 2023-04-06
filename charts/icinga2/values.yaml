@@ -1,0 +1,19 @@
+service:
+  type: ClusterIP
+  port: 5665
+
+node_name: icinga2-master
+zone_name: master
+ticket_salt: hazsdza7s8duasjdh7atdas54zuasdghasndasd
+
+features:
+  icingadb:
+    enabled: true
+  api:
+    enabled: true
+    users:
+      - name: director
+        password: password
+        permissions: '["*"]'
+  checker:
+    enabled: true

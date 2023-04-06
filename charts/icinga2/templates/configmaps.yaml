@@ -1,0 +1,46 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: icinga2-config
+  labels:
+    {{- include "icinga2.labels" . | nindent 4 }}
+data:
+  icinga2.conf: |-
+    {{- include "icinga2.core_config" . | nindent 4 }}
+  {{- if .Values.features.api.enabled }}
+  api-users.conf: |
+    {{- range $user := .Values.features.api.users }}
+    object ApiUser {{ $user.name | quote }} {
+      password = {{ $user.password | quote }}
+      permissions = {{ $user.permissions }}
+    }
+    {{- end }}
+  {{- end }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: icinga2-features
+  labels:
+    {{- include "icinga2.labels" . | nindent 4 }}
+data:
+  {{- if .Values.features.icingadb.enabled }}
+  icingadb.conf: |
+    object IcingaDB "icingadb" {
+        host = {{ if .Values.global.redis.internal -}} "icinga2-redis" {{- else }}{{ .Values.global.redis.host | quote }}{{ end }}
+        port = {{ if .Values.global.redis.internal -}} 6379 {{- else }}{{ .Values.global.redis.port }}{{ end }}
+    }
+  {{- end }}
+  {{- if .Values.features.api.enabled }}
+  api.conf: |
+    object ApiListener "api" {
+      accept_commands = false
+      accept_config = false
+      ticket_salt = TicketSalt
+    }
+  {{- end -}}
+  {{- if .Values.features.checker.enabled }}
+  checker.conf: |
+    object CheckerComponent "checker" {}
+  {{- end -}}

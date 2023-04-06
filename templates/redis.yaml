@@ -1,0 +1,44 @@
+{{- if .Values.global.redis.internal }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: icinga2-redis
+  labels:
+    {{- include "icinga-helm.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: icinga2-redis
+spec:
+  selector:
+    matchLabels:
+      {{- include "icinga-helm.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: icinga2-redis
+  serviceName: icinga2-redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        {{- include "icinga-helm.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/component: icinga2-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+              name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: icinga2-redis
+  labels:
+    {{- include "icinga2.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: icinga2-redis
+spec:
+  ports:
+    - port: 6379
+      name: redis
+  selector:
+    {{- include "icinga2.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: icinga2-redis
+{{- end -}}

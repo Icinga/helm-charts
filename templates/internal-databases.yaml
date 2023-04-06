@@ -1,0 +1,66 @@
+{{- range $resource := .Values.global.databases -}}
+{{- if $resource.internal }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: icinga2-mariadb-{{ $resource.database }}
+  labels:
+    {{- include "icinga-helm.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "icinga-helm.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+  serviceName: icinga2-mariadb-{{ $resource.database }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        {{- include "icinga-helm.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:latest
+          ports:
+            - containerPort: 3306
+              name: mariadb
+          env:
+            - name: MARIADB_RANDOM_ROOT_PASSWORD
+              value: "1"
+            - name: MARIADB_DATABASE
+              value: {{ $resource.database | default "mysql" | quote}}
+            - name: MARIADB_USER
+              value: {{ $resource.username | default "mysql" | quote }}
+            - name: MARIADB_PASSWORD
+              value: {{ $resource.password | default "mysql" | quote }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: icinga2-mariadb-{{ $resource.database }}
+  labels:
+    {{- include "icinga-helm.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+spec:
+  ports:
+    - port: 3306
+      name: mariadb
+  selector:
+    {{- include "icinga-helm.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+{{- end -}}
+{{- end -}}

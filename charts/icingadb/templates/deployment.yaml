@@ -1,0 +1,40 @@
+{{ if .Values.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    {{- include "icingadb.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "icingadb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "icingadb.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: icingadb
+          image: icinga/icingadb:latest
+          env:
+            - name: ICINGADB_REDIS_HOST
+              value: {{ if .Values.global.redis.internal }} "icinga2-redis" {{ else }} {{ .Values.global.redis.host | quote }} {{ end }}
+            - name: ICINGADB_REDIS_PORT
+              value: {{ if .Values.global.redis.internal }} "6379" {{ else }} {{ .Values.global.redis.port | quote }} {{ end }}
+            - name: ICINGADB_DATABASE_HOST
+              value: {{ if .Values.global.databases.icingadb.internal }} icinga2-mariadb-{{ .Values.global.databases.icingadb.database }} {{ else }} {{ .Values.global.databases.icingadb.host | quote }} {{ end }}
+            - name: ICINGADB_DATABASE_PORT
+              value: {{ .Values.global.databases.icingadb.port | default "3306" | quote }}
+            - name: ICINGADB_DATABASE_USER
+              value: {{ .Values.global.databases.icingadb.username | default "mysql" | quote }}
+            - name: ICINGADB_DATABASE_PASSWORD
+              value: {{ .Values.global.databases.icingadb.password | default "mysql" | quote }}
+            - name: ICINGADB_DATABASE_DATABASE
+              value: {{ .Values.global.databases.icingadb.database | default "mysql" | quote }}
+{{- end -}}

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    {{- include "icinga2.labels" . | nindent 4 }}
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "icinga2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "icinga2.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 5665
+      containers:
+        - name: icinga2
+          image: icinga/icinga2:latest
+          ports:
+            - name: api
+              containerPort: 5665
+              protocol: TCP
+          command:
+            - icinga2
+            - daemon
+          volumeMounts:
+            - name: icinga2-master
+              mountPath: /data
+            - name: icinga2-features
+              mountPath: /etc/icinga2/features-enabled
+            - name: icinga2-config
+              mountPath: /etc/icinga2
+      initContainers:
+        - name: icinga2-bootstrapper
+          image: icinga/icinga2:latest
+          args:
+            - icinga2
+            - daemon
+            - -C
+          env:
+            - name: ICINGA_CN
+              value: {{ .Values.node_name | quote }}
+            - name: ICINGA_MASTER
+              value: "1"
+          volumeMounts:
+            - name: icinga2-master
+              mountPath: /data
+      volumes:
+        - name: icinga2-master
+          persistentVolumeClaim:
+            claimName: icinga2-master
+        - name: icinga2-features
+          configMap:
+            name: icinga2-features
+        - name: icinga2-config
+          configMap:
+            name: icinga2-config

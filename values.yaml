@@ -1,0 +1,140 @@
+icinga2:
+  service:
+    type: ClusterIP
+    port: 5665
+
+  node_name: icinga2-master
+  zone_name: master
+  ticket_salt: hazsdza7s8duasjdh7atdas54zuasdghasndasdh
+
+  features:
+    icingadb:
+      enabled: true
+    api:
+      enabled: true
+      users:
+        - name: director
+          password: password
+          permissions: '["*"]'
+    checker:
+      enabled: true
+
+icingadb:
+  enabled: true
+
+icingaweb2:
+  enabled: true
+
+  podAnnotations:
+  
+  service:
+    type: ClusterIP
+    port: 81
+  
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: icingaweb.dbodky.me
+        paths:
+          - path: /
+            pathType: Prefix
+  
+  resources: {}
+    
+  auth:
+    type: db
+    admin_user: icingaweb
+    admin_password: password
+  
+  modules:
+    audit:
+      enabled: true
+      log:
+        type: syslog
+        ident: icingaweb2-audit
+        facility: auth
+      stream:
+        enabled: true
+        format: json
+        path: /var/log/icingaweb2/audit.json
+    businessprocess: {}  # TODO add parsing of existing processes later
+    cube:
+      enabled: true
+    icingadb:
+      enabled: true
+      redis:
+        host: redis1
+        port: 6379
+    director:
+      enabled: true
+      kickstart: true
+    graphite:
+      enabled: true
+      graphite:
+        url: example.com
+        user: graphite
+        password: graphite
+        insecure: 1
+      ui:
+        default_time_range: 1
+        default_time_range_unit: hours
+        disable_no_graphs_found: 1
+      icinga:
+        graphite_writer_host_name_template: {}
+        graphite_writer_service_name_template: {}
+        customvar_obscured_check_command: {}
+    vspheredb:
+      enabled: true
+    x509:
+      enabled: true
+      jobs: {}  # TODO: Add this
+      sni: {}  # TODO: Add this
+  
+global:
+  api:
+    users:
+      icingaweb:
+        password: password
+      director:
+        password: password
+  databases:
+    director:
+      database: directordb
+      username: director
+      password: directorpwd
+      internal: true
+      # host: mariadb.example.com
+      # port: 5432
+    icingadb:
+      database: icingadb
+      username: icingadb
+      password: icingadbpwd
+      internal: true
+      # host: mariadb.example.com
+      # port: 5432
+    icingaweb2:
+      database: icingaweb2db
+      username: icingaweb2
+      password: icingaweb2pwd
+      internal: true
+      # host: mariadb.example.com
+      # port: 5432
+    vspheredb:
+      database: vspheredb
+      username: vsphere
+      password: vspheredbpwd
+      internal: true
+      # host: mariadb.example.com
+      # port: 5432
+    x509:
+      database: x509db
+      username: x509
+      password: x509pwd
+      internal: true
+      # host: mariadb.example.com
+      # port: 5432
+  redis:
+    internal: true
+    # host: redis.example.com
+    # port: 6379
