@@ -1,21 +1,34 @@
 enabled: true
 
-podAnnotations:
+image:
+  repository: icinga/icingaweb2
+  tag: 2.11.4
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 81
+  port: 8080
 
 ingress:
-  enabled: true
-  className: nginx
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: icingaweb.dbodky.me
+    - host: chart-example.local
       paths:
         - path: /
-          pathType: Prefix
-
-resources: {}
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 auth:
   type: db
@@ -33,17 +46,22 @@ modules:
       enabled: true
       format: json
       path: /var/log/icingaweb2/audit.json
+
   businessprocess: {}  # TODO add parsing of existing processes later
+
   cube:
     enabled: true
+
   icingadb:
     enabled: true
     redis:
       host: redis1
       port: 6379
+
   director:
     enabled: true
     kickstart: true
+
   graphite:
     enabled: true
     graphite:
@@ -59,7 +77,51 @@ modules:
       graphite_writer_host_name_template: {}
       graphite_writer_service_name_template: {}
       customvar_obscured_check_command: {}
+
+  vspheredb:
+    enabled: true
+
   x509:
     enabled: true
     jobs: {}  # TODO: Add this
     sni: {}  # TODO: Add this
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+    
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
