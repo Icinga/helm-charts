@@ -33,6 +33,7 @@ config:
   node_name: icinga2-master
   zone_name: master
   ticket_salt: hazsdza7s8duasjdh7atdas54zuasdghasndasdh
+
 features:
   icingadb:
     enabled: true
@@ -44,6 +45,9 @@ features:
         permissions: '["*"]'
   checker:
     enabled: true
+
+persistence:
+  size: 2Gi
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -1,12 +1,12 @@
-{{- define "icinga2.core_config" -}}
+{{- define "icinga2.config" -}}
 
 // Constants for Icinga2 from constants.conf
 const PluginDir = "/usr/lib/nagios/plugins"
 const ManubulonPluginDir = "/usr/lib/nagios/plugins"
 const PluginContribDir = "/usr/lib/nagios/plugins"
-const NodeName = {{ .Values.node_name | quote }}
-const ZoneName = {{ .Values.zone_name | quote }}
-const TicketSalt = {{ .Values.ticket_salt | quote }}
+const NodeName = {{ .Values.config.node_name | quote }}
+const ZoneName = {{ .Values.config.zone_name | quote }}
+const TicketSalt = {{ .Values.config.ticket_salt | quote }}
 
 // Standard imports from icinga2.conf
 include <itl>
@@ -22,7 +22,7 @@ include "api-users.conf"
 
 // zones.conf
 object Endpoint NodeName {
-    host = "icinga2"
+    host = {{ include "icinga2.fullname" . | quote }}
     port = 5665
 }
 
@@ -37,5 +37,4 @@ object Zone "global-templates" {
 object Zone "director-global" {
     global = true
 }
-
 {{- end -}}

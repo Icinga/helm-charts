@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ include "icingadb.fullname" . }}
   labels:
     {{- include "icingadb.labels" . | nindent 4 }}
 spec:
@@ -19,9 +19,18 @@ spec:
       labels:
         {{- include "icingadb.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "icingadb.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    spec:
       containers:
-        - name: icingadb
-          image: icinga/icingadb:latest
+        - name: {{ .Chart.Name}}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: ICINGADB_REDIS_HOST
               value: {{ if .Values.global.redis.internal }} "icinga2-redis" {{ else }} {{ .Values.global.redis.host | quote }} {{ end }}
@@ -37,4 +46,18 @@ spec:
               value: {{ .Values.global.databases.icingadb.password | default "mysql" | quote }}
             - name: ICINGADB_DATABASE_DATABASE
               value: {{ .Values.global.databases.icingadb.database | default "mysql" | quote }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end -}}

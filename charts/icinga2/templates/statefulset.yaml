@@ -1,15 +1,15 @@
-{{ if .Values.enabled -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "icingaweb2.fullname" . }}
+  name: {{ include "icinga2.fullname" . }}
   labels:
-    {{- include "icingaweb2.labels" . | nindent 4 }}
+    {{- include "icinga2.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "icinga2.fullname" . }}k
   replicas: 1
   selector:
     matchLabels:
-      {{- include "icingaweb2.selectorLabels" . | nindent 6 }}
+      {{- include "icinga2.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -17,13 +17,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "icingaweb2.selectorLabels" . | nindent 8 }}
+        {{- include "icinga2.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "icingaweb2.serviceAccountName" . }}
+      serviceAccountName: {{ include "icinga2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -31,45 +31,55 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: api
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          env:
-            - name: icingaweb.enabledModules
-              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509,vspheredb  # TODO build this properly
-            {{- include "icingaweb2.config" . | indent 12 }} # TODO: Job for x509 migrations
-            {{- include "icingaweb2.resources" . | indent 12 }}
+          command:
+            - icinga2
+            - daemon
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: {{ include "icinga2.fullname" . }}-features
+              mountPath: /etc/icinga2/features-enabled
+            - name: {{ include "icinga2.fullname" . }}-config
+              mountPath: /etc/icinga2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        {{- if .Values.modules.director.enabled }}      
-        - name: {{ .Chart.Name }}-director
+      initContainers:
+        - name: {{ .Chart.Name }}-bootstrapper
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: []
           args:
-            - /bin/bash
-            - -ce
-            - |
-              icingacli director migration run
-              (icingacli director kickstart required && icingacli director kickstart run && icingacli director config deploy) || true
-              icingacli director daemon run
+            - icinga2
+            - daemon
+            - -C
           env:
-            - name: icingaweb.enabledModules
-              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509,vspheredb
-            {{- include "icingaweb2.config" . | indent 12 }}
-            {{- include "icingaweb2.resources" . | indent 12 }}
+            - name: ICINGA_CN
+              value: {{ .Values.config.node_name | quote }}
+            - name: ICINGA_MASTER
+              value: "1"
           volumeMounts:
             - name: data
               mountPath: /data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        {{- end }}
       volumes:
-        - name: data
-          emptyDir: {}
+        - name: {{ include "icinga2.fullname" . }}-features
+          configMap:
+            name: {{ include "icinga2.fullname" . }}-features
+        - name: {{ include "icinga2.fullname" . }}-config
+          configMap:
+            name: {{ include "icinga2.fullname" . }}-config
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -82,4 +92,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- end -}}
