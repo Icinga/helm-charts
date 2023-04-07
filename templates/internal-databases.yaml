@@ -1,25 +1,26 @@
-{{- range $resource := .Values.global.databases -}}
-{{- if $resource.internal }}
+{{- range $resource, $settings := .Values.global.databases -}}
+{{- if $settings.internal }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: icinga2-mariadb-{{ $resource.database }}
+  name: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
   labels:
     {{- include "icinga-helm.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+    app.kubernetes.io/component: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
 spec:
+  serviceName: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
   selector:
     matchLabels:
       {{- include "icinga-helm.selectorLabels" $ | nindent 6 }}
-      app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
-  serviceName: icinga2-mariadb-{{ $resource.database }}
+      app.kubernetes.io/component: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
+  serviceName: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
   replicas: 1
   template:
     metadata:
       labels:
         {{- include "icinga-helm.selectorLabels" $ | nindent 8 }}
-        app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+        app.kubernetes.io/component: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
     spec:
       containers:
         - name: mariadb
@@ -31,11 +32,11 @@ spec:
             - name: MARIADB_RANDOM_ROOT_PASSWORD
               value: "1"
             - name: MARIADB_DATABASE
-              value: {{ $resource.database | default "mysql" | quote}}
+              value: {{ $settings.database | default "mysql" | quote}}
             - name: MARIADB_USER
-              value: {{ $resource.username | default "mysql" | quote }}
+              value: {{ $settings.username | default "mysql" | quote }}
             - name: MARIADB_PASSWORD
-              value: {{ $resource.password | default "mysql" | quote }}
+              value: {{ $settings.password | default "mysql" | quote }}
           volumeMounts:
             - name: data
               mountPath: /var/lib/mysql
@@ -51,16 +52,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: icinga2-mariadb-{{ $resource.database }}
+  name: {{ $.Release.Name }}-{{ $resource }}-database  # hardcoded so that dependant services can find it
   labels:
     {{- include "icinga-helm.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
+    app.kubernetes.io/component: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
 spec:
   ports:
     - port: 3306
       name: mariadb
   selector:
     {{- include "icinga-helm.selectorLabels" $ | nindent 4 }}
-    app.kubernetes.io/component: icinga2-mariadb-{{ $resource.database }}
-{{- end -}}
+    app.kubernetes.io/component: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
+{{- end }}
 {{- end -}}

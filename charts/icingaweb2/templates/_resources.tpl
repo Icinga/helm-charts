@@ -1,25 +1,25 @@
 {{- define "icingaweb2.resources" -}}
-{{- range $resource := .Values.resources -}}
+{{- range $resource := .Values.web_resources -}}
 {{- range $k, $v := . }}
 - name: icingaweb.resources.{{ $resource.name }}.{{ $k }}
   value: {{ $v | quote }}
 {{- end }}
 {{- end }}
-{{- range $database := .Values.global.databases }}
-- name: icingaweb.resources.{{ $database.database }}.type
+{{- range $resource, $settings := .Values.global.databases }}
+- name: icingaweb.resources.{{ $settings.database }}.type
   value: db
-- name: icingaweb.resources.{{ $database.database }}.db
+- name: icingaweb.resources.{{ $settings.database }}.db
   value: mysql
-- name: icingaweb.resources.{{ $database.database }}.host
-  value: {{ if $database.internal }}icinga2-mariadb-{{ $database.database }} {{ else }} {{ $database.host }} {{ end }}
-- name: icingaweb.resources.{{ $database.database }}.dbname
-  value: {{ $database.database}}
-- name: icingaweb.resources.{{ $database.database }}.username
-  value: {{ $database.username | default "mysql"}}
-- name: icingaweb.resources.{{ $database.database }}.password
-  value: {{ $database.password | default "mysql" }}
-{{- if eq $database.database "directordb" }}
-- name: icingaweb.resources.{{ $database.database }}.charset
+- name: icingaweb.resources.{{ $settings.database }}.host
+  value: {{ if $settings.internal }} {{ $.Release.Name }}-{{ $resource }}-database {{ else }} {{ $settings.host }} {{ end }}
+- name: icingaweb.resources.{{ $settings.database }}.dbname
+  value: {{ $settings.database}}
+- name: icingaweb.resources.{{ $settings.database }}.username
+  value: {{ $settings.username | default "mysql"}}
+- name: icingaweb.resources.{{ $settings.database }}.password
+  value: {{ $settings.password | default "mysql" }}
+{{- if eq $resource "director" }}
+- name: icingaweb.resources.{{ $settings.database }}.charset
   value: utf8
 {{- end }}
 {{- end }}

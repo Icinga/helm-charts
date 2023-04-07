@@ -37,7 +37,7 @@ spec:
             - name: ICINGADB_REDIS_PORT
               value: {{ if .Values.global.redis.internal }} "6379" {{ else }} {{ .Values.global.redis.port | quote }} {{ end }}
             - name: ICINGADB_DATABASE_HOST
-              value: {{ if .Values.global.databases.icingadb.internal }} icinga2-mariadb-{{ .Values.global.databases.icingadb.database }} {{ else }} {{ .Values.global.databases.icingadb.host | quote }} {{ end }}
+              value: {{ if .Values.global.databases.icingadb.internal }} {{ .Release.Name }}-icingadb-database {{ else }} {{ .Values.global.databases.icingadb.host | quote }} {{ end }}
             - name: ICINGADB_DATABASE_PORT
               value: {{ .Values.global.databases.icingadb.port | default "3306" | quote }}
             - name: ICINGADB_DATABASE_USER
