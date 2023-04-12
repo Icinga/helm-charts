@@ -35,16 +35,210 @@ config:
   ticket_salt: hazsdza7s8duasjdh7atdas54zuasdghasndasdh
 
 features:
-  icingadb:
-    enabled: true
+  # The features are configured as described in the official documentation 
+  # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
+  # Only some features are enabled by default; Some are missing, for more information 
+  # see this project's README.md
+  # `Optional` settings for each features are commented out, all other settings are required when enabling
+  # a feature.
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#apilistener
   api:
     enabled: true
+    # accept_commands: false
+    # accept_config: false
+    # crl_path: /var/lib/icinga2/crl/api.crl
+    # bind_host: 127.0.0.1
+    # bind_port: 5665
+    # max_anonymous_clients: 10
+    # cipher_list: ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384:AES128-GCM-SHA256
+    # connect_timeout: 15s
+    # acl_allow_origin:
+    #   - example.com
+    #   - agent1.example.com
+    # environment: "" 
+
+    # This list defines the available API users and their permissions.
+    # For more information see https://icinga.com/docs/icinga-2/latest/doc/12-icinga2-api/#authentication
     users:
       - name: director
         password: password
         permissions: '["*"]'
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
   checker:
     enabled: true
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#compatlogger
+  compatlog:
+    enabled: false
+    # log_dir: /var/log/icinga2/compat.log
+    # rotation_method: HOURLY
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#filelogger
+  debuglog:
+    enabled: false
+    # path: /var/log/icinga2/debug.log
+    # severity: debug
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#elasticsearchwriter
+  elasticsearch:
+    enabled: false
+    # host: elasticsearch
+    # port: 9200
+    # index: icinga2
+    # enable_send_perfdata: false
+    # flush_threshold: 1024
+    # flush_interval: 10s
+    # username: elastic
+    # password: password
+    # enable_tls: false
+    # insecure_noverify: false
+    # ca_path: /etc/icinga2/pki/elastic-ca.crt
+    # cert_path: /etc/icinga2/pki/elastic-cert.crt
+    # key_path: /etc/icinga2/pki/elastic-cert.key
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#gelfwriter
+  gelf:
+    enabled: false
+    # host: gelf
+    # port: 12201
+    # source: icinga2
+    # enable_send_perfdata: false
+    # enable_tls: false
+    # insecure_noverify: false
+    # ca_path: /etc/icinga2/pki/gelf-ca.crt
+    # cert_path: /etc/icinga2/pki/gelf-cert.crt
+    # key_path: /etc/icinga2/pki/gelf-cert.key
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#graphitewriter
+  graphite:
+    enabled: false
+    # host: graphite
+    # port: 2003
+    # host_name_template: icinga2.$host.name$.$host.check_command$
+    # service_name_template: icinga2.$host.name$.services.$service.name$.$service.check_command$
+    # enable_send_tresholds: false
+    # enable_send_metadata: false
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#icingadb
+  icingadb:
+    enabled: true
+    # password: password
+    # enable_tls: false
+    # cert_path: /etc/icinga2/pki/icingadb-cert.crt
+    # key_path: /etc/icinga2/pki/icingadb-cert.key
+    # ca_path: /etc/icinga2/pki/icingadb-ca.crt
+    # crl_path: /etc/icinga2/pki/icingadb-crl.pem
+    # cipher_list: ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384:AES128-GCM-SHA256
+    # tls_protocolmin: TLSv1.2
+    # insecure_noverify: false
+    # connect_timeout: 15s
+
+  # https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#influxdb2writer
+  influxdb2:
+    enabled: false
+    # host: influx
+    # port: 8086
+    # organization: monitoring
+    # bucket: icinga2
+    # auth_token: password
+    # ssl_enable: false
+    # ssl_insecure_noverify: false
+    # ssl_ca_cert: /etc/icinga2/pki/influxdb2-ca.crt
+    # ssl_cert: /etc/icinga2/pki/influxdb2-cert.crt
+    # ssl_key: /etc/icinga2/pki/influxdb2-cert.key
+    # enable_send_thresholds: false
+    # enable_send_metadata: false
+    # flush_threshold: 1024
+    # flush_interval: 10s
+    host_template: |
+      host_template = {
+        measurement = "$host.check_command$"
+        tags = {
+          hostname = "$host.name$"
+        }
+      }
+    service_template: |
+      service_template = {
+        measurement = "$service.check_command$"
+        tags = {
+          hostname = "$host.name$"
+          service = "$service.name$"
+        }
+      }
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#influxdbwriter
+  influxdb:
+    enabled: false
+    # host: influx
+    # port: 8086
+    # database: icinga2
+    # username: none
+    # password: none
+    # basic_auth:
+    #   username: icinga2
+    #   password: icinga2
+    # ssl_enable: false
+    # ssl_insecure_noverify: false
+    # ssl_ca_cert: /etc/icinga2/pki/influxdb-ca.crt
+    # ssl_cert: /etc/icinga2/pki/influxdb-cert.crt
+    # ssl_key: /etc/icinga2/pki/influxdb-cert.key
+    # enable_send_thresholds: false
+    # enable_send_metadata: false
+    # flush_threshold: 1024
+    # flush_interval: 10s
+    host_template: |
+      host_template = {
+        measurement = "$host.check_command$"
+        tags = {
+          hostname = "$host.name$"
+        }
+      }
+    service_template: |
+      service_template = {
+        measurement = "$service.check_command$"
+        tags = {
+          hostname = "$host.name$"
+          service = "$service.name$"
+        }
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#filelogger
+  mainlog:
+    enabled: false
+    # path: /var/log/icinga2/icinga2.log
+    # severity: information
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#notificationcomponent
+  notification:
+    enabled: true
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#opentsdbwriter
+  opentsdb:
+    enabled: false
+    # host: opentsdb
+    # port: 4242
+    # enable_generic_metrics: false
+    host_template: |
+      host_template = {
+        metric = "icinga.host"
+        tags = {
+          zone = "$host.zone$"
+        }
+      }
+    service_template: |
+      service_template = {
+        metric = "icinga.service.$service.check_command$"
+        tags = {
+          zone = "$service.zone$"
+        }
+      }
+
+  # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#sysloglogger
+  syslog:
+    enabled: true
+    # severity: warning
+    # facility: FacilityUser
 
 persistence:
   size: 2Gi
