@@ -19,7 +19,7 @@ icinga2:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
-      - host: chart-example.local
+      - host:  # Add a host here
         paths:
           - path: /
             pathType: ImplementationSpecific
@@ -31,7 +31,7 @@ icinga2:
   config:
     node_name: icinga2-master
     zone_name: master
-    ticket_salt: hazsdza7s8duasjdh7atdas54zuasdghasndasdh
+    ticket_salt:  # Add a random (long!) string here
 
   features:
     # The features are configured as described in the official documentation 
@@ -61,7 +61,7 @@ icinga2:
       # For more information see https://icinga.com/docs/icinga-2/latest/doc/12-icinga2-api/#authentication
       users:
         - name: director
-          password: password
+          password:  # Add a password here
           permissions: '["*"]'
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
@@ -123,7 +123,7 @@ icinga2:
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#icingadb
     icingadb:
       enabled: true
-      # password: password
+      # password:
       # enable_tls: false
       # cert_path: /etc/icinga2/pki/icingadb-cert.crt
       # key_path: /etc/icinga2/pki/icingadb-cert.key
@@ -141,7 +141,7 @@ icinga2:
       # port: 8086
       # organization: monitoring
       # bucket: icinga2
-      # auth_token: password
+      # auth_token: securitytoken
       # ssl_enable: false
       # ssl_insecure_noverify: false
       # ssl_ca_cert: /etc/icinga2/pki/influxdb2-ca.crt
@@ -174,7 +174,7 @@ icinga2:
       # port: 8086
       # database: icinga2
       # username: none
-      # password: none
+      # password: password
       # basic_auth:
       #   username: icinga2
       #   password: icinga2
@@ -357,7 +357,7 @@ icingaweb2:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
-      - host: example.com
+      - host:  # Add a host here
         paths:
           - path: /
             pathType: ImplementationSpecific
@@ -369,36 +369,33 @@ icingaweb2:
   auth:
     type: db
     admin_user: icingaweb
-    admin_password: password
+    admin_password:  # Add a password here
   
   modules:
     audit:
-      enabled: true
+      enabled: false
       log:
         type: syslog
         ident: icingaweb2-audit
         facility: auth
       stream:
-        enabled: true
+        enabled: false
         format: json
         path: /var/log/icingaweb2/audit.json
     businessprocess: {}  # TODO add parsing of existing processes later
     cube:
-      enabled: true
+      enabled: false
     icingadb:
       enabled: true
-      redis:
-        host: redis1
-        port: 6379
     director:
       enabled: true
       kickstart: true
     graphite:
-      enabled: true
+      enabled: false
       graphite:
-        url: example.com
+        url: graphite.example.com
         user: graphite
-        password: graphite
+        password: password
         insecure: 1
       ui:
         default_time_range: 1
@@ -408,8 +405,6 @@ icingaweb2:
         graphite_writer_host_name_template: {}
         graphite_writer_service_name_template: {}
         customvar_obscured_check_command: {}
-    vspheredb:
-      enabled: true
     x509:
       enabled: true
       jobs: {}  # TODO: Add this
@@ -457,48 +452,48 @@ icingaweb2:
   
 global:
   api:
+    # host:  # only needed if Icinga2 runs out of cluster
+    port: 5665
     users:
       icingaweb:
-        password: password
+        password:
+        permissions:
+        # - "*"
       director:
-        password: password
+        password:
+        permissions:
+        # - "*"
+
   databases:
     director:
       database: directordb
       username: director
-      password: directorpwd
-      internal: true
+      password:  # Add a password here
+      enabled: true
       # host: mariadb.example.com
       # port: 5432
     icingadb:
       database: icingadb
       username: icingadb
-      password: icingadbpwd
-      internal: true
+      password:  # Add a password here
+      enabled: true
       # host: mariadb.example.com
       # port: 5432
     icingaweb2:
       database: icingaweb2db
       username: icingaweb2
-      password: icingaweb2pwd
-      internal: true
-      # host: mariadb.example.com
-      # port: 5432
-    vspheredb:
-      database: vspheredb
-      username: vsphere
-      password: vspheredbpwd
-      internal: true
+      password:  # Add a password here
+      enabled: true
       # host: mariadb.example.com
       # port: 5432
     x509:
       database: x509db
       username: x509
-      password: x509pwd
-      internal: true
+      password:  # Add a password here
+      enabled: true
       # host: mariadb.example.com
       # port: 5432
   redis:
-    internal: true
+    enabled: true
     # host: redis.example.com
     # port: 6379

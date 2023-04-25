@@ -10,10 +10,12 @@ data:
     {{- include "icinga2.config" . | nindent 4 }}
   {{- if .Values.features.api.enabled }}
   api-users.conf: |
-    {{- range $user := .Values.features.api.users }}
-    object ApiUser {{ $user.name | quote }} {
-      password = {{ $user.password | quote }}
-      permissions = {{ $user.permissions }}
+    {{- range $user, $settings := .Values.global.api.users }}
+    {{- $password := $settings.password | required (print ".Values.global.api" $user ".password is required.") }}
+    {{- $permissions := $settings.permissions | default (list "*") }}
+    object ApiUser {{ $user | quote }} {
+      password = {{ $password | quote }}
+      permissions = {{ print "[\"" (join "\"," $settings.permissions) "\"]" }}
     }
     {{- end }}
   {{- end }}
@@ -135,8 +137,8 @@ data:
   {{- if .Values.features.icingadb.enabled }}
   icingadb.conf: |
     object IcingaDB "icingadb" {
-        host = {{ if .Values.global.redis.internal -}} "icinga2-redis" {{- else }}{{ .Values.global.redis.host | quote }}{{ end }}
-        port = {{ if .Values.global.redis.internal -}} 6379 {{- else }}{{ .Values.global.redis.port }}{{ end }}
+        host = {{ if .Values.global.redis.enabled -}} "icinga2-redis" {{- else }}{{ .Values.global.redis.host | quote }}{{ end }}
+        port = {{ if .Values.global.redis.enabled -}} 6379 {{- else }}{{ .Values.global.redis.port }}{{ end }}
         {{- if .Values.global.redis.password }}
         password = {{ .Values.global.redis.password | quote }}
         {{- end }}

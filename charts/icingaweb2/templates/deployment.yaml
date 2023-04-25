@@ -1,3 +1,6 @@
+
+---
+
 {{ if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -36,7 +39,7 @@ spec:
               protocol: TCP
           env:
             - name: icingaweb.enabledModules
-              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509,vspheredb  # TODO build this properly
+              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509  # TODO build this properly
             {{- include "icingaweb2.config" . | indent 12 }} # TODO: Job for x509 migrations
             {{- include "icingaweb2.resources" . | indent 12 }}
           volumeMounts:
@@ -58,7 +61,7 @@ spec:
               icingacli director daemon run
           env:
             - name: icingaweb.enabledModules
-              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509,vspheredb
+              value: director,incubator,icingadb,audit,businessprocess,cube,fileshipper,graphite,x509
             {{- include "icingaweb2.config" . | indent 12 }}
             {{- include "icingaweb2.resources" . | indent 12 }}
           volumeMounts:

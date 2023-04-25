@@ -1,6 +1,8 @@
 {{- range $resource, $settings := .Values.global.databases -}}
-{{- if $settings.internal }}
+{{- if $settings.enabled }}
 ---
+{{- $password := $settings.password | required (print ".Values.global.databases." $resource ".password is required.") }}
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -36,7 +38,7 @@ spec:
             - name: MARIADB_USER
               value: {{ $settings.username | default "mysql" | quote }}
             - name: MARIADB_PASSWORD
-              value: {{ $settings.password | default "mysql" | quote }}
+              value: {{ $password | quote }}
           volumeMounts:
             - name: data
               mountPath: /var/lib/mysql

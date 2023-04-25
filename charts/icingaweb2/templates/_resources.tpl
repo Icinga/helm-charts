@@ -11,7 +11,7 @@
 - name: icingaweb.resources.{{ $settings.database }}.db
   value: mysql
 - name: icingaweb.resources.{{ $settings.database }}.host
-  value: {{ if $settings.internal }} {{ $.Release.Name }}-{{ $resource }}-database {{ else }} {{ $settings.host }} {{ end }}
+  value: {{ if $settings.enabled }} {{ $.Release.Name }}-{{ $resource }}-database {{ else }} {{ $settings.host }} {{ end }}
 - name: icingaweb.resources.{{ $settings.database }}.dbname
   value: {{ $settings.database}}
 - name: icingaweb.resources.{{ $settings.database }}.username

@@ -1,4 +1,4 @@
-{{- if .Values.global.redis.internal }}
+{{- if .Values.global.redis.enabled }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet

@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "icingaweb2.fullname" . -}}
+{{- $fullName := include "icinga2.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
@@ -17,7 +17,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "icingaweb2.labels" . | nindent 4 }}
+    {{- include "icinga2.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -38,7 +38,7 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    {{- $host := .host | required ".Values.icingaweb2.ingress.hosts[].host is required." }}
+    {{- $host := .host | required ".Values.icinga2.ingress.hosts[].host is required." }}
     - host: {{ $host | quote }}
       http:
         paths:

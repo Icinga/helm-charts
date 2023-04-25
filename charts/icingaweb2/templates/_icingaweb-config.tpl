@@ -1,5 +1,8 @@
+---
 {{- define "icingaweb2.config" -}}
+{{- $auth_admin_password := .Values.auth.admin_password | required ".Values.icingaweb2.auth.admin_password is required." -}}
 {{- if .Values.modules.director.enabled }}
+{{- $global_api_director_password := .Values.global.api.users.director.password | required ".Values.global.api.director.password is required." }}
 - name: icingaweb.modules.director.config.db.resource
   value: {{ .Values.global.databases.director.database | quote }}
 {{- if .Values.modules.director.kickstart }}
@@ -10,7 +13,7 @@
 - name: icingaweb.modules.director.kickstart.config.username
   value: director
 - name: icingaweb.modules.director.kickstart.config.password
-  value: {{ .Values.global.api.users.director.password | quote }}
+  value: {{ $global_api_director_password | quote }}
 {{- end }}
 {{- end }}
 - name: icingaweb.authentication.icingaweb2.backend
@@ -18,7 +21,7 @@
 - name: icingaweb.authentication.icingaweb2.resource
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: "icingaweb.passwords.icingaweb2.{{ .Values.auth.admin_user}}"
-  value: {{ .Values.auth.admin_password | quote }}
+  value: {{ $auth_admin_password | quote }}
 - name: icingaweb.config.global.config_backend
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: icingaweb.config.global.config_resource
@@ -34,12 +37,25 @@
 - name: icingaweb.roles.Administrators.groups
   value: Administrators
 {{- if .Values.modules.icingadb.enabled }}
+{{- $global_api_users_icingaweb_password := .Values.global.api.users.icingaweb.password | required ".Values.global.api.icingaweb.password is required." }}
 - name: icingaweb.modules.icingadb.config.icingadb.resource
   value: {{ .Values.global.databases.icingadb.database | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.host
   value: {{ .Values.global.redis.host | default "icinga2-redis" | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.port
   value: {{ .Values.global.redis.port | default "6379" | quote }}
+- name: icingaweb.modules.icingadb.commandtransports.icinga2.transport
+  value: api
+- name: icingaweb.modules.icingadb.commandtransports.icinga2.skip_validation
+  value: "0"
+- name: icingaweb.modules.icingadb.commandtransports.icinga2.host
+  value: {{ .Values.global.api.host | default (print .Release.Name "-icinga2") | quote }}
+- name: icingaweb.modules.icingadb.commandtransports.icinga2.port
+  value: {{ .Values.global.api.port | default 5665 | quote }}
+- name: icingaweb.modules.icingadb.commandtransports.icinga2.username
+  value: {{ .Values.global.api.users.icingaweb.username | quote }}
+- name: icingaweb.modules.icingadb.commandtransports.icinga2.password
+  value: {{ $global_api_users_icingaweb_password | quote }}
 {{- end }}
 {{- if .Values.modules.audit.enabled }}
 - name: icingaweb.modules.audit.config.log.type
@@ -80,9 +96,5 @@
 {{- if .Values.modules.x509.enabled }}
 - name: icingaweb.modules.x509.config.backend.resource
   value: {{ .Values.global.databases.x509.database | quote }}
-{{- end }}
-{{- if .Values.modules.vspheredb.enabled }}
-- name: icingaweb.modules.vspheredb.config.db.resource
-  value: {{ .Values.global.databases.vspheredb.database | quote }}
 {{- end }}
 {{- end -}}

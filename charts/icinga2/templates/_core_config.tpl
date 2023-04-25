@@ -1,12 +1,12 @@
 {{- define "icinga2.config" -}}
-
+{{- $config_ticket_salt := .Values.config.ticket_salt | required ".Values.icinga2.config.ticket_salt is required." }}
 // Constants for Icinga2 from constants.conf
 const PluginDir = "/usr/lib/nagios/plugins"
 const ManubulonPluginDir = "/usr/lib/nagios/plugins"
 const PluginContribDir = "/usr/lib/nagios/plugins"
 const NodeName = {{ .Values.config.node_name | quote }}
 const ZoneName = {{ .Values.config.zone_name | quote }}
-const TicketSalt = {{ .Values.config.ticket_salt | quote }}
+const TicketSalt = {{ $config_ticket_salt | quote }}
 
 // Standard imports from icinga2.conf
 include <itl>
