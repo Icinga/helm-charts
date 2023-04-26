@@ -4,9 +4,7 @@ image:
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
-
 nameOverride: ""
-
 fullnameOverride: ""
 
 service:
@@ -17,8 +15,8 @@ ingress:
   enabled: false
   className: ""
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
   hosts:
     - host:  # Add a host here
       paths:
@@ -57,13 +55,6 @@ features:
     #   - example.com
     #   - agent1.example.com
     # environment: "" 
-
-    # This list defines the available API users and their permissions.
-    # For more information see https://icinga.com/docs/icinga-2/latest/doc/12-icinga2-api/#authentication
-    users:
-      - name: director
-        password:  # Add a password here
-        permissions: '["*"]'
 
   # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
   checker:
@@ -124,7 +115,7 @@ features:
   # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#icingadb
   icingadb:
     enabled: true
-    # password: password
+    # password:
     # enable_tls: false
     # cert_path: /etc/icinga2/pki/icingadb-cert.crt
     # key_path: /etc/icinga2/pki/icingadb-cert.key
@@ -142,7 +133,7 @@ features:
     # port: 8086
     # organization: monitoring
     # bucket: icinga2
-    # auth_token: password
+    # auth_token: securitytoken
     # ssl_enable: false
     # ssl_insecure_noverify: false
     # ssl_ca_cert: /etc/icinga2/pki/influxdb2-ca.crt
@@ -175,7 +166,7 @@ features:
     # port: 8086
     # database: icinga2
     # username: none
-    # password: none
+    # password: password
     # basic_auth:
     #   username: icinga2
     #   password: icinga2
@@ -202,7 +193,7 @@ features:
           hostname = "$host.name$"
           service = "$service.name$"
         }
-
+    
   # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#filelogger
   mainlog:
     enabled: false
@@ -241,7 +232,14 @@ features:
     # facility: FacilityUser
 
 persistence:
-  size: 2Gi
+  enabled: false
+  size: 5Gi
+  accessMode: ReadWriteOnce
+  # storageClass: ""
+  # volumeName: ""
+  # subPath: ""
+  matchLabels: {}
+  matchExpressions: []
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -254,7 +252,7 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
+  
 nodeSelector: {}
 
 tolerations: []
@@ -263,7 +261,7 @@ affinity: {}
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.

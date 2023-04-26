@@ -36,7 +36,7 @@ icinga2:
   features:
     # The features are configured as described in the official documentation 
     # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
-    # Only some features are enabled by default; Some are missing, for more information 
+    # Only some features are enabled by default; Some features are missing, for more information 
     # see this project's README.md
     # `Optional` settings for each features are commented out, all other settings are required when enabling
     # a feature.
@@ -56,13 +56,6 @@ icinga2:
       #   - example.com
       #   - agent1.example.com
       # environment: "" 
-
-      # This list defines the available API users and their permissions.
-      # For more information see https://icinga.com/docs/icinga-2/latest/doc/12-icinga2-api/#authentication
-      users:
-        - name: director
-          password:  # Add a password here
-          permissions: '["*"]'
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
     checker:
@@ -240,7 +233,14 @@ icinga2:
       # facility: FacilityUser
 
   persistence:
-    size: 2Gi
+    enabled: false
+    size: 5Gi
+    accessMode: ReadWriteOnce
+    # storageClass: ""
+    # volumeName: ""
+    # subPath: ""
+    matchLabels: {}
+    matchExpressions: []
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -456,13 +456,13 @@ global:
     port: 5665
     users:
       icingaweb:
-        password:
+        password:  # Add a password here
         permissions:
-        # - "*"
+        - "*"
       director:
-        password:
+        password:  # Add a password here
         permissions:
-        # - "*"
+        - "*"
 
   databases:
     director:
@@ -472,6 +472,16 @@ global:
       enabled: true
       # host: mariadb.example.com
       # port: 5432
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+        
     icingadb:
       database: icingadb
       username: icingadb
@@ -479,6 +489,16 @@ global:
       enabled: true
       # host: mariadb.example.com
       # port: 5432
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+
     icingaweb2:
       database: icingaweb2db
       username: icingaweb2
@@ -486,13 +506,33 @@ global:
       enabled: true
       # host: mariadb.example.com
       # port: 5432
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+
     x509:
       database: x509db
       username: x509
       password:  # Add a password here
-      enabled: true
+      enabled: false
       # host: mariadb.example.com
       # port: 5432
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+
   redis:
     enabled: true
     # host: redis.example.com

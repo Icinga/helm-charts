@@ -40,16 +40,43 @@ spec:
             - name: MARIADB_PASSWORD
               value: {{ $password | quote }}
           volumeMounts:
+            {{- if $settings.persistence.enabled }}
             - name: data
               mountPath: /var/lib/mysql
+              {{- if $settings.persistence.subPath }}
+              subPath: {{ $settings.persistence.subPath }}
+              {{- end }}
+            {{- end }}
+  {{- if $settings.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
-        accessModes: [ "ReadWriteOnce" ]
+        accessModes:
+          - {{ $settings.persistence.accessMode | quote }}
         resources:
           requests:
-            storage: 2Gi
+            storage: {{ $settings.persistence.size }}
+        {{- if $settings.persistence.volumeName }}
+        volumeName: {{ $settings.persistence.volumeName }}
+        {{- end }}
+        {{- if $settings.persistence.storageClass }}
+        {{- if (eq "-" $settings.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ $settings.persistence.storageClass }}
+        {{- end }}
+        {{- end }}
+        selector:
+        {{- if $settings.persistence.matchLabels }}
+          matchLabels:
+            {{- toYaml $settings.persistence.matchLabels | nindent 12 }}
+        {{- end }}
+        {{- if $settings.persistence.matchExpressions }}
+          matchExpressions:
+            {{- toYaml $settings.persistence.matchExpressions | nindent 12 }}
+        {{- end }}
+  {{- end }}
 ---
 apiVersion: v1
 kind: Service
