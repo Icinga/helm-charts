@@ -2,7 +2,7 @@
 {{- define "icingaweb2.config" -}}
 {{- $auth_admin_password := .Values.auth.admin_password | required ".Values.icingaweb2.auth.admin_password is required." -}}
 {{- if .Values.modules.director.enabled }}
-{{- $global_api_director_password := .Values.global.api.users.director.password | required ".Values.global.api.director.password is required." }}
+{{- $global_api_director_password := .Values.global.api.users.director.password | required ".Values.global.api.users.director.password is required." }}
 - name: icingaweb.modules.director.config.db.resource
   value: {{ .Values.global.databases.director.database | quote }}
 {{- if .Values.modules.director.kickstart }}
@@ -37,7 +37,7 @@
 - name: icingaweb.roles.Administrators.groups
   value: Administrators
 {{- if .Values.modules.icingadb.enabled }}
-{{- $global_api_users_icingaweb_password := .Values.global.api.users.icingaweb.password | required ".Values.global.api.icingaweb.password is required." }}
+{{- $global_api_users_icingaweb_password := .Values.global.api.users.icingaweb.password | required ".Values.global.api.users.icingaweb.password is required." }}
 - name: icingaweb.modules.icingadb.config.icingadb.resource
   value: {{ .Values.global.databases.icingadb.database | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.host

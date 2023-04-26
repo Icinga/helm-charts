@@ -16,7 +16,6 @@ spec:
     matchLabels:
       {{- include "icinga-helm.selectorLabels" $ | nindent 6 }}
       app.kubernetes.io/component: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
-  serviceName: {{ include "icinga-helm.fullname" $ }}-{{ $resource }}-database
   replicas: 1
   template:
     metadata:
