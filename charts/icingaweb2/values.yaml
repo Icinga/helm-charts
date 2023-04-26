@@ -52,9 +52,6 @@ modules:
   cube:
     enabled: true
 
-  icingadb:
-    enabled: true
-
   director:
     enabled: true
     kickstart: true
@@ -75,8 +72,13 @@ modules:
       graphite_writer_service_name_template: {}
       customvar_obscured_check_command: {}
 
-  x509:
+  icingadb:
     enabled: true
+  
+  incubator:
+    enabled: true
+  x509:
+    enabled: false
     jobs: {}  # TODO: Add this
     sni: {}  # TODO: Add this
 
