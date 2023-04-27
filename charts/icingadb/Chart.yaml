@@ -1,6 +1,6 @@
 apiVersion: v2
 name: icingadb
-description: A Helm chart for IcingaDB
+description: Icinga DB is a set of components for publishing, synchronizing and visualizing monitoring data in the Icinga ecosystem.
 
 # A chart can be either an 'application' or a 'library' chart.
 #

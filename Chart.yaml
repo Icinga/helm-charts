@@ -1,6 +1,6 @@
 apiVersion: v2
-name: icinga-helm
-description: A Helm chart for Kubernetes
+name: icinga-stack
+description: Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
 
 # A chart can be either an 'application' or a 'library' chart.
 #

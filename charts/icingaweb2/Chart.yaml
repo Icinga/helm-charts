@@ -1,6 +1,6 @@
 apiVersion: v2
 name: icingaweb2
-description: A Helm chart for Icingaweb2
+description: Icinga Web 2 is a powerful PHP framework for web applications that comes in a clean and reduced design.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
