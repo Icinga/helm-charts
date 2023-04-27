@@ -41,7 +41,7 @@
 - name: icingaweb.modules.icingadb.config.icingadb.resource
   value: {{ .Values.global.databases.icingadb.database | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.host
-  value: {{ .Values.global.redis.host | default "icinga2-redis" | quote }}
+  value: {{ .Values.global.redis.host | default (print .Release.Name "-redis" ) | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.port
   value: {{ .Values.global.redis.port | default "6379" | quote }}
 - name: icingaweb.modules.icingadb.commandtransports.icinga2.transport

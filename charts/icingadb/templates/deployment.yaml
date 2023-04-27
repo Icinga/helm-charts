@@ -33,7 +33,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: ICINGADB_REDIS_HOST
-              value: {{ if .Values.global.redis.enabled }} "icinga2-redis" {{ else }} {{ .Values.global.redis.host | quote }} {{ end }}
+              value: {{ if .Values.global.redis.enabled }} {{ .Release.Name }}-redis {{ else }} {{ .Values.global.redis.host | quote }} {{ end }}
             - name: ICINGADB_REDIS_PORT
               value: {{ if .Values.global.redis.enabled }} "6379" {{ else }} {{ .Values.global.redis.port | quote }} {{ end }}
             - name: ICINGADB_DATABASE_HOST

@@ -137,7 +137,7 @@ data:
   {{- if .Values.features.icingadb.enabled }}
   icingadb.conf: |
     object IcingaDB "icingadb" {
-        host = {{ if .Values.global.redis.enabled -}} "icinga2-redis" {{- else }}{{ .Values.global.redis.host | quote }}{{ end }}
+        host = {{ if .Values.global.redis.enabled -}} "{{ .Release.Name }}-redis" {{- else }}{{ .Values.global.redis.host | quote }}{{ end }}
         port = {{ if .Values.global.redis.enabled -}} 6379 {{- else }}{{ .Values.global.redis.port }}{{ end }}
         {{- if .Values.global.redis.password }}
         password = {{ .Values.global.redis.password | quote }}

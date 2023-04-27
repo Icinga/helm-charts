@@ -3,22 +3,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: icinga2-redis
+  name: {{ include "icinga-helm.fullname" .}}-redis
   labels:
     {{- include "icinga-helm.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: icinga2-redis
+    app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
 spec:
   selector:
     matchLabels:
       {{- include "icinga-helm.selectorLabels" $ | nindent 6 }}
-      app.kubernetes.io/component: icinga2-redis
-  serviceName: icinga2-redis
+      app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
+  serviceName: {{ include "icinga-helm.fullname" .}}-redis
   replicas: 1
   template:
     metadata:
       labels:
         {{- include "icinga-helm.selectorLabels" $ | nindent 8 }}
-        app.kubernetes.io/component: icinga2-redis
+        app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
     spec:
       containers:
         - name: redis
@@ -30,15 +30,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: icinga2-redis
+  name: {{ include "icinga-helm.fullname" .}}-redis
   labels:
     {{- include "icinga2.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: icinga2-redis
+    app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
 spec:
   ports:
     - port: 6379
       name: redis
   selector:
     {{- include "icinga2.selectorLabels" $ | nindent 4 }}
-    app.kubernetes.io/component: icinga2-redis
+    app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
 {{- end -}}
