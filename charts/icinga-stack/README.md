@@ -63,8 +63,8 @@ Continue by filling out the template with all the relevant information.
 
 ## Contributing
 
-For information on how to contribute to this repository, see the [contribution guidelines](../CONTRIBUTING.md).
+For information on how to contribute to this repository, see the [contribution guidelines](../../CONTRIBUTING.md).
 
 ## License
 
-This chart is licensed under the terms of the [Apache 2.0](../LICENSE) open source license.
+This chart is licensed under the terms of the [Apache 2.0](../../LICENSE) open source license.
