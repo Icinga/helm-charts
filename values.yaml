@@ -464,11 +464,12 @@ global:
     # host:  # only needed if Icinga2 runs out of cluster
     port: 5665
     users:
-      icingaweb:
+      director:
         password:  # Add a password here
         permissions:
         - "*"
-      director:
+
+      icingaweb:
         password:  # Add a password here
         permissions:
         - "*"
@@ -480,7 +481,7 @@ global:
       password:  # Add a password here
       enabled: true
       # host: mariadb.example.com
-      # port: 5432
+      # port: 3306
       persistence:
         enabled: false
         size: 5Gi
@@ -497,7 +498,7 @@ global:
       password:  # Add a password here
       enabled: true
       # host: mariadb.example.com
-      # port: 5432
+      # port: 3306
       persistence:
         enabled: false
         size: 5Gi
@@ -514,7 +515,7 @@ global:
       password:  # Add a password here
       enabled: true
       # host: mariadb.example.com
-      # port: 5432
+      # port: 3306
       persistence:
         enabled: false
         size: 5Gi
@@ -531,7 +532,7 @@ global:
       password:  # Add a password here
       enabled: false
       # host: mariadb.example.com
-      # port: 5432
+      # port: 3306
       persistence:
         enabled: false
         size: 5Gi
