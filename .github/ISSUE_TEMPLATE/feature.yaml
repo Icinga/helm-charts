@@ -1,0 +1,30 @@
+name: Feature Request
+description: Request a feature or enhancement
+title: "[Feature]: "
+labels: ["feature", "triage"]
+assignees:
+  - mocdaniel
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request! Please try
+        to fill out as much of the information below as you can.
+  - type: dropdown
+    id: chart
+    attributes:
+      label: Affected Chart
+      description: Which chart is this feature request meant for?
+      options:
+        - icinga-stack
+        - icinga2
+        - icingadb
+        - icingaweb2
+        - the repository as a whole
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Please describe your feature request
+      description: Please provide a concise description of the feature you want to request. You can use markdown syntax for formatting.
