@@ -1,0 +1,27 @@
+name: Lint and Test Charts
+
+on: [push, pull_request]
+
+jobs:
+  lint-and-unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Fetch history
+        run: git fetch --prune --unshallow
+
+      - name: Change permissions on cloned repo
+        run: chmod -R 777 ${{ github.workspace }}
+
+      - name: Test Helm chart icinga-stack
+        uses: addnab/docker-run-action@v3
+        with:
+          registry: docker.io
+          image: quintush/helm-unittest:3.11.2-0.3.0
+          options: -v ${{ github.workspace }}:/apps
+          run: |
+            set -x
+            cd charts/icinga-stack
+            helm unittest .
