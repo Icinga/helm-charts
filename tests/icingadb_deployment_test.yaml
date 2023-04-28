@@ -1,0 +1,16 @@
+suite: "[IcingaDB] Deployment"
+templates:
+  - ../charts/icingadb/templates/deployment.yaml
+tests:
+  - it: deploys an IcingaDB deployment
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingadb

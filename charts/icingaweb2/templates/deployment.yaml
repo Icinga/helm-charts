@@ -37,7 +37,7 @@ spec:
               protocol: TCP
           env:
             - name: icingaweb.enabledModules
-              value: {{ include "icingaweb2.enabledModules" . }}  # TODO build this properly
+              value: {{ include "icingaweb2.enabledModules" . }}
             {{- include "icingaweb2.config" . | indent 12 }} # TODO: Job for x509 migrations
             {{- include "icingaweb2.resources" . | indent 12 }}
           volumeMounts:

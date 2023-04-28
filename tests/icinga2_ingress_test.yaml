@@ -1,0 +1,36 @@
+suite: "[Icinga2] Ingress creation"
+templates:
+  - ../charts/icinga2/templates/ingress.yaml
+tests:
+  - it: creates an Ingress if enabled
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        ingress:
+          enabled: true
+          hosts:
+            - host: icinga2.example.com
+              paths:
+                - path: /
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Ingress
+          apiVersion: networking.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.rules
+          content:
+            host: icinga2.example.com
+            http:
+              paths:
+                - path: /
+                  backend:
+                    service:
+                      name: my-icinga-icinga2
+                      port:
+                        number: 5665

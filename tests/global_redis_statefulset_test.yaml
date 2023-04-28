@@ -1,0 +1,20 @@
+suite: "[Global] Redis StatefulSet"
+templates:
+  - redis.yaml
+tests:
+  - it: should deploy a Redis StatefulSet
+    documentIndex: 0
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: icinga2-redis
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm

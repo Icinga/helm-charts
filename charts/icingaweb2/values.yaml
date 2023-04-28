@@ -37,7 +37,7 @@ auth:
 
 modules:
   audit:
-    enabled: true
+    enabled: false
     log:
       type: syslog
       ident: icingaweb2-audit
@@ -50,14 +50,14 @@ modules:
   businessprocess: {}  # TODO add parsing of existing processes later
 
   cube:
-    enabled: true
+    enabled: false
 
   director:
     enabled: true
     kickstart: true
 
   graphite:
-    enabled: true
+    enabled: false
     graphite:
       url: graphite.example.com
       user: graphite
@@ -77,6 +77,7 @@ modules:
   
   incubator:
     enabled: true
+
   x509:
     enabled: false
     jobs: {}  # TODO: Add this

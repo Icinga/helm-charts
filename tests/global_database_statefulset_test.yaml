@@ -1,0 +1,91 @@
+suite: "[Global] Internal databases for Icinga services"
+templates:
+  - internal-databases.yaml
+tests:
+  # Director DB 
+  - it: deploys a Director database StatefulSet
+    documentIndex: 0
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga-helm-director-database
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_PASSWORD
+            value: insecurepassword
+  
+  # IcingaDB DB
+  - it: deploys an IcingaDB database StatefulSet
+    documentIndex: 2
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga-helm-icingadb-database
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_PASSWORD
+            value: insecurepassword
+      
+  # IcingaWeb DB
+  - it: deploys an Icingaweb2 database StatefulSet
+    documentIndex: 4
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga-helm-icingaweb2-database
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_PASSWORD
+            value: insecurepassword
+
+  # Test persistence for databases
+  - it: deploys a PVC for a database if persistence is enabled
+    documentIndex: 0
+    values:
+      - required_values.yaml
+    set:
+      global.databases.director.persistence.enabled: true
+      global.databases.director.password: insecurepassword
+      global.databases.icingadb.password: insecurepassword
+      global.databases.icingaweb2.password: insecurepassword
+    release:
+      name: my-icinga
+    asserts:
+      - contains:
+          path: spec.volumeClaimTemplates
+          content:
+            metadata:
+              name: data
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
+              selector: null
+
+      

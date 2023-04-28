@@ -1,0 +1,58 @@
+suite: "[Icinga2] StatefulSet"
+templates:
+  - ../charts/icinga2/templates/statefulset.yaml
+tests:
+  - it: deploys an Icinga2 StatefulSet without persistence
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+  
+  - it: deploys an Icinga2 StatefulSet with persistence
+    values:
+      - required_values.yaml
+    set:
+      icinga2.persistence.enabled: true
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.volumeClaimTemplates
+          content:
+            metadata:
+              name: data
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
+              selector: null
+          any: true
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true

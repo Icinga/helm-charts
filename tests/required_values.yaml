@@ -1,0 +1,22 @@
+icinga2:
+  config:
+    ticket_salt: insecuresalt
+
+icingaweb2:
+  auth:
+    admin_password: insecurepassword
+
+global:
+  api:
+    users:
+      director:
+        password: insecurepassword
+      icingaweb:
+        password: insecurepassword
+  databases:
+    director:
+      password: insecurepassword
+    icingaweb2:
+      password: insecurepassword
+    icingadb:
+      password: insecurepassword
