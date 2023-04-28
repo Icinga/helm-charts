@@ -51,18 +51,15 @@ This example sets all **required** value for the chart to install successfully. 
 
 Currently there's no upgrade path needed nor available. This will be added in the future.
 
-## Testing
+## Reporting issues
 
-This Helm chart is tested with [helm unittest](https://github.com/helm-unittest/helm-unittest).
+Please report issues and bugs by creating a [GitHub Issue](https://github.com/icinga/helm-charts/issues/new/choose) and choosing **Bug** from the template list.
+Continue by filling out the template with all the relevant information.
 
-You can find the test specifications in the `./tests/` directory. Tests are automatically run in CI.
+## Suggesting features and enhancements
 
-To run the tests locally, use the following command:
-
-```
-docker run --rm -v "${PWD}:/apps" docker.io/quintush/helm-unittest:3.11.2-0.3.0 .
-```
-> **NOTE**: We require maintainers to write tests if they introduce new features or change existing ones. For more information see the [contribution guidelines](CONTRIBUTING.md).
+Please report issues and bugs by creating a [GitHub Issue](https://github.com/icinga/helm-charts/issues/new/choose) and choosing **Feature Request** from the template list.
+Continue by filling out the template with all the relevant information.
 
 ## Contributing
 
