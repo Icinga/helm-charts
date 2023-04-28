@@ -14,7 +14,7 @@ tests:
           apiVersion: apps/v1
       - equal:
           path: metadata.name
-          value: icinga2-redis
+          value: my-icinga-icinga-stack-redis
       - equal:
           path: metadata.labels["app.kubernetes.io/managed-by"]
           value: Helm
