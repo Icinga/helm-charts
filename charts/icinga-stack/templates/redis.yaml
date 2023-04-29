@@ -12,7 +12,7 @@ spec:
     matchLabels:
       {{- include "icinga-helm.selectorLabels" $ | nindent 6 }}
       app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
-  serviceName: {{ include "icinga-helm.fullname" .}}-redis
+  serviceName: {{ .Release.Name }}-redis
   replicas: 1
   template:
     metadata:
@@ -30,7 +30,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "icinga-helm.fullname" .}}-redis
+  name: {{ .Release.Name }}-redis
   labels:
     {{- include "icinga2.labels" $ | nindent 4 }}
     app.kubernetes.io/component: {{ include "icinga-helm.fullname" .}}-redis
