@@ -49,6 +49,14 @@ spec:
               mountPath: /etc/icinga2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /v1
+              port: {{ .Values.service.port }}
+              httpHeaders:
+                - name: Authorization
+                  value: Basic {{ printf "%s:%s" "director" .Values.global.api.users.director.password | b64enc }}
       initContainers:
         - name: {{ .Chart.Name }}-bootstrapper
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
