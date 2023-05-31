@@ -45,7 +45,14 @@ spec:
               mountPath: /data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              scheme: HTTP
+              path: /img/favicon.png
+              port: {{ .Values.service.port }}
           readinessProbe:
+            failureThreshold: 3
             httpGet:
               scheme: HTTP
               path: /img/favicon.png
