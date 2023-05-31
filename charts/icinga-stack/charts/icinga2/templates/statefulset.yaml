@@ -56,7 +56,7 @@ spec:
               port: {{ .Values.service.port }}
               httpHeaders:
                 - name: Authorization
-                  value: Basic {{ printf "%s:%s" "director" .Values.global.api.users.director.password | b64enc }}
+                  value: Basic {{ printf "%s:%s" "icingaweb" .Values.global.api.users.icingaweb.password | b64enc }}
       initContainers:
         - name: {{ .Chart.Name }}-bootstrapper
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
