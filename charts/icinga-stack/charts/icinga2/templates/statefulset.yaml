@@ -49,7 +49,17 @@ spec:
               mountPath: /etc/icinga2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              scheme: HTTPS
+              path: /v1
+              port: {{ .Values.service.port }}
+              httpHeaders:
+                - name: Authorization
+                  value: Basic {{ printf "%s:%s" "icingaweb" .Values.global.api.users.icingaweb.password | b64enc }}
           readinessProbe:
+            failureThreshold: 3
             httpGet:
               scheme: HTTPS
               path: /v1
