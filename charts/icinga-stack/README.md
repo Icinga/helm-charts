@@ -22,7 +22,7 @@ This chart bootstraps a complete Icinga environment on a [Kubernetes](http://kub
 First you need to add the Icinga2 Helm repository to your Helm installation. Helm repositories are similar to package repositories in Linux distributions as in they contain different available packages of 
 Kubernetes manifests for users to consume.
 
-The Icinga2 Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following command:
+The Icinga2 Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following commands:
 
 ```console
 helm repo add icinga https://icinga.github.io/helm-charts
