@@ -22,7 +22,7 @@ This chart bootstraps a complete Icinga environment on a [Kubernetes](http://kub
 First you need to add the Icinga2 Helm repository to your Helm installation. Helm repositories are similar to package repositories in Linux distributions as in they contain different available packages of 
 Kubernetes manifests for users to consume.
 
-The Icinga2 Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following command:
+The Icinga2 Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following commands:
 
 ```console
 helm repo add icinga https://icinga.github.io/helm-charts
@@ -35,14 +35,14 @@ Once the repository is known to your Helm installation, you can install Icinga2 
 
 ```console
 helm install <release-name> \
-  --set icinga2.config.ticket_salt=CHANGE-ME
-  --set icingaweb2.auth.admin_password=CHANGE-ME
-  --set global.api.users.director.password=CHANGE-ME
-  --set global.api.users.director.icingaweb.password=CHANGE-ME
-  --set global.databases.director.password=CHANGE-ME
-  --set global.databases.icingaweb2.password=CHANGE-ME
-  --set global.databases.icingadb.password=CHANGE-ME
-icinga-stack
+  --set icinga2.config.ticket_salt=CHANGE-ME \
+  --set icingaweb2.auth.admin_password=CHANGE-ME \
+  --set global.api.users.director.password=CHANGE-ME \
+  --set global.api.users.icingaweb.password=CHANGE-ME \
+  --set global.databases.director.password=CHANGE-ME \
+  --set global.databases.icingaweb2.password=CHANGE-ME \
+  --set global.databases.icingadb.password=CHANGE-ME \
+icinga/icinga-stack
 ```
 
 This example sets all **required** value for the chart to install successfully. For more information on the available configuration options, see the [configuration](docs/configuration.md#configuration) section.
