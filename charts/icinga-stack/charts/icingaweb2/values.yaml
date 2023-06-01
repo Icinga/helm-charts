@@ -32,6 +32,7 @@ ingress:
 
 auth:
   type: db
+  #resource: # Add the name of the db resource used by Icinga Web 2 here
   admin_user: icingaweb
   admin_password:  # Add a password here
 
@@ -74,7 +75,7 @@ modules:
 
   icingadb:
     enabled: true
-  
+
   incubator:
     enabled: true
 
@@ -100,7 +101,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-    
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

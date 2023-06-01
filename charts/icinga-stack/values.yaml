@@ -253,7 +253,7 @@ icinga2:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
-  
+
   nodeSelector: {}
 
   tolerations: []
@@ -305,7 +305,7 @@ icingadb:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
-  
+
   nodeSelector: {}
 
   tolerations: []
@@ -368,9 +368,10 @@ icingaweb2:
 
   auth:
     type: db
+    #resource: # Add the name of the db resource used by Icinga Web 2 here
     admin_user: icingaweb
     admin_password:  # Add a password here
-  
+
   modules:
     audit:
       enabled: false
@@ -430,13 +431,13 @@ icingaweb2:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
-  
+
   nodeSelector: {}
 
   tolerations: []
 
   affinity: {}
-      
+
   serviceAccount:
     # Specifies whether a service account should be created
     create: false
@@ -458,7 +459,7 @@ icingaweb2:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1000
-  
+
 global:
   api:
     # host:  # only needed if Icinga2 runs out of cluster
@@ -491,7 +492,7 @@ global:
         # subPath: ""
         matchLabels: {}
         matchExpressions: []
-        
+
     icingadb:
       database: icingadb
       username: icingadb

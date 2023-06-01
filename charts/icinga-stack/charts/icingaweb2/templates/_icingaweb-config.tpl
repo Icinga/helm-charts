@@ -22,10 +22,8 @@
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: "icingaweb.passwords.icingaweb2.{{ .Values.auth.admin_user}}"
   value: {{ $auth_admin_password | quote }}
-- name: icingaweb.config.global.config_backend
-  value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: icingaweb.config.global.config_resource
-  value: {{ .Values.auth.type | quote }}
+  value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: icingaweb.groups.icingaweb2.backend
   value: {{ .Values.auth.type | quote }}
 - name: icingaweb.groups.icingaweb2.resource
