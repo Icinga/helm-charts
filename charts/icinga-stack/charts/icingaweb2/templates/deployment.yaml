@@ -45,7 +45,19 @@ spec:
               mountPath: /data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        {{- if .Values.modules.director.enabled }}      
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              scheme: HTTP
+              path: /img/favicon.png
+              port: {{ .Values.service.port }}
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              scheme: HTTP
+              path: /img/favicon.png
+              port: {{ .Values.service.port }}
+        {{- if .Values.modules.director.enabled }}
         - name: {{ .Chart.Name }}-director
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
