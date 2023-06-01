@@ -46,6 +46,18 @@ spec:
               subPath: {{ $settings.persistence.subPath }}
               {{- end }}
             {{- end }}
+          livenessProbe:
+            failureThreshold: 5
+            exec:
+              command:
+                - /usr/local/bin/healthcheck.sh
+                - --connect
+          readinessProbe:
+            failureThreshold: 3
+            exec:
+              command:
+                - /usr/local/bin/healthcheck.sh
+                - --connect
   {{- if $settings.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
