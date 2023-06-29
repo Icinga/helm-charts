@@ -42,7 +42,7 @@ helm install <release-name> \
   --set global.databases.director.password=CHANGE-ME
   --set global.databases.icingaweb2.password=CHANGE-ME
   --set global.databases.icingadb.password=CHANGE-ME
-icinga-stack
+icinga/icinga-stack
 ```
 
 This example sets all **required** value for the chart to install successfully. For more information on the available configuration options, see the [configuration](docs/configuration.md#configuration) section.
