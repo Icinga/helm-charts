@@ -30,6 +30,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: ICINGA_DISABLE_CONFD
+              value: {{ .Values.config.disable_confd | int | quote }}
           ports:
             - name: api
               containerPort: {{ .Values.service.port }}
@@ -62,6 +65,8 @@ spec:
               value: {{ .Values.config.node_name | quote }}
             - name: ICINGA_MASTER
               value: "1"
+            - name: ICINGA_DISABLE_CONFD
+              value: {{ .Values.config.disable_confd | int | quote }}
           volumeMounts:
             - name: data
               mountPath: /data

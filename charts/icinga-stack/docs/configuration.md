@@ -73,6 +73,7 @@ These values are used by the Icinga2 sub-chart. For configuration of Icinga2's d
 | `icinga2.ingress.tls[].secretName` | Secret name of the Icinga2 ingress | `string` | **not set** |
 | `icinga2.config.node_name` | Name of the Icinga2 node | `string` | `icinga2-master` |
 | `icinga2.config.zone_name` | Name of the Icinga2 zone | `string` | `master` |
+| `icinga2.config.disable_confd` | Disables the `include_recursive "conf.d"` directive in icinga2.conf | `boolean` | `true` |
 | `icinga2.config.ticket_salt` | Salt used to generate API tickets for satellites and agents | `string` | **not set** |
 | `icinga2.features.<feature>.enabled` | Whether or not the respective feature should be enabled | `boolean` | **varies** |
 | `icinga2.persistence.enabled` | Whether or not the Icinga2 deployment should use a persistent volume | `boolean` | `false` |

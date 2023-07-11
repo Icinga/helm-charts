@@ -31,6 +31,7 @@ config:
   node_name: icinga2-master
   zone_name: master
   ticket_salt:  # Add a random (long!) string here
+  disable_confd: true
 
 features:
   # The features are configured as described in the official documentation 
