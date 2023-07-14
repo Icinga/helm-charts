@@ -38,7 +38,6 @@ helm install <release-name> \
   --set icinga2.config.ticket_salt=CHANGE-ME
   --set icingaweb2.auth.admin_password=CHANGE-ME
   --set global.api.users.director.password=CHANGE-ME
-  --set global.api.users.director.icingaweb.password=CHANGE-ME
   --set global.api.users.icingaweb.password=CHANGE-ME
   --set global.databases.director.password=CHANGE-ME
   --set global.databases.icingaweb2.password=CHANGE-ME
