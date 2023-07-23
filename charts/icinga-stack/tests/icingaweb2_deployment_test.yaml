@@ -20,6 +20,11 @@ tests:
             name: icingaweb.enabledModules
             value: director,icingadb,incubator,
           any: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.passwords.icingaweb2.icingaweb
+            value: insecurepassword
 
   - it: deploys an Icingaweb2 deployment with additional modules
     values:
@@ -27,7 +32,8 @@ tests:
     set:
       icingaweb2:
         auth:
-          admin_password: insecurepassword
+          admin_password:
+            value: insecurepassword
         modules:
           x509:
             enabled: true
@@ -46,3 +52,155 @@ tests:
             name: icingaweb.enabledModules
             value: director,icingadb,incubator,x509,
           any: true
+  
+  - it: deploys an Icingaweb2 deployment with minimal configuration using secrets
+    values:
+      - required_values_secrets.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingaweb2
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.enabledModules
+            value: director,icingadb,incubator,
+          any: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.passwords.icingaweb2.icingaweb
+            valueFrom:
+              secretKeyRef:
+                name: icingaweb2-secret
+                key: admin_password
+
+  - it: deploys an Icingaweb2 deployment with graphite
+    values:
+      - required_values.yaml
+    set:
+      icingaweb2:
+        auth:
+          admin_password:
+            value: insecurepassword
+        modules:
+          graphite:
+            enabled: true
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingaweb2
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.enabledModules
+            value: director,graphite,icingadb,incubator,
+          any: true
+
+  - it: deploys an Icingaweb2 deployment with graphite, user/password from value
+    values:
+      - required_values.yaml
+    set:
+      icingaweb2:
+        auth:
+          admin_password:
+            value: insecurepassword
+        modules:
+          graphite:
+            enabled: true
+            graphite:
+              user:
+                value: graphite-user
+              password:
+                value: graphite-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingaweb2
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.modules.graphite.config.graphite.user
+            value: graphite-user
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.modules.graphite.config.graphite.password
+            value: graphite-password
+
+  - it: deploys an Icingaweb2 deployment with graphite, user/password from secret
+    values:
+      - required_values.yaml
+    set:
+      icingaweb2:
+        auth:
+          admin_password:
+            value: insecurepassword
+        modules:
+          graphite:
+            enabled: true
+            graphite:
+              secretName: graphite-secret
+              user:
+                secretKey: graphite-user
+              password:
+                secretKey: graphite-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingaweb2
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.modules.graphite.config.graphite.user
+            valueFrom:
+              secretKeyRef:
+                name: graphite-secret
+                key: graphite-user
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: icingaweb.modules.graphite.config.graphite.password
+            valueFrom:
+              secretKeyRef:
+                name: graphite-secret
+                key: graphite-password
+
+  - it: failed deployment of Icingaweb2 due to partial secret definition
+    values:
+      - required_values_secrets.yaml
+    set:
+      global:
+        api:
+          users:
+            secretName: api-users
+            director:
+              password:
+            icingaweb:
+              password:
+                secretKey: icingaweb-password
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.secretName and .Values.global.api.users.director.password.secretKey"

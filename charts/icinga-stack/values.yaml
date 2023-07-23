@@ -31,7 +31,10 @@ icinga2:
   config:
     node_name: icinga2-master
     zone_name: master
-    ticket_salt:  # Add a random (long!) string here
+    ticket_salt:
+      value:  # Add random (long!) string here
+      secretName: # Or use existing secret
+      secretKey:
     disable_confd: true
 
   features:
@@ -371,7 +374,10 @@ icingaweb2:
     type: db
     #resource: # Add the name of the db resource used by Icinga Web 2 here
     admin_user: icingaweb
-    admin_password:  # Add a password here
+    admin_password:
+      value: # Add a password here
+      secretName:
+      secretKey:
 
   modules:
     audit:
@@ -398,8 +404,13 @@ icingaweb2:
       enabled: false
       graphite:
         url: graphite.example.com
-        user: graphite
-        password: password
+        secretName:
+        user:
+          value:
+          secretKey:
+        password:
+          value:
+          secretKey:
         insecure: 1
       ui:
         default_time_range: 1
@@ -466,21 +477,31 @@ global:
     # host:  # only needed if Icinga2 runs out of cluster
     port: 5665
     users:
+      secretName: # Existing secret for director and icingaweb password
       director:
-        password:  # Add a password here
+        password:
+          value: # Add a password here
+          secretKey: # Or specify secret key
         permissions:
         - "*"
 
       icingaweb:
-        password:  # Add a password here
+        password:
+          value: # Add a password here
+          secretKey:  # Or specify secret key
         permissions:
         - "*"
 
   databases:
     director:
       database: directordb
-      username: director
-      password:  # Add a password here
+      secretName: # Existing secret name for username and password
+      username:
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
       # port: 3306
@@ -496,8 +517,13 @@ global:
 
     icingadb:
       database: icingadb
-      username: icingadb
-      password:  # Add a password here
+      secretName: # Existing secret name for username and password
+      username:
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
       # port: 3306
@@ -513,8 +539,13 @@ global:
 
     icingaweb2:
       database: icingaweb2db
-      username: icingaweb2
-      password:  # Add a password here
+      secretName: # Existing secret name for username and password
+      username: 
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
       # port: 3306
@@ -530,8 +561,13 @@ global:
 
     x509:
       database: x509db
-      username: x509
-      password:  # Add a password here
+      secretName: # Existing secret name for username and password
+      username: 
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
       enabled: false
       # host: mariadb.example.com
       # port: 3306

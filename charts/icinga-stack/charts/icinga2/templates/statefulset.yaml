@@ -33,6 +33,7 @@ spec:
           env:
             - name: ICINGA_DISABLE_CONFD
               value: {{ .Values.config.disable_confd | int | quote }}
+            {{- include "icinga2.envSecrets" . | nindent 12 }}
           ports:
             - name: api
               containerPort: {{ .Values.service.port }}
@@ -67,6 +68,7 @@ spec:
               value: "1"
             - name: ICINGA_DISABLE_CONFD
               value: {{ .Values.config.disable_confd | int | quote }}
+            {{- include "icinga2.envSecrets" . | nindent 12 }}
           volumeMounts:
             - name: data
               mountPath: /data

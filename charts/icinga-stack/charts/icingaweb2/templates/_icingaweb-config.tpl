@@ -1,8 +1,6 @@
 ---
 {{- define "icingaweb2.config" -}}
-{{- $auth_admin_password := .Values.auth.admin_password | required ".Values.icingaweb2.auth.admin_password is required." -}}
 {{- if .Values.modules.director.enabled }}
-{{- $global_api_director_password := .Values.global.api.users.director.password | required ".Values.global.api.users.director.password is required." }}
 - name: icingaweb.modules.director.config.db.resource
   value: {{ .Values.global.databases.director.database | quote }}
 {{- if .Values.modules.director.kickstart }}
@@ -13,7 +11,16 @@
 - name: icingaweb.modules.director.kickstart.config.username
   value: director
 - name: icingaweb.modules.director.kickstart.config.password
-  value: {{ $global_api_director_password | quote }}
+{{- if and .Values.global.api.users.director.password .Values.global.api.users.director.password.value }}
+  value: {{ .Values.global.api.users.director.password.value | quote }}
+{{- else if and .Values.global.api.users.secretName .Values.global.api.users.director.password .Values.global.api.users.director.password.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.api.users.secretName | quote }}
+      key: {{ .Values.global.api.users.director.password.secretKey | quote }}
+{{- else }}
+{{ fail "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.secretName and .Values.global.api.users.director.password.secretKey" }}
+{{- end }}
 {{- end }}
 {{- end }}
 - name: icingaweb.authentication.icingaweb2.backend
@@ -21,7 +28,16 @@
 - name: icingaweb.authentication.icingaweb2.resource
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: "icingaweb.passwords.icingaweb2.{{ .Values.auth.admin_user}}"
-  value: {{ $auth_admin_password | quote }}
+{{- if .Values.auth.admin_password.value }}
+  value: {{ .Values.auth.admin_password.value | quote }}
+{{- else if and .Values.auth.admin_password.secretName .Values.auth.admin_password.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.auth.admin_password.secretName | quote }}
+      key: {{ .Values.auth.admin_password.secretKey | quote }}
+{{- else }}
+{{ fail "IcingaWeb2 auth admin password not set. Set either .Values.icingaweb2.auth.admin_password.value or .Values.icingaweb2.auth.admin_password.secretName and .Values.icingaweb2.auth.admin_password.secretKey" }}
+{{- end}}
 - name: icingaweb.config.global.config_resource
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
 - name: icingaweb.groups.icingaweb2.backend
@@ -35,7 +51,6 @@
 - name: icingaweb.roles.Administrators.groups
   value: Administrators
 {{- if .Values.modules.icingadb.enabled }}
-{{- $global_api_users_icingaweb_password := .Values.global.api.users.icingaweb.password | required ".Values.global.api.users.icingaweb.password is required." }}
 - name: icingaweb.modules.icingadb.config.icingadb.resource
   value: {{ .Values.global.databases.icingadb.database | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.host
@@ -51,9 +66,18 @@
 - name: icingaweb.modules.icingadb.commandtransports.icinga2.port
   value: {{ .Values.global.api.port | default 5665 | quote }}
 - name: icingaweb.modules.icingadb.commandtransports.icinga2.username
-  value: {{ .Values.global.api.users.icingaweb.username | quote }}
+  value: "icingaweb"
 - name: icingaweb.modules.icingadb.commandtransports.icinga2.password
-  value: {{ $global_api_users_icingaweb_password | quote }}
+{{- if and .Values.global.api.users.icingaweb.password .Values.global.api.users.icingaweb.password.value }}
+  value: {{ .Values.global.api.users.icingaweb.password.value | quote }}
+{{- else if and .Values.global.api.users.secretName .Values.global.api.users.icingaweb.password .Values.global.api.users.icingaweb.password.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.api.users.secretName | quote }}
+      key: {{ .Values.global.api.users.icingaweb.password.secretKey | quote }}
+{{- else }}
+{{ fail "icingaweb API user password not set. Set either .Values.global.api.users.icingaweb.password.value or .Values.global.api.users.secretName and .Values.global.api.users.icingaweb.password.secretKey" }}
+{{- end }}
 {{- end }}
 {{- if .Values.modules.audit.enabled }}
 - name: icingaweb.modules.audit.config.log.type
@@ -72,10 +96,26 @@
 {{- if .Values.modules.graphite.enabled }}
 - name: icingaweb.modules.graphite.config.graphite.url
   value: {{ .Values.modules.graphite.graphite.url | quote }}
+{{- if and .Values.modules.graphite.graphite.user .Values.modules.graphite.graphite.password }}
 - name: icingaweb.modules.graphite.config.graphite.user
-  value: {{ .Values.modules.graphite.graphite.user | quote }}
+{{- if .Values.modules.graphite.graphite.user.value }}
+  value: {{ .Values.modules.graphite.graphite.user.value | quote }}
+{{- else if and .Values.modules.graphite.graphite.secretName .Values.modules.graphite.graphite.user.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.modules.graphite.graphite.secretName | quote }}
+      key: {{ .Values.modules.graphite.graphite.user.secretKey | quote }}
+{{- end }}
 - name: icingaweb.modules.graphite.config.graphite.password
-  value: {{ .Values.modules.graphite.graphite.password | quote}}
+{{- if .Values.modules.graphite.graphite.password.value }}
+  value: {{ .Values.modules.graphite.graphite.password.value | quote}}
+{{- else if and .Values.modules.graphite.graphite.secretName .Values.modules.graphite.graphite.password.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.modules.graphite.graphite.secretName | quote }}
+      key: {{ .Values.modules.graphite.graphite.password.secretKey | quote }}
+{{- end }}
+{{- end }}
 - name: icingaweb.modules.graphite.config.graphite.insecure
   value: {{ .Values.modules.graphite.graphite.insecure | quote }}
 - name: icingaweb.modules.graphite.config.ui.default_time_range

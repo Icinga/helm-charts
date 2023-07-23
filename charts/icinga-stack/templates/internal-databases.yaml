@@ -1,8 +1,6 @@
 {{- range $resource, $settings := .Values.global.databases -}}
 {{- if $settings.enabled }}
 ---
-{{- $password := $settings.password | required (print ".Values.global.databases." $resource ".password is required.") }}
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -35,9 +33,27 @@ spec:
             - name: MARIADB_DATABASE
               value: {{ $settings.database | default "mysql" | quote}}
             - name: MARIADB_USER
-              value: {{ $settings.username | default "mysql" | quote }}
+              {{- if and $settings.username $settings.username.value }}
+              value: {{ $settings.username.value | quote }}
+              {{- else if and $settings.username $settings.secretName $settings.username.secretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $settings.secretName | quote }}
+                  key: {{ $settings.username.secretKey | quote }}
+              {{- else }}
+              {{ fail (print $resource " username not set. Set either .Values.global.databases." $resource ".username.value or .Values.global.databases." $resource ".secretName and .Values.global.databases." $resource ".username.secretKey") }}
+              {{- end }}
             - name: MARIADB_PASSWORD
-              value: {{ $password | quote }}
+              {{- if and $settings.password $settings.password.value }}
+              value: {{ $settings.password.value | quote }}
+              {{- else if and $settings.password $settings.secretName $settings.password.secretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $settings.secretName | quote }}
+                  key: {{ $settings.password.secretKey | quote }}
+              {{- else }}
+              {{ fail (print $resource " password not set. Set either .Values.global.databases." $resource ".password.value or .Values.global.databases." $resource ".secretName and .Values.global.databases." $resource ".password.secretKey") }}
+              {{- end }}
           volumeMounts:
             {{- if $settings.persistence.enabled }}
             - name: data

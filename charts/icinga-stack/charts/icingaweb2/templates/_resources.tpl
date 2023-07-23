@@ -15,9 +15,27 @@
 - name: icingaweb.resources.{{ $settings.database }}.dbname
   value: {{ $settings.database}}
 - name: icingaweb.resources.{{ $settings.database }}.username
-  value: {{ $settings.username | default "mysql"}}
+  {{- if and $settings.username $settings.username.value }}
+  value: {{ $settings.username.value | quote }}
+  {{- else if and $settings.username $settings.secretName $settings.username.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $settings.secretName | quote }}
+      key: {{ $settings.username.secretKey | quote }}
+  {{- else }}
+  value: "mysql"
+  {{- end }}
 - name: icingaweb.resources.{{ $settings.database }}.password
-  value: {{ $settings.password | default "mysql" }}
+  {{- if and $settings.password $settings.password.value }}
+  value: {{ $settings.password.value | quote }}
+  {{- else if and $settings.password $settings.secretName $settings.password.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $settings.secretName | quote }}
+      key: {{ $settings.password.secretKey | quote }}
+  {{- else }}
+  value: "mysql"
+  {{- end }}
 {{- if eq $resource "director" }}
 - name: icingaweb.resources.{{ $settings.database }}.charset
   value: utf8

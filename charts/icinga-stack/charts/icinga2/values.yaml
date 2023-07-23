@@ -30,7 +30,10 @@ ingress:
 config:
   node_name: icinga2-master
   zone_name: master
-  ticket_salt:  # Add a random (long!) string here
+  ticket_salt:
+    value: # Add random (long!) string here
+    secretName: # Or use existing secret
+    secretKey:
   disable_confd: true
 
 features:
@@ -82,8 +85,13 @@ features:
     # enable_send_perfdata: false
     # flush_threshold: 1024
     # flush_interval: 10s
-    # username: elastic
-    # password: password
+    # secretName: icinga-elasticsearch-secret # used for username and password
+    # username:
+    #   value: elastic # Specify username
+    #   secretKey: username # Or use existing secret
+    # password:
+    #    value: password # Specify password
+    #    secretKey: password # Or use existing secret
     # enable_tls: false
     # insecure_noverify: false
     # ca_path: /etc/icinga2/pki/elastic-ca.crt
@@ -134,7 +142,10 @@ features:
     # port: 8086
     # organization: monitoring
     # bucket: icinga2
-    # auth_token: securitytoken
+    # auth_token:
+    #   value: securitytoken # Specify auth token value
+    #   secretName: secretName # Or use existing secret
+    #   secretKey: secretKey
     # ssl_enable: false
     # ssl_insecure_noverify: false
     # ssl_ca_cert: /etc/icinga2/pki/influxdb2-ca.crt
@@ -166,11 +177,20 @@ features:
     # host: influx
     # port: 8086
     # database: icinga2
-    # username: none
-    # password: password
+    # secretName: # existing secret used for influxdb credentials and basic_auth credentials
+    # username:
+    #   value: # Specify username
+    #   secretKey: # Or use existing secret
+    # password:
+    #   value: # Specify password
+    #   secretKey: # Or use existing secret
     # basic_auth:
-    #   username: icinga2
-    #   password: icinga2
+    #   username:
+    #     value: # Specify username
+    #     secretKey: # Or use existing secret
+    #   password:
+    #     value: # Specify password
+    #     secretKey: # Or use existing secret
     # ssl_enable: false
     # ssl_insecure_noverify: false
     # ssl_ca_cert: /etc/icinga2/pki/influxdb-ca.crt

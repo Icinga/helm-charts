@@ -35,13 +35,16 @@ Once the repository is known to your Helm installation, you can install Icinga2 
 
 ```console
 helm install <release-name> \
-  --set icinga2.config.ticket_salt=CHANGE-ME
-  --set icingaweb2.auth.admin_password=CHANGE-ME
-  --set global.api.users.director.password=CHANGE-ME
-  --set global.api.users.icingaweb.password=CHANGE-ME
-  --set global.databases.director.password=CHANGE-ME
-  --set global.databases.icingaweb2.password=CHANGE-ME
-  --set global.databases.icingadb.password=CHANGE-ME
+  --set icinga2.config.ticket_salt.value=CHANGE-ME \
+  --set icingaweb2.auth.admin_password.value=CHANGE-ME \
+  --set global.api.users.director.password.value=CHANGE-ME \
+  --set global.api.users.icingaweb.password.value=CHANGE-ME \
+  --set global.databases.director.username.value=CHANGE-ME \
+  --set global.databases.director.password.value=CHANGE-ME \
+  --set global.databases.icingaweb2.username.value=CHANGE-ME \
+  --set global.databases.icingaweb2.password.value=CHANGE-ME \
+  --set global.databases.icingadb.username.value=CHANGE-ME \
+  --set global.databases.icingadb.password.value=CHANGE-ME \
 icinga/icinga-stack
 ```
 

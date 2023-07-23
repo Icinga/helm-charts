@@ -14,3 +14,55 @@ tests:
       - equal:
           path: metadata.name
           value: my-icinga-icingadb
+
+  - it: deploys an IcingaDB deployment using values
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingadb
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGADB_DATABASE_USER
+            value: icingadb
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGADB_DATABASE_PASSWORD
+            value: insecureicingadbpassword
+
+  - it: deploys an IcingaDB deployment using secrets
+    values:
+      - required_values_secrets.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icingadb
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGADB_DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: database-icingadb
+                key: username
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGADB_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: database-icingadb
+                key: password

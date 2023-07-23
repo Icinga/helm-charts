@@ -11,12 +11,13 @@ data:
   {{- if .Values.features.api.enabled }}
   api-users.conf: |
     {{- range $user, $settings := .Values.global.api.users }}
-    {{- $password := $settings.password | required (print ".Values.global.api" $user ".password is required.") }}
+    {{- if ne $user "secretName" }} # skip key secretName
     {{- $permissions := $settings.permissions | default (list "*") }}
     object ApiUser {{ $user | quote }} {
-      password = {{ $password | quote }}
+      password = getenv("{{ print "ICINGA_" $user "_API_PASSWORD" | upper }}")
       permissions = {{ print "[\"" (join "\"," $settings.permissions) "\"]" }}
     }
+    {{- end }}
     {{- end }}
   {{- end }}
 ---
@@ -83,10 +84,10 @@ data:
       flush_threshold = {{ .Values.features.elasticsearch.flush_threshold | default 1024 }}
       flush_interval = {{ .Values.features.elasticsearch.flush_interval | default "10s" }}
       {{- if .Values.features.elasticsearch.username }}
-      username = {{ .Values.features.elasticsearch.username | quote }}
+      username = getenv("ICINGA_ELASTICSEARCH_USERNAME")
       {{- end }}
       {{- if .Values.features.elasticsearch.password }}
-      password = {{ .Values.features.elasticsearch.password | quote }}
+      password = getenv("ICINGA_ELASTICSEARCH_PASSWORD")
       {{- end }}
       enable_tls = {{ .Values.features.elasticsearch.enable_tls | default "false" }}
       insecure_noverify = {{ .Values.features.elasticsearch.insecure_noverify | default "false" }}
@@ -168,7 +169,7 @@ data:
       port = {{ .Values.features.influxdb2.port | default 8086 }}
       organization = {{ .Values.features.influxdb2.organization | default "monitoring" | quote }}
       bucket = {{ .Values.features.influxdb2.bucket | default "icinga2" | quote }}
-      auth_token = {{ .Values.features.influxdb2.auth_token | quote }}
+      auth_token = getenv("ICINGA_INFLUXDB2_AUTH_TOKEN")
       flush_threshold = {{ .Values.features.influxdb2.flush_threshold | default 1024 }}
       flush_interval = {{ .Values.features.influxdb2.flush_interval | default "10s" }}
       {{- if .Values.features.influxdb2.host_template }}
@@ -207,12 +208,14 @@ data:
       {{- if .Values.features.influxdb.service_template }}
       {{ .Values.features.influxdb.service_template | indent 6}}
       {{- end -}}
-      username = {{ .Values.features.influxdb.username | quote }}
-      password = {{ .Values.features.influxdb.password | quote }}
-      {{- if .Values.features.influxdb.basic_auth }}
+      {{- if and .Values.features.influxdb.username .Values.features.influxdb.password }}
+      username = getenv("ICINGA_INFLUXDB_USERNAME")
+      password = getenv("ICINGA_INFLUXDB_PASSWORD")
+      {{- end }}
+      {{- if and .Values.features.influxdb.basic_auth .Values.features.influxdb.basic_auth.username .Values.features.influxdb.basic_auth.password }}
       basic_auth = {
-        username = {{ .Values.features.influxdb.basic_auth.username | quote }}
-        password = {{ .Values.features.influxdb.basic_auth.password | quote }}
+        username = getenv("ICINGA_INFLUXDB_BASIC_AUTH_USERNAME")
+        password = getenv("ICINGA_INFLUXDB_BASIC_AUTH_PASSWORD")
       }
       {{- end }}
       ssl_enable = {{ .Values.features.influxdb.ssl_enable | default "false" }}

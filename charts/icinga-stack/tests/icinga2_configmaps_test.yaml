@@ -1,0 +1,159 @@
+suite: "[Icinga2] Configmaps"
+templates:
+  - ../charts/icinga2/templates/configmaps.yaml
+tests:
+  - it: Icinga2 configmap ticket_salt and api-users test
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["icinga2.conf"]
+          pattern: const TicketSalt = getenv\("ICINGA_TICKET_SALT"\)
+        documentIndex: 0
+      - matchRegex:
+          path: data["api-users.conf"]
+          pattern: password = getenv\("ICINGA_DIRECTOR_API_PASSWORD"\)
+        documentIndex: 0
+      - matchRegex:
+          path: data["api-users.conf"]
+          pattern: password = getenv\("ICINGA_ICINGAWEB_API_PASSWORD"\)
+        documentIndex: 0
+
+  - it: Icinga2 configmap elasticsearch test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          elasticsearch:
+            enabled: true
+            secretName: icinga-elasticsearch
+            username:
+              secretKey: elastic-username
+            password:
+              secretKey: elastic-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: username = getenv\("ICINGA_ELASTICSEARCH_USERNAME"\)
+        documentIndex: 1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: password = getenv\("ICINGA_ELASTICSEARCH_PASSWORD"\)
+        documentIndex: 1
+
+  - it: Icinga2 configmap influxdb2 test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb2:
+            enabled: true
+            auth_token:
+              secretName: icinga-influxdb2
+              secretKey: authToken
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["influxdb2.conf"]
+          pattern: auth_token = getenv\("ICINGA_INFLUXDB2_AUTH_TOKEN"\)
+        documentIndex: 1
+
+  - it: Icinga2 configmap influxdb credentials from secret
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb:
+            enabled: true
+            secretName: icinga-influxdb
+            username:
+              secretKey: influxdb-username
+            password:
+              secretKey: influxdb-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: username = getenv\("ICINGA_INFLUXDB_USERNAME"\)
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: password = getenv\("ICINGA_INFLUXDB_PASSWORD"\)
+        documentIndex: 1
+
+  - it: Icinga2 configmap influxdb credentials from value
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb:
+            enabled: true
+            username:
+              value: influxdb-username
+            password:
+              value: influxdb-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: username = getenv\("ICINGA_INFLUXDB_USERNAME"\)
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: password = getenv\("ICINGA_INFLUXDB_PASSWORD"\)
+        documentIndex: 1
+        
+  - it: Icinga2 configmap influxdb basic auth credentials from secret
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb:
+            enabled: true
+            secretName: icinga-influxdb
+            basic_auth:
+              username:
+                secretKey: influxdb-basic-auth-username
+              password:
+                secretKey: influxdb-basic-auth-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: username = getenv\("ICINGA_INFLUXDB_BASIC_AUTH_USERNAME"\)
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: password = getenv\("ICINGA_INFLUXDB_BASIC_AUTH_PASSWORD"\)
+        documentIndex: 1
