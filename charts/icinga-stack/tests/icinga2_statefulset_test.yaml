@@ -2,7 +2,7 @@ suite: "[Icinga2] StatefulSet"
 templates:
   - ../charts/icinga2/templates/statefulset.yaml
 tests:
-  - it: deploys an Icinga2 StatefulSet without persistence
+  - it: deploys an Icinga2 StatefulSet without persistence and with ticket_salt provided as value
     values:
       - required_values.yaml
     release:
@@ -22,12 +22,131 @@ tests:
           any: true
       - isNull:
           path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_TICKET_SALT
+            value: "insecuresalt"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_DIRECTOR_API_PASSWORD
+            value: "director-insecurepassword"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_ICINGAWEB_API_PASSWORD
+            value: "icingaweb-insecurepassword"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_TICKET_SALT
+            value: "insecuresalt"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_DIRECTOR_API_PASSWORD
+            value: "director-insecurepassword"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_ICINGAWEB_API_PASSWORD
+            value: "icingaweb-insecurepassword"
+
+  - it: deploys an Icinga2 StatefulSet without persistence and with ticket_salt provided as secret
+    values:
+      - required_values_secrets.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_TICKET_SALT
+            valueFrom:
+              secretKeyRef:
+                name: "icinga2-secret"
+                key: "ticket_salt"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_DIRECTOR_API_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "api-users"
+                key: "director-password"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_ICINGAWEB_API_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "api-users"
+                key: "icingaweb-password"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_TICKET_SALT
+            valueFrom:
+              secretKeyRef:
+                name: "icinga2-secret"
+                key: "ticket_salt"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_DIRECTOR_API_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "api-users"
+                key: "director-password"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_ICINGAWEB_API_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "api-users"
+                key: "icingaweb-password"
+
+  - it: failed deployment of Icinga2 StatefulSet due to partial secret definition
+    values:
+      - required_values_secrets.yaml
+    set:
+      global:
+        api:
+          users:
+            secretName: api-users
+            director:
+              password:
+            icingaweb:
+              password:
+                secretKey: icingaweb-password
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.secretName and .Values.global.api.users.director.password.secretKey"
   
   - it: deploys an Icinga2 StatefulSet with persistence
     values:
       - required_values.yaml
     set:
       icinga2.persistence.enabled: true
+      icinga2.config.ticket_salt.value: "insecuresalt"
     release:
       name: my-icinga
     asserts:
@@ -56,3 +175,331 @@ tests:
             name: data
             emptyDir: {}
           any: true
+
+  - it: failed deployment of an Icinga2 StatefulSet due to missing ticket_salt
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "Icinga TicketSalt not set. Either set .Values.config.ticket_salt.value or .Values.config.ticket_salt.secretName and .Values.config.ticket_salt.secretKey"
+
+  - it: deploys an Icinga2 StatefulSet with elasticsearch values
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          elasticsearch:
+            enabled: true
+            username:
+              value: elastic-username
+            password:
+              value: elastic-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_ELASTICSEARCH_USERNAME
+            value: "elastic-username"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_ELASTICSEARCH_PASSWORD
+            value: "elastic-password"
+
+  - it: deploys an Icinga2 StatefulSet with elasticsearch secrets
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          elasticsearch:
+            enabled: true
+            secretName: icinga-elasticsearch
+            username:
+              secretKey: elastic-username
+            password:
+              secretKey: elastic-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_ELASTICSEARCH_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-elasticsearch"
+                key: "elastic-username"
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: ICINGA_ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-elasticsearch"
+                key: "elastic-password"
+
+  - it: deploys an Icinga2 StatefulSet with influxdb2 values
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          influxdb2:
+            enabled: true
+            auth_token:
+              value: influxdb2_auth_token
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB2_AUTH_TOKEN
+            value: "influxdb2_auth_token"
+
+  - it: deploys an Icinga2 StatefulSet with influxdb2 secrets
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          influxdb2:
+            enabled: true
+            auth_token:
+              secretName: icinga-influxdb2
+              secretKey: authToken
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB2_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-influxdb2"
+                key: "authToken"
+
+  - it: failed deployment of an Icinga2 StatefulSet with influxdb2 due to missing auth_token
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          influxdb2:
+            enabled: true
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "Icinga InfluxDB2 auth_token not set. Either set .Values.features.influxdb2.auth_token.value or .Values.features.influxdb2.auth_token.secretName and .Values.features.influxdb2.auth_token.secretKey"
+
+  - it: deploys an Icinga2 StatefulSet with influxdb values
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          influxdb:
+            enabled: true
+            username:
+              value: influxdb-username
+            password:
+              value: influxdb-password
+            basic_auth:
+              username:
+                value: influxdb-basic-auth-username
+              password:
+                value: influxdb-basic-auth-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_USERNAME
+            value: "influxdb-username"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_PASSWORD
+            value: "influxdb-password"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_BASIC_AUTH_USERNAME
+            value: "influxdb-basic-auth-username"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_BASIC_AUTH_PASSWORD
+            value: "influxdb-basic-auth-password"
+            
+  - it: deploys an Icinga2 StatefulSet with influxdb secrets
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        config:
+          ticket_salt:
+            value: "insecuresalt"
+        features:
+          influxdb:
+            enabled: true
+            secretName: icinga-influxdb
+            username:
+              secretKey: username
+            password:
+              secretKey: password
+            basic_auth:
+              username:
+                secretKey: basic-auth-username
+              password:
+                secretKey: basic-auth-password
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga2
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+          any: true
+      - isNull:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-influxdb"
+                key: "username"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-influxdb"
+                key: "password"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_BASIC_AUTH_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-influxdb"
+                key: "basic-auth-username"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ICINGA_INFLUXDB_BASIC_AUTH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "icinga-influxdb"
+                key: "basic-auth-password"

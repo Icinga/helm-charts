@@ -34,7 +34,10 @@ auth:
   type: db
   #resource: # Add the name of the db resource used by Icinga Web 2 here
   admin_user: icingaweb
-  admin_password:  # Add a password here
+  admin_password:
+    value: # Add a password here
+    secretName: # Or use existing secret
+    secretKey:
 
 modules:
   audit:
@@ -61,8 +64,13 @@ modules:
     enabled: false
     graphite:
       url: graphite.example.com
-      user: graphite
-      password: password
+      secretName: # Existing secret used for user and password
+      user:
+        value: # Specify username
+        secretKey: # Or use existing secret
+      password:
+        value: # Specify password
+        secretKey: # Or use existing secret
       insecure: 1
     ui:
       default_time_range: 1
