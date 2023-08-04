@@ -25,7 +25,7 @@
 {{- end }}
 {{- end }}
 {{- end }}
-{{- if and .Values.features.elasticsearch.enabled (or (.Values.features.elasticsearch.username.value) (and .Values.features.elasticsearch.secretName .Values.features.elasticsearch.username.secretKey)) }}
+{{- if and .Values.features.elasticsearch.enabled .Values.features.elasticsearch.username (or (.Values.features.elasticsearch.username.value) (and .Values.features.elasticsearch.secretName .Values.features.elasticsearch.username.secretKey)) }}
 - name: ICINGA_ELASTICSEARCH_USERNAME
   {{- if .Values.features.elasticsearch.username.value }}
   value: {{ .Values.features.elasticsearch.username.value | quote }}
@@ -36,7 +36,7 @@
       key: {{ .Values.features.elasticsearch.username.secretKey  | quote }}
   {{- end }}
 {{- end }}
-{{- if and .Values.features.elasticsearch.enabled (or (.Values.features.elasticsearch.password.value) (and .Values.features.elasticsearch.secretName .Values.features.elasticsearch.password.secretKey)) }}
+{{- if and .Values.features.elasticsearch.enabled .Values.features.elasticsearch.password (or (.Values.features.elasticsearch.password.value) (and .Values.features.elasticsearch.secretName .Values.features.elasticsearch.password.secretKey)) }}
 - name: ICINGA_ELASTICSEARCH_PASSWORD
   {{- if .Values.features.elasticsearch.password.value }}
   value: {{ .Values.features.elasticsearch.password.value | quote }}
@@ -47,17 +47,30 @@
       key: {{ .Values.features.elasticsearch.password.secretKey  | quote }}
   {{- end }}
 {{- end }}
+{{- if and .Values.features.icingadb.enabled .Values.features.icingadb.password }}
+- name: ICINGA_ICINGADB_PASSWORD
+{{- if .Values.features.icingadb.password.value }}
+  value: {{ .Values.features.icingadb.password.value | quote }}
+{{- else if and .Values.features.icingadb.secretName .Values.features.icingadb.password.secretKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.features.icingadb.secretName | quote }}
+      key: {{ .Values.features.icingadb.password.secretKey  | quote }}
+{{- else }}
+  {{ fail "icingadb password partially set. Set either .Values.features.icingadb.password.value or .Values.features.icingadb.secretName and .Values.features.icingadb.password.secretKey" }}
+{{- end }}
+{{- end }}
 {{- if .Values.features.influxdb2.enabled }}
 - name: ICINGA_INFLUXDB2_AUTH_TOKEN
   {{- if and .Values.features.influxdb2.auth_token .Values.features.influxdb2.auth_token.value }}
   value: {{ .Values.features.influxdb2.auth_token.value | quote }}
-  {{- else if and .Values.features.influxdb2.auth_token .Values.features.influxdb2.auth_token.secretName .Values.features.influxdb2.auth_token.secretKey }}
+  {{- else if and .Values.features.influxdb2.auth_token .Values.features.influxdb2.secretName .Values.features.influxdb2.auth_token.secretKey }}
   valueFrom:
     secretKeyRef:
-      name: {{ .Values.features.influxdb2.auth_token.secretName | quote }}
+      name: {{ .Values.features.influxdb2.secretName | quote }}
       key: {{ .Values.features.influxdb2.auth_token.secretKey  | quote }}
   {{- else }}
-    {{ fail "Icinga InfluxDB2 auth_token not set. Either set .Values.features.influxdb2.auth_token.value or .Values.features.influxdb2.auth_token.secretName and .Values.features.influxdb2.auth_token.secretKey" }}
+    {{ fail "Icinga InfluxDB2 auth_token not set. Either set .Values.features.influxdb2.auth_token.value or .Values.features.influxdb2.secretName and .Values.features.influxdb2.auth_token.secretKey" }}
   {{- end }}
 {{- end }}
 {{- if .Values.features.influxdb.enabled }}

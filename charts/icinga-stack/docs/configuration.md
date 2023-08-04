@@ -10,6 +10,8 @@ For configuration of IcingaWeb2's different **modules**, please see the section 
 
 Sensible values can be set directly using `.value` key or by using Kubernetes secrets. Values that can be configured using secrets have parameters holding secret name and key listed in tables below.
 
+Certificates used by Icinga features are projected in containers using kubernetes secrets. Please see [values.yaml](../values.yaml) for configuration.
+
 ### Required values
 
 These values **must** be set for the chart to install successfully. Therefore, no defaults are provided. Installation will fail if these values are not set.
