@@ -51,6 +51,7 @@ spec:
               mountPath: /etc/icinga2/features-enabled
             - name: {{ include "icinga2.fullname" . }}-config
               mountPath: /etc/icinga2
+            {{- include "icinga2.secretMounts" . | indent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       initContainers:
@@ -75,6 +76,7 @@ spec:
               {{- if .Values.persistence.subPath }}
               subPath: {{ .Values.persistence.subPath }}
               {{- end }}
+            {{- include "icinga2.secretMounts" . | indent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -88,6 +90,7 @@ spec:
         - name: data
           emptyDir: {}
         {{- end }}
+        {{- include "icinga2.secretVolumes" . | indent 8 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

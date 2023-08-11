@@ -32,7 +32,7 @@ tests:
         features:
           elasticsearch:
             enabled: true
-            secretName: icinga-elasticsearch
+            credSecret: icinga-elasticsearch
             username:
               secretKey: elastic-username
             password:
@@ -52,6 +52,321 @@ tests:
           pattern: password = getenv\("ICINGA_ELASTICSEARCH_PASSWORD"\)
         documentIndex: 1
 
+  - it: Icinga2 configmap elasticsearch tls test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          elasticsearch:
+            enabled: true
+            credSecret: icinga-elasticsearch-creds
+            tlsSecret: icinga-elasticsearch-certs
+            username:
+              secretKey: elastic-username
+            password:
+              secretKey: elastic-password
+            enable_tls: true
+            caSecretKey: elastic-ca-key
+            certSecretKey: elastic-cert-key
+            keySecretKey: elastic-key-key
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: username = getenv\("ICINGA_ELASTICSEARCH_USERNAME"\)
+        documentIndex: 1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: password = getenv\("ICINGA_ELASTICSEARCH_PASSWORD"\)
+        documentIndex: 1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: ca_path = "/etc/icinga2-pki/elastic/ca.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: cert_path = "/etc/icinga2-pki/elastic/cert.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["elasticsearch.conf"]
+          pattern: key_path = "/etc/icinga2-pki/elastic/cert.key"
+        documentIndex: 1
+
+  - it: Icinga2 configmap elasticsearch tls failure
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          elasticsearch:
+            enabled: true
+            tlsSecret: icinga-elasticsearch-certs
+            username:
+              secretKey: elastic-username
+            password:
+              secretKey: elastic-password
+            enable_tls: true
+            caSecretKey: elastic-ca-key
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "Elasticsearch cert secrets not set. Set .Values.features.elasticsearch.tlsSecret, .Values.features.elasticsearch.caSecretKey, .Values.features.elasticsearch.certSecretKey and .Values.features.elasticsearch.keySecretKey"
+
+  - it: Icinga2 configmap gelf tls test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          gelf:
+            enabled: true
+            tlsSecret: icinga-gelf
+            enable_tls: true
+            caSecretKey: gelf-ca-key
+            certSecretKey: gelf-cert-key
+            keySecretKey: gelf-key-key
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["gelf.conf"]
+          pattern: ca_path = "/etc/icinga2-pki/gelf/ca.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["gelf.conf"]
+          pattern: cert_path = "/etc/icinga2-pki/gelf/cert.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["gelf.conf"]
+          pattern: key_path = "/etc/icinga2-pki/gelf/cert.key"
+        documentIndex: 1
+
+  - it: Icinga2 configmap gelf tls failure
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          gelf:
+            enabled: true
+            tlsSecret: icinga-gelf
+            enable_tls: true
+            caSecretKey: gelf-gelf-key
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "GELF cert secrets not set. Set .Values.features.gelf.tlsSecret, .Values.features.gelf.caSecretKey, .Values.features.gelf.certSecretKey and .Values.features.gelf.keySecretKey"
+
+  - it: Icinga2 configmap icingadb test without password
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          icingadb:
+            enabled: true
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["icingadb.conf"]
+          pattern: password = getenv\("ICINGA_ICINGADB_PASSWORD"\)
+        documentIndex: 1
+        not: true
+
+  - it: Icinga2 configmap icingadb test with password
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          icingadb:
+            enabled: true
+            credSecret: icinga-icingadb-secret
+            password:
+              secretKey: password-key
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["icingadb.conf"]
+          pattern: password = getenv\("ICINGA_ICINGADB_PASSWORD"\)
+        documentIndex: 1
+
+  - it: Icinga2 configmap icingadb tls test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          icingadb:
+            enabled: true
+            tlsSecret: icinga-icingadb
+            enable_tls: true
+            caSecretKey: icingadb-ca-key
+            certSecretKey: icingadb-cert-key
+            keySecretKey: icingadb-key-key
+            crlSecretKey: icingadb-crl-key
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["icingadb.conf"]
+          pattern: ca_path = "/etc/icinga2-pki/icingadb/ca.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["icingadb.conf"]
+          pattern: cert_path = "/etc/icinga2-pki/icingadb/cert.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["icingadb.conf"]
+          pattern: key_path = "/etc/icinga2-pki/icingadb/cert.key"
+        documentIndex: 1
+      - matchRegex:
+          path: data["icingadb.conf"]
+          pattern: crl_path = "/etc/icinga2-pki/icingadb/crl.pem"
+        documentIndex: 1
+
+  - it: Icinga2 configmap icingadb tls failure
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          icingadb:
+            enabled: true
+            tlsSecret: icinga-icingadb
+            enable_tls: true
+            caSecretKey: icingadb-ca-key
+            keySecretKey: icingadb-key-key
+            crlSecretKey: icingadb-crl-key
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "icingadb cert secrets not set. Set .Values.features.icingadb.tlsSecret, .Values.features.icingadb.caSecretKey, .Values.features.icingadb.certSecretKey, .Values.features.icingadb.keySecretKey and .Values.features.icingadb.crlSecretKey"
+
+  - it: Icinga2 configmap influxdb2 ssl test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb2:
+            enabled: true
+            tlsSecret: icinga-influxdb2
+            ssl_enable: true
+            caSecretKey: influxdb2-ca-key
+            certSecretKey: influxdb2-cert-key
+            keySecretKey: influxdb2-key-key
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["influxdb2.conf"]
+          pattern: ssl_ca_cert = "/etc/icinga2-pki/influxdb2/ca.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb2.conf"]
+          pattern: ssl_cert = "/etc/icinga2-pki/influxdb2/cert.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb2.conf"]
+          pattern: ssl_key = "/etc/icinga2-pki/influxdb2/cert.key"
+        documentIndex: 1
+
+  - it: Icinga2 configmap influxdb2 tls failure
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb2:
+            enabled: true
+            tlsSecret: icinga-influxdb2
+            ssl_enable: true
+            caSecretKey: influxdb2-ca-key
+            keySecretKey: influxdb2-key-key
+            crlSecretKey: influxdb2-crl-key
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "influxdb2 cert secrets not set. Set .Values.features.influxdb2.tlsSecret, .Values.features.influxdb2.caSecretKey, .Values.features.influxdb2.certSecretKey and .Values.features.influxdb2.keySecretKey"
+
+  - it: Icinga2 configmap influxdb ssl test
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb:
+            enabled: true
+            tlsSecret: icinga-influxdb
+            ssl_enable: true
+            caSecretKey: influxdb-ca-key
+            certSecretKey: influxdb-cert-key
+            keySecretKey: influxdb-key-key
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: ssl_ca_cert = "/etc/icinga2-pki/influxdb/ca.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: ssl_cert = "/etc/icinga2-pki/influxdb/cert.crt"
+        documentIndex: 1
+      - matchRegex:
+          path: data["influxdb.conf"]
+          pattern: ssl_key = "/etc/icinga2-pki/influxdb/cert.key"
+        documentIndex: 1
+
+  - it: Icinga2 configmap influxdb tls failure
+    values:
+      - required_values.yaml
+    set:
+      icinga2:
+        features:
+          influxdb:
+            enabled: true
+            tlsSecret: icinga-influxdb
+            ssl_enable: true
+            caSecretKey: influxdb-ca-key
+            keySecretKey: influxdb-key-key
+            crlSecretKey: influxdb-crl-key
+    release:
+      name: my-icinga
+    asserts:
+      - failedTemplate:
+          errorMessage: "influxdb cert secrets not set. Set .Values.features.influxdb.tlsSecret, .Values.features.influxdb.caSecretKey, .Values.features.influxdb.certSecretKey and .Values.features.influxdb.keySecretKey"
+
   - it: Icinga2 configmap influxdb2 test
     values:
       - required_values.yaml
@@ -61,7 +376,7 @@ tests:
           influxdb2:
             enabled: true
             auth_token:
-              secretName: icinga-influxdb2
+              tlsSecret: icinga-influxdb2
               secretKey: authToken
     release:
       name: my-icinga
@@ -82,7 +397,7 @@ tests:
         features:
           influxdb:
             enabled: true
-            secretName: icinga-influxdb
+            credSecret: icinga-influxdb
             username:
               secretKey: influxdb-username
             password:
@@ -137,7 +452,7 @@ tests:
         features:
           influxdb:
             enabled: true
-            secretName: icinga-influxdb
+            credSecret: icinga-influxdb
             basic_auth:
               username:
                 secretKey: influxdb-basic-auth-username

@@ -10,6 +10,8 @@ For configuration of IcingaWeb2's different **modules**, please see the section 
 
 Sensible values can be set directly using `.value` key or by using Kubernetes secrets. Values that can be configured using secrets have parameters holding secret name and key listed in tables below.
 
+Certificates used by Icinga features are projected in containers using kubernetes secrets. Please see [values.yaml](../values.yaml) for configuration.
+
 ### Required values
 
 These values **must** be set for the chart to install successfully. Therefore, no defaults are provided. Installation will fail if these values are not set.
@@ -18,10 +20,10 @@ The values can be set in the chart's `values.yaml` file or via the `--set` flag 
 
 | Parameter | Description | Remarks | Kubernetes secret parameters |
 | --------- | ----------- | ------- | ---------------------------- |
-| `icinga2.config.ticket_salt.value` | Salt used to generate API tickets for satellites and agents | - | `icinga2.config.ticket_salt.secretName`, `icinga2.config.ticket_salt.secretKey` |
-| `icingaweb2.auth.admin_password.value` | Password for the Icinga Web 2 admin user | Only needs to be set if Icingaweb2 is `enabled` | `icingaweb2.auth.admin_password.secretName`, `icingaweb2.auth.admin_password.secretKey` |
-| `global.api.users.director.password.value` | Password for the Icinga Director API user | Only needs to be set if Director is `enabled` | `global.api.users.secretName`, `global.api.users.director.password.secretKey` |
-| `global.api.users.icingaweb.password.value` | Password for the Icingaweb2 API user| Only needs to be set if Icingaweb2 is `enabled` | `global.api.users.secretName`, `global.api.users.icingaweb.password.secretKey` |
+| `icinga2.config.ticket_salt.value` | Salt used to generate API tickets for satellites and agents | - | `icinga2.config.ticket_salt.credSecret`, `icinga2.config.ticket_salt.secretKey` |
+| `icingaweb2.auth.admin_password.value` | Password for the Icinga Web 2 admin user | Only needs to be set if Icingaweb2 is `enabled` | `icingaweb2.auth.admin_password.credSecret`, `icingaweb2.auth.admin_password.secretKey` |
+| `global.api.users.director.password.value` | Password for the Icinga Director API user | Only needs to be set if Director is `enabled` | `global.api.users.credSecret`, `global.api.users.director.password.secretKey` |
+| `global.api.users.icingaweb.password.value` | Password for the Icingaweb2 API user| Only needs to be set if Icingaweb2 is `enabled` | `global.api.users.credSecret`, `global.api.users.icingaweb.password.secretKey` |
 
 ### Global values
 
@@ -34,8 +36,8 @@ These values are used by multiple (sub-)charts and therefore need to be set in t
 | `global.api.users.director.permissions` | Permissions of the Icinga2 API user for Director | `[]string` | `["*"]` |
 | `global.api.users.icingaweb.permissions` | Permissions of the Icinga2 API user for Icingaweb2 | `[]string` | `["*"]` |
 | `global.databases.<database>.database` | Name of the respective database | `string` | `<database>db`|
-| `global.databases.<database>.username.value` | Username for the respective database. Can be set from secret defined by `global.databases.<database>.secretName` and `global.databases.<database>.username.secretKey` | `string` | **not set** |  |
-| `global.databases.<database>.password.value` | Password for the respective database. Can be set from secret defined by `global.databases.<database>.secretName` and `global.databases.<database>.password.secretKey` | `string` | **not set** |  |
+| `global.databases.<database>.username.value` | Username for the respective database. Can be set from secret defined by `global.databases.<database>.credSecret` and `global.databases.<database>.username.secretKey` | `string` | **not set** |  |
+| `global.databases.<database>.password.value` | Password for the respective database. Can be set from secret defined by `global.databases.<database>.credSecret` and `global.databases.<database>.password.secretKey` | `string` | **not set** |  |
 | `global.databases.<database>.enabled` | Whether or not the database should get deployed in-cluster | `boolean` | **varies** |
 | `global.databases.<database>.host` | Hostname of the respective database | `string` | **not set** |
 | `global.databases.<database>.port` | Port of the respective database | `number` | `3306` |
@@ -76,7 +78,7 @@ These values are used by the Icinga2 sub-chart. For configuration of Icinga2's d
 | `icinga2.config.node_name` | Name of the Icinga2 node | `string` | `icinga2-master` |
 | `icinga2.config.zone_name` | Name of the Icinga2 zone | `string` | `master` |
 | `icinga2.config.disable_confd` | Disables the `include_recursive "conf.d"` directive in icinga2.conf | `boolean` | `true` |
-| `icinga2.config.ticket_salt.value` | Salt used to generate API tickets for satellites and agents. Can be set from secret specified in `icinga2.config.ticket_salt.secretName` and `icinga2.config.ticket_salt.secretKey` | `string` | **not set** |
+| `icinga2.config.ticket_salt.value` | Salt used to generate API tickets for satellites and agents. Can be set from secret specified in `icinga2.config.ticket_salt.credSecret` and `icinga2.config.ticket_salt.secretKey` | `string` | **not set** |
 | `icinga2.features.<feature>.enabled` | Whether or not the respective feature should be enabled | `boolean` | **varies** |
 | `icinga2.persistence.enabled` | Whether or not the Icinga2 deployment should use a persistent volume | `boolean` | `false` |
 | `icinga2.persistence.size` | Size of the persistent volume | `string` | `5Gi` |
@@ -146,7 +148,7 @@ These values are used by the IcingaWeb2 sub-chart. For configuration of Icingawe
 | `icingaweb2.ingress.tls[].secretName` | Secret name of the IcingaWeb2 ingress | `string` | **not set** |
 | `icingaweb2.auth.type` | Type of the IcingaWeb2 authentication | `string` | `db` |
 | `icingaweb2.auth.admin_user` | Admin user of the IcingaWeb2 authentication | `string` | `icingaweb` |
-| `icingaweb2.auth.admin_password.value` | Admin password of the IcingaWeb2 authentication. Can be set from secret specified in `icingaweb2.auth.admin_password.secretName` and `icingaweb2.auth.admin_password.secretKey` | `string` | **not set** |
+| `icingaweb2.auth.admin_password.value` | Admin password of the IcingaWeb2 authentication. Can be set from secret specified in `icingaweb2.auth.admin_password.credSecret` and `icingaweb2.auth.admin_password.secretKey` | `string` | **not set** |
 | `icingaweb2.modules.<module>.enabled` | Whether or not to enable the IcingaWeb2 module | `boolean` | **varies** |
 | `icingaweb2.resources` | Resources of the IcingaWeb2 deployment | `map[string]string` | `{}` |
 | `icingaweb2.nodeSelector` | Node selector of the IcingaWeb2 deployment | `map[string]string` | `{}` |

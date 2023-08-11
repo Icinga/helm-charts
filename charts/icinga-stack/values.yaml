@@ -33,7 +33,7 @@ icinga2:
     zone_name: master
     ticket_salt:
       value:  # Add random (long!) string here
-      secretName: # Or use existing secret
+      credSecret: # Or use existing secret
       secretKey:
     disable_confd: true
 
@@ -86,13 +86,15 @@ icinga2:
       # enable_send_perfdata: false
       # flush_threshold: 1024
       # flush_interval: 10s
+      # credSecret: # used for credentials
+      # tlsSecret: # used for certificates
       # username: elastic
       # password: password
       # enable_tls: false
       # insecure_noverify: false
-      # ca_path: /etc/icinga2/pki/elastic-ca.crt
-      # cert_path: /etc/icinga2/pki/elastic-cert.crt
-      # key_path: /etc/icinga2/pki/elastic-cert.key
+      # caSecretKey: # Secret key to mount at /etc/icinga2-pki/elastic-ca.crt
+      # certSecretKey: # Secret key to mount at /etc/icinga2-pki/elastic-cert.crt
+      # keySecretKey: # Secret key to mount at /etc/icinga2-pki/elastic-cert.key
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#gelfwriter
     gelf:
@@ -103,9 +105,10 @@ icinga2:
       # enable_send_perfdata: false
       # enable_tls: false
       # insecure_noverify: false
-      # ca_path: /etc/icinga2/pki/gelf-ca.crt
-      # cert_path: /etc/icinga2/pki/gelf-cert.crt
-      # key_path: /etc/icinga2/pki/gelf-cert.key
+      # tlsSecret: # used for certificates
+      # caSecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/ca.crt
+      # certSecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/cert.crt
+      # keySecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/cert.key
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#graphitewriter
     graphite:
@@ -120,12 +123,16 @@ icinga2:
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#icingadb
     icingadb:
       enabled: true
-      # password:
+      # credSecret: # used for credentials
+      # tlsSecret: # used for certificates
+      # password: 
+      #   value: password # Specify password
+      #   secretKey: password # Or use existing secret
       # enable_tls: false
-      # cert_path: /etc/icinga2/pki/icingadb-cert.crt
-      # key_path: /etc/icinga2/pki/icingadb-cert.key
-      # ca_path: /etc/icinga2/pki/icingadb-ca.crt
-      # crl_path: /etc/icinga2/pki/icingadb-crl.pem
+      # certSecretKey: # Secret key to mount at /etc/icinga2-pki/icingadb/cert.crt
+      # keySecretKey: # Secret key to mount at /etc/icinga2-pki/icingadb/cert.key
+      # caSecretKey: # Secret key to mount at /etc/icinga2-pki/icingadb/ca.crt
+      # crlSecretKey: # Secret key to mount at /etc/icinga2/pki/icingadb/crl.pem
       # cipher_list: ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384:AES128-GCM-SHA256
       # tls_protocolmin: TLSv1.2
       # insecure_noverify: false
@@ -138,12 +145,14 @@ icinga2:
       # port: 8086
       # organization: monitoring
       # bucket: icinga2
+      # credSecret: # used for credentials
+      # tlsSecret: # used for certificates
       # auth_token: securitytoken
       # ssl_enable: false
       # ssl_insecure_noverify: false
-      # ssl_ca_cert: /etc/icinga2/pki/influxdb2-ca.crt
-      # ssl_cert: /etc/icinga2/pki/influxdb2-cert.crt
-      # ssl_key: /etc/icinga2/pki/influxdb2-cert.key
+      # caSecretKey: # Secret key to mount at /etc/icinga2-pki/influxdb2/ca.crt
+      # certSecretKey: # Secret key to mount at /etc/icinga2-pki/influxdb2/cert.crt
+      # keySecretKey: # Secret key to mount at /etc/icinga2-pki/influxdb2/cert.key
       # enable_send_thresholds: false
       # enable_send_metadata: false
       # flush_threshold: 1024
@@ -170,16 +179,26 @@ icinga2:
       # host: influx
       # port: 8086
       # database: icinga2
-      # username: none
-      # password: password
+      # credSecret: # existing secret used for influxdb credentials and basic_auth credentials
+      # tlsSecret: # used for certificates
+      # username:
+      #   value: # Specify username
+      #   secretKey: # Or use existing secret
+      # password:
+      #   value: # Specify password
+      #   secretKey: # Or use existing secret
       # basic_auth:
-      #   username: icinga2
-      #   password: icinga2
+      #   username:
+      #     value: # Specify username
+      #     secretKey: # Or use existing secret
+      #   password:
+      #     value: # Specify password
+      #     secretKey: # Or use existing secret
       # ssl_enable: false
       # ssl_insecure_noverify: false
-      # ssl_ca_cert: /etc/icinga2/pki/influxdb-ca.crt
-      # ssl_cert: /etc/icinga2/pki/influxdb-cert.crt
-      # ssl_key: /etc/icinga2/pki/influxdb-cert.key
+      # caSecretKey: # Secret key to mount at /etc/icinga2-pki/influxdb/ca.crt
+      # certSecretKey: # Secret key to mount at /etc/icinga2-pki/influxdb/cert.crt
+      # keySecretKey: # Secret key to mount at /etc/icinga2-pki/influxdb/cert.key
       # enable_send_thresholds: false
       # enable_send_metadata: false
       # flush_threshold: 1024
@@ -198,6 +217,7 @@ icinga2:
             hostname = "$host.name$"
             service = "$service.name$"
           }
+        }
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#filelogger
     mainlog:
@@ -376,7 +396,7 @@ icingaweb2:
     admin_user: icingaweb
     admin_password:
       value: # Add a password here
-      secretName:
+      credSecret:
       secretKey:
 
   modules:
@@ -404,7 +424,7 @@ icingaweb2:
       enabled: false
       graphite:
         url: graphite.example.com
-        secretName:
+        credSecret:
         user:
           value:
           secretKey:
@@ -477,7 +497,7 @@ global:
     # host:  # only needed if Icinga2 runs out of cluster
     port: 5665
     users:
-      secretName: # Existing secret for director and icingaweb password
+      credSecret: # Existing secret for director and icingaweb password
       director:
         password:
           value: # Add a password here
@@ -495,7 +515,7 @@ global:
   databases:
     director:
       database: directordb
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username:
         value: # Set username
         secretKey: # Or specify secret key
@@ -517,7 +537,7 @@ global:
 
     icingadb:
       database: icingadb
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username:
         value: # Set username
         secretKey: # Or specify secret key
@@ -539,7 +559,7 @@ global:
 
     icingaweb2:
       database: icingaweb2db
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username: 
         value: # Set username
         secretKey: # Or specify secret key
@@ -561,7 +581,7 @@ global:
 
     x509:
       database: x509db
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username: 
         value: # Set username
         secretKey: # Or specify secret key

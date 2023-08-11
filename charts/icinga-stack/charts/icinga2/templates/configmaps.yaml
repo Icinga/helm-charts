@@ -11,7 +11,7 @@ data:
   {{- if .Values.features.api.enabled }}
   api-users.conf: |
     {{- range $user, $settings := .Values.global.api.users }}
-    {{- if ne $user "secretName" }} # skip key secretName
+    {{- if ne $user "credSecret" }} # skip key credSecret
     {{- $permissions := $settings.permissions | default (list "*") }}
     object ApiUser {{ $user | quote }} {
       password = getenv("{{ print "ICINGA_" $user "_API_PASSWORD" | upper }}")
@@ -91,14 +91,14 @@ data:
       {{- end }}
       enable_tls = {{ .Values.features.elasticsearch.enable_tls | default "false" }}
       insecure_noverify = {{ .Values.features.elasticsearch.insecure_noverify | default "false" }}
-      {{- if and .Values.features.elasticsearch.ca_path .Values.features.elasticsearch.enable_tls }}
-      ca_path = {{ .Values.features.elasticsearch.ca_path | quote }}
+      {{- if .Values.features.elasticsearch.enable_tls }}
+      {{- if and .Values.features.elasticsearch.tlsSecret .Values.features.elasticsearch.caSecretKey .Values.features.elasticsearch.certSecretKey .Values.features.elasticsearch.keySecretKey }}
+      ca_path = "/etc/icinga2-pki/elastic/ca.crt"
+      cert_path = "/etc/icinga2-pki/elastic/cert.crt"
+      key_path = "/etc/icinga2-pki/elastic/cert.key"
+      {{- else }}
+        {{ fail "Elasticsearch cert secrets not set. Set .Values.features.elasticsearch.tlsSecret, .Values.features.elasticsearch.caSecretKey, .Values.features.elasticsearch.certSecretKey and .Values.features.elasticsearch.keySecretKey" }}
       {{- end }}
-      {{- if and .Values.features.elasticsearch.cert_path .Values.features.elasticsearch.enable_tls }}
-      cert_path = {{ .Values.features.elasticsearch.cert_path | quote }}
-      {{- end }}
-      {{- if and .Values.features.elasticsearch.key_path .Values.features.elasticsearch.enable_tls }}
-      key_path = {{ .Values.features.elasticsearch.key_path | quote }}
       {{- end }}
       enable_ha = false
     }
@@ -111,14 +111,14 @@ data:
       enable_send_perfdata = {{ .Values.features.gelf.enable_send_perfdata | default "false" }}
       enable_tls = {{ .Values.features.gelf.enable_tls | default "false" }}
       insecure_noverify = {{ .Values.features.gelf.insecure_noverify | default "false" }}
-      {{- if and .Values.features.gelf.ca_path .Values.features.elasticsearch.enable_tls }}
-      ca_path = {{ .Values.features.gelf.ca_path | quote }}
+      {{- if .Values.features.gelf.enable_tls }}
+      {{- if and .Values.features.gelf.tlsSecret .Values.features.gelf.caSecretKey .Values.features.gelf.certSecretKey .Values.features.gelf.keySecretKey }}
+      ca_path = "/etc/icinga2-pki/gelf/ca.crt"
+      cert_path = "/etc/icinga2-pki/gelf/cert.crt"
+      key_path = "/etc/icinga2-pki/gelf/cert.key"
+      {{- else }}
+        {{ fail "GELF cert secrets not set. Set .Values.features.gelf.tlsSecret, .Values.features.gelf.caSecretKey, .Values.features.gelf.certSecretKey and .Values.features.gelf.keySecretKey" }}
       {{- end }}
-      {{- if and .Values.features.gelf.cert_path .Values.features.gelf.enable_tls }}
-      cert_path = {{ .Values.features.gelf.cert_path | quote }}
-      {{- end }}
-      {{- if and .Values.features.gelf.key_path .Values.features.gelf.enable_tls }}
-      key_path = {{ .Values.features.gelf.key_path | quote }}
       {{- end }}
       enable_ha = false
     }
@@ -140,22 +140,20 @@ data:
     object IcingaDB "icingadb" {
         host = {{ if .Values.global.redis.enabled -}} "{{ .Release.Name }}-redis" {{- else }}{{ .Values.global.redis.host | quote }}{{ end }}
         port = {{ if .Values.global.redis.enabled -}} 6379 {{- else }}{{ .Values.global.redis.port }}{{ end }}
-        {{- if .Values.global.redis.password }}
-        password = {{ .Values.global.redis.password | quote }}
+        {{- if .Values.features.icingadb.password }}
+        password = getenv("ICINGA_ICINGADB_PASSWORD")
         {{- end }}
-        enable_tls = {{ .Values.global.redis.enable_tls | default "false" }}
+        enable_tls = {{ .Values.features.icingadb.enable_tls | default "false" }}
         insecure_noverify = {{ .Values.global.redis.insecure_noverify | default "false" }}
-        {{- if and .Values.global.redis.ca_path .Values.global.redis.enable_tls }}
-        ca_path = {{ .Values.global.redis.ca_path | quote }}
+        {{- if .Values.features.icingadb.enable_tls }}
+        {{- if and .Values.features.icingadb.tlsSecret .Values.features.icingadb.caSecretKey .Values.features.icingadb.certSecretKey .Values.features.icingadb.keySecretKey .Values.features.icingadb.crlSecretKey }}
+        cert_path = "/etc/icinga2-pki/icingadb/cert.crt"
+        key_path = "/etc/icinga2-pki/icingadb/cert.key"
+        ca_path = "/etc/icinga2-pki/icingadb/ca.crt"
+        crl_path = "/etc/icinga2-pki/icingadb/crl.pem"
+        {{- else }}
+          {{ fail "icingadb cert secrets not set. Set .Values.features.icingadb.tlsSecret, .Values.features.icingadb.caSecretKey, .Values.features.icingadb.certSecretKey, .Values.features.icingadb.keySecretKey and .Values.features.icingadb.crlSecretKey" }}
         {{- end }}
-        {{- if and .Values.global.redis.cert_path .Values.global.redis.enable_tls }}
-        cert_path = {{ .Values.global.redis.cert_path | quote }}
-        {{- end }}
-        {{- if and .Values.global.redis.key_path .Values.global.redis.enable_tls }}
-        key_path = {{ .Values.global.redis.key_path | quote }}
-        {{- end }}
-        {{- if .Values.features.icingadb.crl_path }}
-        crl_path = {{ .Values.features.icingadb.crl_path | quote }}
         {{- end }}
         cipher_list = "{{ .Values.features.icingadb.cipher_list | default "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:AES256-GCM-SHA384:AES128-GCM-SHA256" }}"
         tls_protocolmin = {{ .Values.features.icingadb.tls_protocolmin | default "TLSv1.2" | quote }}
@@ -180,14 +178,14 @@ data:
       {{- end -}}
       ssl_enable = {{ .Values.features.influxdb2.ssl_enable | default "false" }}
       ssl_insecure_noverify = {{ .Values.features.influxdb2.ssl_insecure_noverify | default "false" }}
-      {{- if and .Values.features.influxdb2.ssl_enable .Values.features.influxdb2.ssl_ca_cert }}
-      ssl_ca_cert = {{ .Values.features.influxdb2.ssl_ca_cert | quote }}
+      {{- if .Values.features.influxdb2.ssl_enable }}
+      {{- if and .Values.features.influxdb2.tlsSecret .Values.features.influxdb2.caSecretKey .Values.features.influxdb2.certSecretKey .Values.features.influxdb2.keySecretKey }}
+      ssl_ca_cert = "/etc/icinga2-pki/influxdb2/ca.crt"
+      ssl_cert = "/etc/icinga2-pki/influxdb2/cert.crt"
+      ssl_key = "/etc/icinga2-pki/influxdb2/cert.key"
+      {{- else }}
+        {{ fail "influxdb2 cert secrets not set. Set .Values.features.influxdb2.tlsSecret, .Values.features.influxdb2.caSecretKey, .Values.features.influxdb2.certSecretKey and .Values.features.influxdb2.keySecretKey" }}
       {{- end }}
-      {{- if and .Values.features.influxdb2.ssl_enable .Values.features.influxdb2.ssl_cert }}
-      ssl_cert = {{ .Values.features.influxdb2.ssl_cert | quote }}
-      {{- end }}
-      {{- if and .Values.features.influxdb2.ssl_enable .Values.features.influxdb2.ssl_key }}
-      ssl_key = {{ .Values.features.influxdb2.ssl_key | quote }}
       {{- end }}
       enable_send_thresholds = {{ .Values.features.influxdb2.enable_send_thresholds | default "false" }}
       enable_send_metadata = {{ .Values.features.influxdb2.enable_send_metadata | default "false" }}
@@ -220,14 +218,14 @@ data:
       {{- end }}
       ssl_enable = {{ .Values.features.influxdb.ssl_enable | default "false" }}
       ssl_insecure_noverify = {{ .Values.features.influxdb.ssl_insecure_noverify | default "false" }}
-      {{- if and .Values.features.influxdb.ssl_enable .Values.features.influxdb.ssl_ca_cert }}
-      ssl_ca_cert = {{ .Values.features.influxdb.ssl_ca_cert | quote }}
+      {{- if .Values.features.influxdb.ssl_enable }}
+      {{- if and .Values.features.influxdb.tlsSecret .Values.features.influxdb.caSecretKey .Values.features.influxdb.certSecretKey .Values.features.influxdb.keySecretKey }}
+      ssl_ca_cert = "/etc/icinga2-pki/influxdb/ca.crt"
+      ssl_cert = "/etc/icinga2-pki/influxdb/cert.crt"
+      ssl_key = "/etc/icinga2-pki/influxdb/cert.key"
+      {{- else }}
+        {{ fail "influxdb cert secrets not set. Set .Values.features.influxdb.tlsSecret, .Values.features.influxdb.caSecretKey, .Values.features.influxdb.certSecretKey and .Values.features.influxdb.keySecretKey" }}
       {{- end }}
-      {{- if and .Values.features.influxdb.ssl_enable .Values.features.influxdb.ssl_cert }}
-      ssl_cert = {{ .Values.features.influxdb.ssl_cert | quote }}
-      {{- end }}
-      {{- if and .Values.features.influxdb.ssl_enable .Values.features.influxdb.ssl_key }}
-      ssl_key = {{ .Values.features.influxdb.ssl_key | quote }}
       {{- end }}
       enable_send_thresholds = {{ .Values.features.influxdb.enable_send_thresholds | default "false" }}
       enable_send_metadata = {{ .Values.features.influxdb.enable_send_metadata | default "false" }}

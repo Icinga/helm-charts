@@ -36,7 +36,7 @@ auth:
   admin_user: icingaweb
   admin_password:
     value: # Add a password here
-    secretName: # Or use existing secret
+    credSecret: # Or use existing secret
     secretKey:
 
 modules:
@@ -64,7 +64,7 @@ modules:
     enabled: false
     graphite:
       url: graphite.example.com
-      secretName: # Existing secret used for user and password
+      credSecret: # Existing secret used for user and password
       user:
         value: # Specify username
         secretKey: # Or use existing secret

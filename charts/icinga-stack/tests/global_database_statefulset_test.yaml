@@ -70,13 +70,13 @@ tests:
             password:
               value: insecuredirectorpassword
           icingaweb2:
-            secretName: database-icingaweb2
+            credSecret: database-icingaweb2
             username:
               secretKey: username
             password:
               secretKey: password
           icingadb:
-            secretName: database-icingadb
+            credSecret: database-icingadb
             username:
               secretKey: username
             password:
@@ -109,17 +109,17 @@ tests:
       global:
         databases:
           director:
-            secretName: database-director
+            credSecret: database-director
             username:
               secretKey: username
           icingaweb2:
-            secretName: database-icingaweb2
+            credSecret: database-icingaweb2
             username:
               secretKey: username
             password:
               secretKey: password
           icingadb:
-            secretName: database-icingadb
+            credSecret: database-icingadb
             username:
               secretKey: username
             password:
@@ -128,7 +128,7 @@ tests:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "director password not set. Set either .Values.global.databases.director.password.value or .Values.global.databases.director.secretName and .Values.global.databases.director.password.secretKey"
+          errorMessage: "director password not set. Set either .Values.global.databases.director.password.value or .Values.global.databases.director.credSecret and .Values.global.databases.director.password.secretKey"
   
   # IcingaDB DB
   - it: deploys an IcingaDB database StatefulSet using values
