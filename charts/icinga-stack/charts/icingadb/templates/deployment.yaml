@@ -42,24 +42,24 @@ spec:
             - name: ICINGADB_DATABASE_USER
               {{- if and .Values.global.databases.icingadb.username .Values.global.databases.icingadb.username.value }}
               value: {{ .Values.global.databases.icingadb.username.value | quote }}
-              {{- else if and .Values.global.databases.icingadb.username .Values.global.databases.icingadb.secretName .Values.global.databases.icingadb.username.secretKey }}
+              {{- else if and .Values.global.databases.icingadb.username .Values.global.databases.icingadb.credSecret .Values.global.databases.icingadb.username.secretKey }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.global.databases.icingadb.secretName | quote }}
+                  name: {{ .Values.global.databases.icingadb.credSecret | quote }}
                   key: {{ .Values.global.databases.icingadb.username.secretKey | quote }}
               {{- else }}
-              {{ fail ".Values.global.databases.icingadb.username not set. Set either .Values.global.databases.icingadb.username.value or .Values.global.databases.icingadb.secretName and .Values.global.databases.icingadb.username.secretKey" }}
+              {{ fail ".Values.global.databases.icingadb.username not set. Set either .Values.global.databases.icingadb.username.value or .Values.global.databases.icingadb.credSecret and .Values.global.databases.icingadb.username.secretKey" }}
               {{- end }}
             - name: ICINGADB_DATABASE_PASSWORD
               {{- if and .Values.global.databases.icingadb.password .Values.global.databases.icingadb.password.value }}
               value: {{ .Values.global.databases.icingadb.password.value | quote }}
-              {{- else if and .Values.global.databases.icingadb.password .Values.global.databases.icingadb.secretName .Values.global.databases.icingadb.password.secretKey }}
+              {{- else if and .Values.global.databases.icingadb.password .Values.global.databases.icingadb.credSecret .Values.global.databases.icingadb.password.secretKey }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.global.databases.icingadb.secretName | quote }}
+                  name: {{ .Values.global.databases.icingadb.credSecret | quote }}
                   key: {{ .Values.global.databases.icingadb.password.secretKey | quote }}
               {{- else }}
-              {{ fail ".Values.global.databases.icingadb.password not set. Set either .Values.global.databases.icingadb.password.value or .Values.global.databases.icingadb.secretName and .Values.global.databases.icingadb.password.secretKey" }}
+              {{ fail ".Values.global.databases.icingadb.password not set. Set either .Values.global.databases.icingadb.password.value or .Values.global.databases.icingadb.credSecret and .Values.global.databases.icingadb.password.secretKey" }}
               {{- end }}
             - name: ICINGADB_DATABASE_DATABASE
               value: {{ .Values.global.databases.icingadb.database | default "mysql" | quote }}

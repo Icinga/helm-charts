@@ -33,7 +33,7 @@ icinga2:
     zone_name: master
     ticket_salt:
       value:  # Add random (long!) string here
-      secretName: # Or use existing secret
+      credSecret: # Or use existing secret
       secretKey:
     disable_confd: true
 
@@ -86,7 +86,8 @@ icinga2:
       # enable_send_perfdata: false
       # flush_threshold: 1024
       # flush_interval: 10s
-      # secretName: icinga-elasticsearch-secret # used for username, password and certs
+      # credSecret: # used for credentials
+      # tlsSecret: # used for certificates
       # username: elastic
       # password: password
       # enable_tls: false
@@ -104,7 +105,7 @@ icinga2:
       # enable_send_perfdata: false
       # enable_tls: false
       # insecure_noverify: false
-      # secretName: # used for certs
+      # tlsSecret: # used for certificates
       # caSecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/ca.crt
       # certSecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/cert.crt
       # keySecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/cert.key
@@ -122,7 +123,8 @@ icinga2:
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#icingadb
     icingadb:
       enabled: true
-      # secretName: # used for password and certs
+      # credSecret: # used for credentials
+      # tlsSecret: # used for certificates
       # password: 
       #   value: password # Specify password
       #   secretKey: password # Or use existing secret
@@ -143,7 +145,8 @@ icinga2:
       # port: 8086
       # organization: monitoring
       # bucket: icinga2
-      # secretName: secretName # Used for auth_token and certs
+      # credSecret: # used for credentials
+      # tlsSecret: # used for certificates
       # auth_token: securitytoken
       # ssl_enable: false
       # ssl_insecure_noverify: false
@@ -176,7 +179,8 @@ icinga2:
       # host: influx
       # port: 8086
       # database: icinga2
-      # secretName: # existing secret used for influxdb credentials and basic_auth credentials
+      # credSecret: # existing secret used for influxdb credentials and basic_auth credentials
+      # tlsSecret: # used for certificates
       # username:
       #   value: # Specify username
       #   secretKey: # Or use existing secret
@@ -392,7 +396,7 @@ icingaweb2:
     admin_user: icingaweb
     admin_password:
       value: # Add a password here
-      secretName:
+      credSecret:
       secretKey:
 
   modules:
@@ -420,7 +424,7 @@ icingaweb2:
       enabled: false
       graphite:
         url: graphite.example.com
-        secretName:
+        credSecret:
         user:
           value:
           secretKey:
@@ -493,7 +497,7 @@ global:
     # host:  # only needed if Icinga2 runs out of cluster
     port: 5665
     users:
-      secretName: # Existing secret for director and icingaweb password
+      credSecret: # Existing secret for director and icingaweb password
       director:
         password:
           value: # Add a password here
@@ -511,7 +515,7 @@ global:
   databases:
     director:
       database: directordb
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username:
         value: # Set username
         secretKey: # Or specify secret key
@@ -533,7 +537,7 @@ global:
 
     icingadb:
       database: icingadb
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username:
         value: # Set username
         secretKey: # Or specify secret key
@@ -555,7 +559,7 @@ global:
 
     icingaweb2:
       database: icingaweb2db
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username: 
         value: # Set username
         secretKey: # Or specify secret key
@@ -577,7 +581,7 @@ global:
 
     x509:
       database: x509db
-      secretName: # Existing secret name for username and password
+      credSecret: # Existing secret name for username and password
       username: 
         value: # Set username
         secretKey: # Or specify secret key

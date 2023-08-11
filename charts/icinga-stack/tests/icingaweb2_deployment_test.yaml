@@ -155,7 +155,7 @@ tests:
           graphite:
             enabled: true
             graphite:
-              secretName: graphite-secret
+              credSecret: graphite-secret
               user:
                 secretKey: graphite-user
               password:
@@ -193,7 +193,7 @@ tests:
       global:
         api:
           users:
-            secretName: api-users
+            credSecret: api-users
             director:
               password:
             icingaweb:
@@ -203,4 +203,4 @@ tests:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.secretName and .Values.global.api.users.director.password.secretKey"
+          errorMessage: "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.credSecret and .Values.global.api.users.director.password.secretKey"

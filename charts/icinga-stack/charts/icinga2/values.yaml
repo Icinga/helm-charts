@@ -32,7 +32,7 @@ config:
   zone_name: master
   ticket_salt:
     value: # Add random (long!) string here
-    secretName: # Or use existing secret
+    credSecret: # Or use existing secret
     secretKey:
   disable_confd: true
 
@@ -85,7 +85,8 @@ features:
     # enable_send_perfdata: false
     # flush_threshold: 1024
     # flush_interval: 10s
-    # secretName: icinga-elasticsearch-secret # used for username, password and certs
+    # credSecret: # used for credentials
+    # tlsSecret: # used for certificates
     # username:
     #   value: elastic # Specify username
     #   secretKey: username # Or use existing secret
@@ -107,7 +108,7 @@ features:
     # enable_send_perfdata: false
     # enable_tls: false
     # insecure_noverify: false
-    # secretName: # used for certs
+    # tlsSecret: # used for certificates
     # caSecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/ca.crt
     # certSecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/cert.crt
     # keySecretKey: # Secret key to mount at /etc/icinga2-pki/gelf/cert.key
@@ -125,7 +126,8 @@ features:
   # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#icingadb
   icingadb:
     enabled: true
-    # secretName: # used for password and certs
+    # credSecret: # used for credentials
+    # tlsSecret: # used for certificates
     # password: 
     #   value: password # Specify password
     #   secretKey: password # Or use existing secret
@@ -146,7 +148,8 @@ features:
     # port: 8086
     # organization: monitoring
     # bucket: icinga2
-    # secretName: secretName # Used for auth_token and certs
+    # credSecret: # used for credentials
+    # tlsSecret: # used for certificates
     # auth_token:
     #   value: securitytoken # Specify auth token value
     #   secretKey: secretKey
@@ -181,7 +184,8 @@ features:
     # host: influx
     # port: 8086
     # database: icinga2
-    # secretName: # existing secret used for influxdb credentials and basic_auth credentials
+    # credSecret: # existing secret used for influxdb credentials and basic_auth credentials
+    # tlsSecret: # used for certificates
     # username:
     #   value: # Specify username
     #   secretKey: # Or use existing secret

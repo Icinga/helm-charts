@@ -32,7 +32,7 @@ tests:
         features:
           elasticsearch:
             enabled: true
-            secretName: icinga-elasticsearch
+            credSecret: icinga-elasticsearch
             username:
               secretKey: elastic-username
             password:
@@ -60,7 +60,8 @@ tests:
         features:
           elasticsearch:
             enabled: true
-            secretName: icinga-elasticsearch
+            credSecret: icinga-elasticsearch-creds
+            tlsSecret: icinga-elasticsearch-certs
             username:
               secretKey: elastic-username
             password:
@@ -104,7 +105,7 @@ tests:
         features:
           elasticsearch:
             enabled: true
-            secretName: icinga-elasticsearch
+            tlsSecret: icinga-elasticsearch-certs
             username:
               secretKey: elastic-username
             password:
@@ -115,7 +116,7 @@ tests:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "Elasticsearch cert secrets not set. Set .Values.features.elasticsearch.secretName, .Values.features.elasticsearch.caSecretKey, .Values.features.elasticsearch.certSecretKey and .Values.features.elasticsearch.keySecretKey"
+          errorMessage: "Elasticsearch cert secrets not set. Set .Values.features.elasticsearch.tlsSecret, .Values.features.elasticsearch.caSecretKey, .Values.features.elasticsearch.certSecretKey and .Values.features.elasticsearch.keySecretKey"
 
   - it: Icinga2 configmap gelf tls test
     values:
@@ -125,7 +126,7 @@ tests:
         features:
           gelf:
             enabled: true
-            secretName: icinga-gelf
+            tlsSecret: icinga-gelf
             enable_tls: true
             caSecretKey: gelf-ca-key
             certSecretKey: gelf-cert-key
@@ -157,14 +158,14 @@ tests:
         features:
           gelf:
             enabled: true
-            secretName: icinga-gelf
+            tlsSecret: icinga-gelf
             enable_tls: true
             caSecretKey: gelf-gelf-key
     release:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "GELF cert secrets not set. Set .Values.features.gelf.secretName, .Values.features.gelf.caSecretKey, .Values.features.gelf.certSecretKey and .Values.features.gelf.keySecretKey"
+          errorMessage: "GELF cert secrets not set. Set .Values.features.gelf.tlsSecret, .Values.features.gelf.caSecretKey, .Values.features.gelf.certSecretKey and .Values.features.gelf.keySecretKey"
 
   - it: Icinga2 configmap icingadb test without password
     values:
@@ -194,7 +195,7 @@ tests:
         features:
           icingadb:
             enabled: true
-            secretName: icinga-icingadb-secret
+            credSecret: icinga-icingadb-secret
             password:
               secretKey: password-key
     release:
@@ -216,7 +217,7 @@ tests:
         features:
           icingadb:
             enabled: true
-            secretName: icinga-icingadb
+            tlsSecret: icinga-icingadb
             enable_tls: true
             caSecretKey: icingadb-ca-key
             certSecretKey: icingadb-cert-key
@@ -253,7 +254,7 @@ tests:
         features:
           icingadb:
             enabled: true
-            secretName: icinga-icingadb
+            tlsSecret: icinga-icingadb
             enable_tls: true
             caSecretKey: icingadb-ca-key
             keySecretKey: icingadb-key-key
@@ -262,7 +263,7 @@ tests:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "icingadb cert secrets not set. Set .Values.features.icingadb.secretName, .Values.features.icingadb.caSecretKey, .Values.features.icingadb.certSecretKey, .Values.features.icingadb.keySecretKey and .Values.features.icingadb.crlSecretKey"
+          errorMessage: "icingadb cert secrets not set. Set .Values.features.icingadb.tlsSecret, .Values.features.icingadb.caSecretKey, .Values.features.icingadb.certSecretKey, .Values.features.icingadb.keySecretKey and .Values.features.icingadb.crlSecretKey"
 
   - it: Icinga2 configmap influxdb2 ssl test
     values:
@@ -272,7 +273,7 @@ tests:
         features:
           influxdb2:
             enabled: true
-            secretName: icinga-influxdb2
+            tlsSecret: icinga-influxdb2
             ssl_enable: true
             caSecretKey: influxdb2-ca-key
             certSecretKey: influxdb2-cert-key
@@ -304,7 +305,7 @@ tests:
         features:
           influxdb2:
             enabled: true
-            secretName: icinga-influxdb2
+            tlsSecret: icinga-influxdb2
             ssl_enable: true
             caSecretKey: influxdb2-ca-key
             keySecretKey: influxdb2-key-key
@@ -313,7 +314,7 @@ tests:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "influxdb2 cert secrets not set. Set .Values.features.influxdb2.secretName, .Values.features.influxdb2.caSecretKey, .Values.features.influxdb2.certSecretKey and .Values.features.influxdb2.keySecretKey"
+          errorMessage: "influxdb2 cert secrets not set. Set .Values.features.influxdb2.tlsSecret, .Values.features.influxdb2.caSecretKey, .Values.features.influxdb2.certSecretKey and .Values.features.influxdb2.keySecretKey"
 
   - it: Icinga2 configmap influxdb ssl test
     values:
@@ -323,7 +324,7 @@ tests:
         features:
           influxdb:
             enabled: true
-            secretName: icinga-influxdb
+            tlsSecret: icinga-influxdb
             ssl_enable: true
             caSecretKey: influxdb-ca-key
             certSecretKey: influxdb-cert-key
@@ -355,7 +356,7 @@ tests:
         features:
           influxdb:
             enabled: true
-            secretName: icinga-influxdb
+            tlsSecret: icinga-influxdb
             ssl_enable: true
             caSecretKey: influxdb-ca-key
             keySecretKey: influxdb-key-key
@@ -364,7 +365,7 @@ tests:
       name: my-icinga
     asserts:
       - failedTemplate:
-          errorMessage: "influxdb cert secrets not set. Set .Values.features.influxdb.secretName, .Values.features.influxdb.caSecretKey, .Values.features.influxdb.certSecretKey and .Values.features.influxdb.keySecretKey"
+          errorMessage: "influxdb cert secrets not set. Set .Values.features.influxdb.tlsSecret, .Values.features.influxdb.caSecretKey, .Values.features.influxdb.certSecretKey and .Values.features.influxdb.keySecretKey"
 
   - it: Icinga2 configmap influxdb2 test
     values:
@@ -375,7 +376,7 @@ tests:
           influxdb2:
             enabled: true
             auth_token:
-              secretName: icinga-influxdb2
+              tlsSecret: icinga-influxdb2
               secretKey: authToken
     release:
       name: my-icinga
@@ -396,7 +397,7 @@ tests:
         features:
           influxdb:
             enabled: true
-            secretName: icinga-influxdb
+            credSecret: icinga-influxdb
             username:
               secretKey: influxdb-username
             password:
@@ -451,7 +452,7 @@ tests:
         features:
           influxdb:
             enabled: true
-            secretName: icinga-influxdb
+            credSecret: icinga-influxdb
             basic_auth:
               username:
                 secretKey: influxdb-basic-auth-username

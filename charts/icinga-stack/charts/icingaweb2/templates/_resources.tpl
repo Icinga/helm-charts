@@ -17,10 +17,10 @@
 - name: icingaweb.resources.{{ $settings.database }}.username
   {{- if and $settings.username $settings.username.value }}
   value: {{ $settings.username.value | quote }}
-  {{- else if and $settings.username $settings.secretName $settings.username.secretKey }}
+  {{- else if and $settings.username $settings.credSecret $settings.username.secretKey }}
   valueFrom:
     secretKeyRef:
-      name: {{ $settings.secretName | quote }}
+      name: {{ $settings.credSecret | quote }}
       key: {{ $settings.username.secretKey | quote }}
   {{- else }}
   value: "mysql"
@@ -28,10 +28,10 @@
 - name: icingaweb.resources.{{ $settings.database }}.password
   {{- if and $settings.password $settings.password.value }}
   value: {{ $settings.password.value | quote }}
-  {{- else if and $settings.password $settings.secretName $settings.password.secretKey }}
+  {{- else if and $settings.password $settings.credSecret $settings.password.secretKey }}
   valueFrom:
     secretKeyRef:
-      name: {{ $settings.secretName | quote }}
+      name: {{ $settings.credSecret | quote }}
       key: {{ $settings.password.secretKey | quote }}
   {{- else }}
   value: "mysql"
