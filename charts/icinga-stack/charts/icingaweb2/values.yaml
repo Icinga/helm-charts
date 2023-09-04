@@ -77,9 +77,9 @@ modules:
       default_time_range_unit: hours
       disable_no_graphs_found: 1
     icinga:
-      graphite_writer_host_name_template: {}
-      graphite_writer_service_name_template: {}
-      customvar_obscured_check_command: {}
+      graphite_writer_host_name_template: null
+      graphite_writer_service_name_template: null
+      customvar_obscured_check_command: null
 
   icingadb:
     enabled: true
