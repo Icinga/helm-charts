@@ -2,7 +2,7 @@ enabled: true
 
 image:
   repository: icinga/icingadb
-  tag: 1.1.0
+  tag: 1.1.1
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
