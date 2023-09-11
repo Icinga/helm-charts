@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   icinga-stack:
   - apiVersion: v2
+    appVersion: 0.2.0
+    created: "2023-09-11T16:11:29.435587785Z"
+    description: Icinga is a monitoring system which checks the availability of your
+      network resources, notifies users of outages, and generates performance data
+      for reporting.
+    digest: 6e02728e0d4e590f26c71b174215c189f81d92dd40335027f3d5c58326b64da8
+    maintainers:
+    - email: daniel.bodky@netways.de
+      name: Daniel Bodky
+      url: https://github.com/mocdaniel
+    name: icinga-stack
+    type: application
+    urls:
+    - https://github.com/Icinga/helm-charts/releases/download/icinga-stack-0.2.0/icinga-stack-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 0.1.0
     created: "2023-04-28T15:32:12.276084057Z"
     description: Icinga is a monitoring system which checks the availability of your
@@ -17,4 +33,4 @@ entries:
     urls:
     - https://github.com/Icinga/helm-charts/releases/download/icinga-stack-0.1.0/icinga-stack-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-28T15:32:12.276098858Z"
+generated: "2023-09-11T16:11:29.435601185Z"
