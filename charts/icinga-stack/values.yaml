@@ -492,6 +492,8 @@ icingaweb2:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  extraEnvVars: []
+
 global:
   api:
     # host:  # only needed if Icinga2 runs out of cluster

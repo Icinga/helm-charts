@@ -34,6 +34,7 @@ spec:
             - name: ICINGA_DISABLE_CONFD
               value: {{ .Values.config.disable_confd | int | quote }}
             {{- include "icinga2.envSecrets" . | nindent 12 }}
+            {{- toYaml .Values.extraEnvVars | nindent 12 }}
           ports:
             - name: api
               containerPort: {{ .Values.service.port }}
