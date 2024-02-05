@@ -358,6 +358,8 @@ icingadb:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  extraEnvVars: []
+
 icingaweb2:
   enabled: true
 
