@@ -63,6 +63,9 @@ spec:
               {{- end }}
             - name: ICINGADB_DATABASE_DATABASE
               value: {{ .Values.global.databases.icingadb.database | default "mysql" | quote }}
+            {{- if .Values.extraEnvVars }}
+            {{- toYaml .Values.extraEnvVars | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

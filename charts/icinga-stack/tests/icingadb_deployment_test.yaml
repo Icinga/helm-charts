@@ -66,3 +66,27 @@ tests:
               secretKeyRef:
                 name: database-icingadb
                 key: password
+
+  - it: deploys an IcingaDB deployment with extra environment variables
+    values:
+      - required_values.yaml
+    set:
+      icingadb:
+        extraEnvVars:
+          - name: ENV_VAR_1
+            value: env_var_1
+          - name: ENV_VAR_2
+            value: env_var_2
+    release:
+      name: my-icinga
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ENV_VAR_1
+            value: env_var_1
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ENV_VAR_2
+            value: env_var_2
