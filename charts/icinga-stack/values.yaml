@@ -619,6 +619,29 @@ global:
         matchLabels: {}
         matchExpressions: []
 
+    kubernetes:
+      # Note that using secrets is not yet supported for Icinga Kubernetes.
+      database: kubernetes
+      credSecret: # Existing secret name for username and password
+      username:
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
+      enabled: true
+      # host: mariadb.example.com
+      # port: 3306
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+
   redis:
     enabled: true
     # host: redis.example.com
