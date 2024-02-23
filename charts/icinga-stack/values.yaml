@@ -38,9 +38,9 @@ icinga2:
     disable_confd: true
 
   features:
-    # The features are configured as described in the official documentation 
+    # The features are configured as described in the official documentation
     # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
-    # Only some features are enabled by default; Some features are missing, for more information 
+    # Only some features are enabled by default; Some features are missing, for more information
     # see this project's README.md
     # `Optional` settings for each features are commented out, all other settings are required when enabling
     # a feature.
@@ -59,7 +59,7 @@ icinga2:
       # acl_allow_origin:
       #   - example.com
       #   - agent1.example.com
-      # environment: "" 
+      # environment: ""
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
     checker:
@@ -125,7 +125,7 @@ icinga2:
       enabled: true
       # credSecret: # used for credentials
       # tlsSecret: # used for certificates
-      # password: 
+      # password:
       #   value: password # Specify password
       #   secretKey: password # Or use existing secret
       # enable_tls: false
@@ -564,7 +564,7 @@ global:
     icingaweb2:
       database: icingaweb2db
       credSecret: # Existing secret name for username and password
-      username: 
+      username:
         value: # Set username
         secretKey: # Or specify secret key
       password:
@@ -586,7 +586,7 @@ global:
     x509:
       database: x509db
       credSecret: # Existing secret name for username and password
-      username: 
+      username:
         value: # Set username
         secretKey: # Or specify secret key
       password:

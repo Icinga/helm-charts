@@ -2,7 +2,7 @@ suite: "[Global] Internal databases for Icinga services"
 templates:
   - internal-databases.yaml
 tests:
-  # Director DB 
+  # Director DB
   - it: deploys a Director database StatefulSet using values
     documentIndex: 0
     values:
@@ -129,7 +129,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "director password not set. Set either .Values.global.databases.director.password.value or .Values.global.databases.director.credSecret and .Values.global.databases.director.password.secretKey"
-  
+
   # IcingaDB DB
   - it: deploys an IcingaDB database StatefulSet using values
     documentIndex: 2
@@ -184,7 +184,7 @@ tests:
               secretKeyRef:
                 name: database-icingadb
                 key: password
-      
+
   # IcingaWeb DB
   - it: deploys an Icingaweb2 database StatefulSet using values
     documentIndex: 4
@@ -268,5 +268,3 @@ tests:
                 requests:
                   storage: 5Gi
               selector: null
-
-      
