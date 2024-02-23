@@ -240,6 +240,31 @@ tests:
                 name: database-icingaweb2
                 key: password
 
+  # Icinga Kubernetes DB
+  - it: deploys an Icinga Kubernetes database StatefulSet using values
+    documentIndex: 8
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga-stack-kubernetes-database
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_USER
+            value: kubernetes
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_PASSWORD
+            value: insecurekubernetesdbpassword
+
   # Test persistence for databases
   - it: deploys a PVC for a database if persistence is enabled
     documentIndex: 0
@@ -253,6 +278,8 @@ tests:
       global.databases.icingadb.password.value: insecurepassword
       global.databases.icingaweb2.username.value: icingaweb2
       global.databases.icingaweb2.password.value: insecurepassword
+      global.databases.kubernetes.username.value: kubernetes
+      global.databases.kubernetes.password.value: insecurepassword
     release:
       name: my-icinga
     asserts:
