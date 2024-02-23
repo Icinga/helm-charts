@@ -1,0 +1,16 @@
+dependencies:
+  - name: common
+    version: 2.x.x
+    repository: oci://registry-1.docker.io/bitnamicharts
+
+apiVersion: v2
+name: icinga-kubernetes
+description: Icinga Kubernetes
+maintainers:
+  - name: Icinga GmbH
+    email: info@icinga.com
+    url: https://icinga.com
+
+type: application
+version: 0.1.0
+appVersion: "edge"
