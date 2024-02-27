@@ -23,7 +23,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: icingaweb.passwords.icingaweb2.icingaweb
+            name: icingaweb.passwords.icingaweb2.icingaadmin
             value: insecurepassword
 
   - it: deploys an Icinga Web deployment with additional modules
@@ -74,7 +74,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: icingaweb.passwords.icingaweb2.icingaweb
+            name: icingaweb.passwords.icingaweb2.icingaadmin
             valueFrom:
               secretKeyRef:
                 name: icingaweb2-secret
