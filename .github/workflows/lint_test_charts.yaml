@@ -24,4 +24,5 @@ jobs:
           run: |
             set -x
             cd charts/icinga-stack
+            helm dependency update
             helm unittest .
