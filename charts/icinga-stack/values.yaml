@@ -365,8 +365,8 @@ icingaweb2:
 
   image:
     repository: icinga/icingaweb2
-    tag: 2.11.4
-    pullPolicy: IfNotPresent
+    tag: 2.12.1
+    pullPolicy: Always
 
   imagePullSecrets: []
   nameOverride: ""
