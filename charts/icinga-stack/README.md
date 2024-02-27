@@ -45,6 +45,8 @@ helm install <release-name> \
   --set global.databases.icingaweb2.password.value=CHANGE-ME \
   --set global.databases.icingadb.username.value=CHANGE-ME \
   --set global.databases.icingadb.password.value=CHANGE-ME \
+  --set global.databases.kubernetes.username.value=CHANGE-ME \
+  --set global.databases.kubernetes.password.value=CHANGE-ME \
 icinga/icinga-stack
 ```
 
