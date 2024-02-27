@@ -37,5 +37,5 @@ To maintain a certain style of tests throughout the charts, please adhere to the
 
 * Tests for subcharts should be placed in the `./tests` directory of the parent chart and prefixed with the subchart's name, e.g. `icingaweb2_deployment_test.yaml`.
 * Tests should be grouped by the template they are testing.
-* Test files should be named after the template they are testing, e.g. IcingaWeb2's `deployment.yaml` should be tested in `icingaweb2_deployment_test.yaml`.
-* **Test Suites** should be prefixed with the name of the chart they test, e.g. *[Icinga2] Test Icinga2 persistence*
+* Test files should be named after the template they are testing, e.g. Icinga Web's `deployment.yaml` should be tested in `icingaweb2_deployment_test.yaml`.
+* **Test Suites** should be prefixed with the name of the product/chart they test, e.g. *[Icinga 2] Test Icinga 2 persistence*

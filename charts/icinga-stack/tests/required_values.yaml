@@ -32,3 +32,8 @@ global:
         value: icingadb
       password:
         value: insecureicingadbpassword
+    kubernetes:
+      username:
+        value: kubernetes
+      password:
+        value: insecurekubernetesdbpassword

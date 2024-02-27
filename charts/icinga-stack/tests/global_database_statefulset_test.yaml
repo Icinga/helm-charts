@@ -2,7 +2,7 @@ suite: "[Global] Internal databases for Icinga services"
 templates:
   - internal-databases.yaml
 tests:
-  # Director DB 
+  # Director DB
   - it: deploys a Director database StatefulSet using values
     documentIndex: 0
     values:
@@ -81,6 +81,11 @@ tests:
               secretKey: username
             password:
               secretKey: password
+          kubernetes:
+            username:
+              value: kubernetes
+            password:
+              value: insecurekubernetespassword
     release:
       name: my-icinga
     asserts:
@@ -129,9 +134,9 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "director password not set. Set either .Values.global.databases.director.password.value or .Values.global.databases.director.credSecret and .Values.global.databases.director.password.secretKey"
-  
-  # IcingaDB DB
-  - it: deploys an IcingaDB database StatefulSet using values
+
+  # Icinga DB DB
+  - it: deploys an Icinga DB database StatefulSet using values
     documentIndex: 2
     values:
       - required_values.yaml
@@ -155,7 +160,7 @@ tests:
             name: MARIADB_PASSWORD
             value: insecureicingadbpassword
 
-  - it: deploys an IcingaDB database StatefulSet using secrets
+  - it: deploys an Icinga DB database StatefulSet using secrets
     documentIndex: 2
     values:
       - required_values_secrets.yaml
@@ -184,9 +189,9 @@ tests:
               secretKeyRef:
                 name: database-icingadb
                 key: password
-      
+
   # IcingaWeb DB
-  - it: deploys an Icingaweb2 database StatefulSet using values
+  - it: deploys an Icinga Web database StatefulSet using values
     documentIndex: 4
     values:
       - required_values.yaml
@@ -210,7 +215,7 @@ tests:
             name: MARIADB_PASSWORD
             value: insecureicingaweb2password
 
-  - it: deploys an Icingaweb2 database StatefulSet using secrets
+  - it: deploys an Icinga Web database StatefulSet using secrets
     documentIndex: 4
     values:
       - required_values_secrets.yaml
@@ -240,6 +245,31 @@ tests:
                 name: database-icingaweb2
                 key: password
 
+  # Icinga Kubernetes DB
+  - it: deploys an Icinga Kubernetes database StatefulSet using values
+    documentIndex: 6
+    values:
+      - required_values.yaml
+    release:
+      name: my-icinga
+    asserts:
+      - containsDocument:
+          kind: StatefulSet
+          apiVersion: apps/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga-stack-kubernetes-database
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_USER
+            value: kubernetes
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MARIADB_PASSWORD
+            value: insecurekubernetesdbpassword
+
   # Test persistence for databases
   - it: deploys a PVC for a database if persistence is enabled
     documentIndex: 0
@@ -253,6 +283,8 @@ tests:
       global.databases.icingadb.password.value: insecurepassword
       global.databases.icingaweb2.username.value: icingaweb2
       global.databases.icingaweb2.password.value: insecurepassword
+      global.databases.kubernetes.username.value: kubernetes
+      global.databases.kubernetes.password.value: insecurepassword
     release:
       name: my-icinga
     asserts:
@@ -268,5 +300,3 @@ tests:
                 requests:
                   storage: 5Gi
               selector: null
-
-      

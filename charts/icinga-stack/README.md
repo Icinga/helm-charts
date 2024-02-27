@@ -1,8 +1,8 @@
-# Icinga2 Kubernetes Helm Charts
+# Icinga Kubernetes Helm Charts
 
 > **WARNING**: This chart is currently in alpha state and should not be used in production. Breaking changes in future releases are well possible.
 
-[Icinga2](https://icinga.com) is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
+[Icinga](https://icinga.com) is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
 
 [Helm](https://helm.sh) is a tool for managing Kubernetes charts. Charts are packages of pre-configured Kubernetes resources.
 
@@ -19,19 +19,19 @@ This chart bootstraps a complete Icinga environment on a [Kubernetes](http://kub
 
 ### Add Helm repository
 
-First you need to add the Icinga2 Helm repository to your Helm installation. Helm repositories are similar to package repositories in Linux distributions as in they contain different available packages of 
+First you need to add the Icinga Helm repository to your Helm installation. Helm repositories are similar to package repositories in Linux distributions as in they contain different available packages of 
 Kubernetes manifests for users to consume.
 
-The Icinga2 Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following command:
+The Icinga Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following command:
 
 ```console
 helm repo add icinga https://icinga.github.io/helm-charts
 helm repo update
 ```
 
-### Install Icinga2
+### Install Icinga
 
-Once the repository is known to your Helm installation, you can install Icinga2 by running the following command:
+Once the repository is known to your Helm installation, you can install Icinga by running the following command:
 
 ```console
 helm install <release-name> \
@@ -45,6 +45,8 @@ helm install <release-name> \
   --set global.databases.icingaweb2.password.value=CHANGE-ME \
   --set global.databases.icingadb.username.value=CHANGE-ME \
   --set global.databases.icingadb.password.value=CHANGE-ME \
+  --set global.databases.kubernetes.username.value=CHANGE-ME \
+  --set global.databases.kubernetes.password.value=CHANGE-ME \
 icinga/icinga-stack
 ```
 

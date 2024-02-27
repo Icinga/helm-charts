@@ -1,0 +1,12 @@
+enabled: true
+
+image:
+  repository: icinga/icinga-kubernetes
+  tag: edge
+  pullPolicy: Always
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true

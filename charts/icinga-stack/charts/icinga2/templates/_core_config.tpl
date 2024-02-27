@@ -1,5 +1,5 @@
 {{- define "icinga2.config" -}}
-// Constants for Icinga2 from constants.conf
+// Constants for Icinga 2 from constants.conf
 const PluginDir = "/usr/lib/nagios/plugins"
 const ManubulonPluginDir = "/usr/lib/nagios/plugins"
 const PluginContribDir = "/usr/lib/nagios/plugins"

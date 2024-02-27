@@ -38,9 +38,9 @@ icinga2:
     disable_confd: true
 
   features:
-    # The features are configured as described in the official documentation 
+    # The features are configured as described in the official documentation
     # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
-    # Only some features are enabled by default; Some features are missing, for more information 
+    # Only some features are enabled by default; Some features are missing, for more information
     # see this project's README.md
     # `Optional` settings for each features are commented out, all other settings are required when enabling
     # a feature.
@@ -59,7 +59,7 @@ icinga2:
       # acl_allow_origin:
       #   - example.com
       #   - agent1.example.com
-      # environment: "" 
+      # environment: ""
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
     checker:
@@ -125,7 +125,7 @@ icinga2:
       enabled: true
       # credSecret: # used for credentials
       # tlsSecret: # used for certificates
-      # password: 
+      # password:
       #   value: password # Specify password
       #   secretKey: password # Or use existing secret
       # enable_tls: false
@@ -365,8 +365,8 @@ icingaweb2:
 
   image:
     repository: icinga/icingaweb2
-    tag: 2.11.4
-    pullPolicy: IfNotPresent
+    tag: 2.12.1
+    pullPolicy: Always
 
   imagePullSecrets: []
   nameOverride: ""
@@ -496,9 +496,23 @@ icingaweb2:
 
   extraEnvVars: []
 
+icinga-kubernetes:
+  enabled: true
+
+  image:
+    repository: icinga/icinga-kubernetes
+    tag: edge
+    pullPolicy: Always
+
+  rbac:
+    create: true
+
+  serviceAccount:
+    create: true
+
 global:
   api:
-    # host:  # only needed if Icinga2 runs out of cluster
+    # host:  # only needed if Icinga 2 runs out of cluster
     port: 5665
     users:
       credSecret: # Existing secret for director and icingaweb password
@@ -564,7 +578,7 @@ global:
     icingaweb2:
       database: icingaweb2db
       credSecret: # Existing secret name for username and password
-      username: 
+      username:
         value: # Set username
         secretKey: # Or specify secret key
       password:
@@ -586,13 +600,36 @@ global:
     x509:
       database: x509db
       credSecret: # Existing secret name for username and password
-      username: 
+      username:
         value: # Set username
         secretKey: # Or specify secret key
       password:
         value: # Add a password here
         secretKey: # Or specify secret key
       enabled: false
+      # host: mariadb.example.com
+      # port: 3306
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+
+    kubernetes:
+      # Note that using secrets is not yet supported for Icinga Kubernetes.
+      database: kubernetes
+      credSecret: # Existing secret name for username and password
+      username:
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
+      enabled: true
       # host: mariadb.example.com
       # port: 3306
       persistence:
