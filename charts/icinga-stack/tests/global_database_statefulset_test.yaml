@@ -191,7 +191,7 @@ tests:
                 key: password
 
   # IcingaWeb DB
-  - it: deploys an Icingaweb2 database StatefulSet using values
+  - it: deploys an Icinga Web database StatefulSet using values
     documentIndex: 4
     values:
       - required_values.yaml
@@ -215,7 +215,7 @@ tests:
             name: MARIADB_PASSWORD
             value: insecureicingaweb2password
 
-  - it: deploys an Icingaweb2 database StatefulSet using secrets
+  - it: deploys an Icinga Web database StatefulSet using secrets
     documentIndex: 4
     values:
       - required_values_secrets.yaml

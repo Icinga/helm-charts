@@ -4,7 +4,7 @@ The configuration for this chart is done via entries in `values.yaml` in the pro
 
 For configuration of Icinga 2's different **features**, please see the section about [Icinga 2 features](#icinga-2-features).
 
-For configuration of IcingaWeb2's different **modules**, please see the section about [IcingaWeb2 modules](#icingaweb2-modules).
+For configuration of Icinga Web's different **modules**, please see the section about [Icinga Web modules](#icinga-web-modules).
 
 ## Values configuration
 
@@ -21,9 +21,9 @@ The values can be set in the chart's `values.yaml` file or via the `--set` flag 
 | Parameter | Description | Remarks | Kubernetes secret parameters |
 | --------- | ----------- | ------- | ---------------------------- |
 | `icinga2.config.ticket_salt.value` | Salt used to generate API tickets for satellites and agents | - | `icinga2.config.ticket_salt.credSecret`, `icinga2.config.ticket_salt.secretKey` |
-| `icingaweb2.auth.admin_password.value` | Password for the Icinga Web 2 admin user | Only needs to be set if Icingaweb2 is `enabled` | `icingaweb2.auth.admin_password.credSecret`, `icingaweb2.auth.admin_password.secretKey` |
+| `icingaweb2.auth.admin_password.value` | Password for the Icinga Web admin user | Only needs to be set if Icinga Web is `enabled` | `icingaweb2.auth.admin_password.credSecret`, `icingaweb2.auth.admin_password.secretKey` |
 | `global.api.users.director.password.value` | Password for the Icinga Director API user | Only needs to be set if Director is `enabled` | `global.api.users.credSecret`, `global.api.users.director.password.secretKey` |
-| `global.api.users.icingaweb.password.value` | Password for the Icingaweb2 API user| Only needs to be set if Icingaweb2 is `enabled` | `global.api.users.credSecret`, `global.api.users.icingaweb.password.secretKey` |
+| `global.api.users.icingaweb.password.value` | Password for the Icinga Web API user| Only needs to be set if Icinga Web is `enabled` | `global.api.users.credSecret`, `global.api.users.icingaweb.password.secretKey` |
 
 ### Global values
 
@@ -34,7 +34,7 @@ These values are used by multiple (sub-)charts and therefore need to be set in t
 | `global.api.host` | Hostname of the Icinga 2 API | `string` | **not set** |
 | `global.api.port` | Port of the Icinga 2 API | `number` | `5665` |
 | `global.api.users.director.permissions` | Permissions of the Icinga 2 API user for Director | `[]string` | `["*"]` |
-| `global.api.users.icingaweb.permissions` | Permissions of the Icinga 2 API user for Icingaweb2 | `[]string` | `["*"]` |
+| `global.api.users.icingaweb.permissions` | Permissions of the Icinga 2 API user for Icinga Web | `[]string` | `["*"]` |
 | `global.databases.<database>.database` | Name of the respective database | `string` | `<database>db`|
 | `global.databases.<database>.username.value` | Username for the respective database. Can be set from secret defined by `global.databases.<database>.credSecret` and `global.databases.<database>.username.secretKey` | `string` | **not set** |  |
 | `global.databases.<database>.password.value` | Password for the respective database. Can be set from secret defined by `global.databases.<database>.credSecret` and `global.databases.<database>.password.secretKey` | `string` | **not set** |  |
@@ -123,43 +123,43 @@ These values are used by the IcingaDB sub-chart.
 | `icingadb.podSecurityContext` | Security context of the IcingaDB pods | `map[string]string` | `{}` |
 | `icingadb.securityContext` | Security context of the IcingaDB container | `map[string]string` | `{}` |
 
-### IcingaWeb2 values
+### Icinga Web values
 
-These values are used by the IcingaWeb2 sub-chart. For configuration of Icingaweb2's different **modules**, please see the section about [Icingaweb2 modules](#icingaweb2-modules).
+These values are used by the Icinga Web sub-chart. For configuration of Icinga Web's different **modules**, please see the section about [Icinga Web modules](#icinga-web-modules).
 
 | Parameter | Description | Data Type | Default |
 | --------- | ----------- | --------- | ------- |
-| `icingaweb2.enabled` | Whether or not to deploy IcingaWeb2 | `boolean` | `true` |
-| `icingaweb2.image.repository` | Repository of the IcingaWeb2 image | `string` | `icinga/icingaweb2` |
-| `icingaweb2.image.tag` | Tag of the IcingaWeb2 image | `string` | `2.11.4` |
-| `icingaweb2.image.pullPolicy` | Pull policy of the IcingaWeb2 image | `string` | `IfNotPresent` |
-| `icingaweb2.imagePullSecrets` | Pull secrets of the IcingaWeb2 image | `[]string` | `[]` |
-| `icingaweb2.nameOverride` | Name override of the IcingaWeb2 deployment | `string` | `""` |
-| `icingaweb2.fullnameOverride` | Fullname override of the IcingaWeb2 deployment | `string` | `""` |
-| `icingaweb2.service.type` | Type of the IcingaWeb2 service | `string` | `ClusterIP` |
-| `icingaweb2.service.port` | Port of the IcingaWeb2 service | `number` | `8080` |
-| `icingaweb2.ingress.enabled` | Whether or not to create an ingress for the IcingaWeb2 service | `boolean` | `false` |
-| `icingaweb2.ingress.className` | Class name of the IcingaWeb2 ingress | `string` | `""` |
-| `icingaweb2.ingress.annotations` | Annotations of the IcingaWeb2 ingress | `map[string]string` | `{}` |
-| `icingaweb2.ingress.hosts[].host` | Host of the IcingaWeb2 ingress | `string` | **not set** |
-| `icingaweb2.ingress.hosts[].paths[].path` | Path of the IcingaWeb2 ingress | `string` | `/` |
-| `icingaweb2.ingress.hosts[].paths[].pathType` | Path type of the IcingaWeb2 ingress | `string` | `ImplementationSpecific` |
-| `icingaweb2.ingress.tls[].hosts` | Hosts of the IcingaWeb2 ingress | `[]string` | **not set** |
-| `icingaweb2.ingress.tls[].secretName` | Secret name of the IcingaWeb2 ingress | `string` | **not set** |
-| `icingaweb2.auth.type` | Type of the IcingaWeb2 authentication | `string` | `db` |
-| `icingaweb2.auth.admin_user` | Admin user of the IcingaWeb2 authentication | `string` | `icingaweb` |
-| `icingaweb2.auth.admin_password.value` | Admin password of the IcingaWeb2 authentication. Can be set from secret specified in `icingaweb2.auth.admin_password.credSecret` and `icingaweb2.auth.admin_password.secretKey` | `string` | **not set** |
-| `icingaweb2.modules.<module>.enabled` | Whether or not to enable the IcingaWeb2 module | `boolean` | **varies** |
-| `icingaweb2.resources` | Resources of the IcingaWeb2 deployment | `map[string]string` | `{}` |
-| `icingaweb2.nodeSelector` | Node selector of the IcingaWeb2 deployment | `map[string]string` | `{}` |
-| `icingaweb2.tolerations` | Tolerations of the IcingaWeb2 deployment | `[]map[string]string` | `[]` |
-| `icingaweb2.affinity` | Affinity of the IcingaWeb2 deployment | `map[string]string` | `{}` |
-| `icingaweb2.serviceAccount.create` | Whether or not to create a service account for the IcingaWeb2 deployment | `boolean` | `false` |
-| `icingaweb2.serviceAccount.annotations` | Annotations of the IcingaWeb2 service account | `map[string]string` | `{}` |
-| `icingaweb2.serviceAccount.name` | Name of the IcingaWeb2 service account | `string` |  `""` |
-| `icingaweb2.podAnnotations` | Annotations of the IcingaWeb2 pods | `map[string]string` | `{}` |
-| `icingaweb2.podSecurityContext` | Security context of the IcingaWeb2 pods | `map[string]string` | `{}` |
-| `icingaweb2.securityContext` | Security context of the IcingaWeb2 container | `map[string]string` | `{}` |
+| `icingaweb2.enabled` | Whether or not to deploy Icinga Web | `boolean` | `true` |
+| `icingaweb2.image.repository` | Repository of the Icinga Web image | `string` | `icinga/icingaweb2` |
+| `icingaweb2.image.tag` | Tag of the Icinga Web image | `string` | `2.11.4` |
+| `icingaweb2.image.pullPolicy` | Pull policy of the Icinga Web image | `string` | `IfNotPresent` |
+| `icingaweb2.imagePullSecrets` | Pull secrets of the Icinga Web image | `[]string` | `[]` |
+| `icingaweb2.nameOverride` | Name override of the Icinga Web deployment | `string` | `""` |
+| `icingaweb2.fullnameOverride` | Fullname override of the Icinga Web deployment | `string` | `""` |
+| `icingaweb2.service.type` | Type of the Icinga Web service | `string` | `ClusterIP` |
+| `icingaweb2.service.port` | Port of the Icinga Web service | `number` | `8080` |
+| `icingaweb2.ingress.enabled` | Whether or not to create an ingress for the Icinga Web service | `boolean` | `false` |
+| `icingaweb2.ingress.className` | Class name of the Icinga Web ingress | `string` | `""` |
+| `icingaweb2.ingress.annotations` | Annotations of the Icinga Web ingress | `map[string]string` | `{}` |
+| `icingaweb2.ingress.hosts[].host` | Host of the Icinga Web ingress | `string` | **not set** |
+| `icingaweb2.ingress.hosts[].paths[].path` | Path of the Icinga Web ingress | `string` | `/` |
+| `icingaweb2.ingress.hosts[].paths[].pathType` | Path type of the Icinga Web ingress | `string` | `ImplementationSpecific` |
+| `icingaweb2.ingress.tls[].hosts` | Hosts of the Icinga Web ingress | `[]string` | **not set** |
+| `icingaweb2.ingress.tls[].secretName` | Secret name of the Icinga Web ingress | `string` | **not set** |
+| `icingaweb2.auth.type` | Type of the Icinga Web authentication | `string` | `db` |
+| `icingaweb2.auth.admin_user` | Admin user of the Icinga Web authentication | `string` | `icingaweb` |
+| `icingaweb2.auth.admin_password.value` | Admin password of the Icinga Web authentication. Can be set from secret specified in `icingaweb2.auth.admin_password.credSecret` and `icingaweb2.auth.admin_password.secretKey` | `string` | **not set** |
+| `icingaweb2.modules.<module>.enabled` | Whether or not to enable the Icinga Web module | `boolean` | **varies** |
+| `icingaweb2.resources` | Resources of the Icinga Web deployment | `map[string]string` | `{}` |
+| `icingaweb2.nodeSelector` | Node selector of the Icinga Web deployment | `map[string]string` | `{}` |
+| `icingaweb2.tolerations` | Tolerations of the Icinga Web deployment | `[]map[string]string` | `[]` |
+| `icingaweb2.affinity` | Affinity of the Icinga Web deployment | `map[string]string` | `{}` |
+| `icingaweb2.serviceAccount.create` | Whether or not to create a service account for the Icinga Web deployment | `boolean` | `false` |
+| `icingaweb2.serviceAccount.annotations` | Annotations of the Icinga Web service account | `map[string]string` | `{}` |
+| `icingaweb2.serviceAccount.name` | Name of the Icinga Web service account | `string` |  `""` |
+| `icingaweb2.podAnnotations` | Annotations of the Icinga Web pods | `map[string]string` | `{}` |
+| `icingaweb2.podSecurityContext` | Security context of the Icinga Web pods | `map[string]string` | `{}` |
+| `icingaweb2.securityContext` | Security context of the Icinga Web container | `map[string]string` | `{}` |
 
 ## Icinga 2 Features
 
@@ -182,9 +182,9 @@ The feature set of Icinga 2 supported by this Helmchart is **opinionated**. We d
 
 **Configuration** of these features is done via the `values.yaml` file. A **commented** version of all available values is provided with this repository. Please refer to the official documentation linked above for more information on how to configure these features.
 
-## IcingaWeb2 Modules
+## Icinga Web Modules
 
-The module set of IcingaWeb2 supported by this Helmchart is **opinionated**. We deliberately chose to omit some modules, either because they are **deprecated** or just have no real use-case when run on Kubernetes. Below is a list of currently supported modules, with links to the official documentation, if available:
+The module set of Icinga Web supported by this Helmchart is **opinionated**. We deliberately chose to omit some modules, either because they are **deprecated** or just have no real use-case when run on Kubernetes. Below is a list of currently supported modules, with links to the official documentation, if available:
 
 - `audit` [Documentation](https://github.com/icinga/icingaweb2-module-audit)
 - `businessprocess` [Documentation](https://icinga.com/docs/icinga-business-process-modelling/latest/doc/01-About/)
