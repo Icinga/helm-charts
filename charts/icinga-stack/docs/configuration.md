@@ -99,29 +99,29 @@ These values are used by the Icinga 2 sub-chart. For configuration of Icinga 2's
 | `icinga2.podSecurityContext.fsGroup` | Filesystem group of the Icinga 2 pods | `number` | `5665` |
 | `icinga2.podSecurityContext` | Security context of the Icinga 2 pods | `map[string]string` | `{}` |
 
-### IcingaDB values
+### Icinga DB values
 
-These values are used by the IcingaDB sub-chart.
+These values are used by the Icinga DB sub-chart.
 
 | Parameter | Description | Data Type | Default |
 | --------- | ----------- | --------- | ------- |
-| `icingadb.enabled` | Whether or not to deploy IcingaDB | `boolean` | `true` |
-| `icingadb.image.repository` | Repository of the IcingaDB image | `string` | `icinga/icingadb` |
-| `icingadb.image.tag` | Tag of the IcingaDB image | `string` | `1.1.0` |
-| `icingadb.image.pullPolicy` | Pull policy of the IcingaDB image | `string` | `IfNotPresent` |
-| `icingadb.imagePullSecrets` | Pull secrets of the IcingaDB image | `[]string` | `[]` |
-| `icingadb.nameOverride` | Name override of the IcingaDB deployment | `string` | `""` |
-| `icingadb.fullnameOverride` | Fullname override of the IcingaDB deployment | `string` | `""` |
-| `icingadb.resources` | Resources of the IcingaDB deployment | `map[string]string` | `{}` |
-| `icingadb.nodeSelector` | Node selector of the IcingaDB deployment | `map[string]string` | `{}` |
-| `icingadb.tolerations` | Tolerations of the IcingaDB deployment | `[]map[string]string` | `[]` |
-| `icingadb.affinity` | Affinity of the IcingaDB deployment | `map[string]string` | `{}` |
-| `icingadb.serviceAccount.create` | Whether or not to create a service account for the IcingaDB deployment | `boolean` | `false` |
-| `icingadb.serviceAccount.annotations` | Annotations of the IcingaDB service account | `map[string]string` | `{}` |
-| `icingadb.serviceAccount.name` | Name of the IcingaDB service account | `string` |  `""` |
-| `icingadb.podAnnotations` | Annotations of the IcingaDB pods | `map[string]string` | `{}` |
-| `icingadb.podSecurityContext` | Security context of the IcingaDB pods | `map[string]string` | `{}` |
-| `icingadb.securityContext` | Security context of the IcingaDB container | `map[string]string` | `{}` |
+| `icingadb.enabled` | Whether or not to deploy Icinga DB | `boolean` | `true` |
+| `icingadb.image.repository` | Repository of the Icinga DB image | `string` | `icinga/icingadb` |
+| `icingadb.image.tag` | Tag of the Icinga DB image | `string` | `1.1.0` |
+| `icingadb.image.pullPolicy` | Pull policy of the Icinga DB image | `string` | `IfNotPresent` |
+| `icingadb.imagePullSecrets` | Pull secrets of the Icinga DB image | `[]string` | `[]` |
+| `icingadb.nameOverride` | Name override of the Icinga DB deployment | `string` | `""` |
+| `icingadb.fullnameOverride` | Fullname override of the Icinga DB deployment | `string` | `""` |
+| `icingadb.resources` | Resources of the Icinga DB deployment | `map[string]string` | `{}` |
+| `icingadb.nodeSelector` | Node selector of the Icinga DB deployment | `map[string]string` | `{}` |
+| `icingadb.tolerations` | Tolerations of the Icinga DB deployment | `[]map[string]string` | `[]` |
+| `icingadb.affinity` | Affinity of the Icinga DB deployment | `map[string]string` | `{}` |
+| `icingadb.serviceAccount.create` | Whether or not to create a service account for the Icinga DB deployment | `boolean` | `false` |
+| `icingadb.serviceAccount.annotations` | Annotations of the Icinga DB service account | `map[string]string` | `{}` |
+| `icingadb.serviceAccount.name` | Name of the Icinga DB service account | `string` |  `""` |
+| `icingadb.podAnnotations` | Annotations of the Icinga DB pods | `map[string]string` | `{}` |
+| `icingadb.podSecurityContext` | Security context of the Icinga DB pods | `map[string]string` | `{}` |
+| `icingadb.securityContext` | Security context of the Icinga DB container | `map[string]string` | `{}` |
 
 ### Icinga Web values
 

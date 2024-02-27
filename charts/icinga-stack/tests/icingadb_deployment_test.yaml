@@ -1,8 +1,8 @@
-suite: "[IcingaDB] Deployment"
+suite: "[Icinga DB] Deployment"
 templates:
   - ../charts/icingadb/templates/deployment.yaml
 tests:
-  - it: deploys an IcingaDB deployment
+  - it: deploys an Icinga DB deployment
     values:
       - required_values.yaml
     release:
@@ -15,7 +15,7 @@ tests:
           path: metadata.name
           value: my-icinga-icingadb
 
-  - it: deploys an IcingaDB deployment using values
+  - it: deploys an Icinga DB deployment using values
     values:
       - required_values.yaml
     release:
@@ -38,7 +38,7 @@ tests:
             name: ICINGADB_DATABASE_PASSWORD
             value: insecureicingadbpassword
 
-  - it: deploys an IcingaDB deployment using secrets
+  - it: deploys an Icinga DB deployment using secrets
     values:
       - required_values_secrets.yaml
     release:
@@ -67,7 +67,7 @@ tests:
                 name: database-icingadb
                 key: password
 
-  - it: deploys an IcingaDB deployment with extra environment variables
+  - it: deploys an Icinga DB deployment with extra environment variables
     values:
       - required_values.yaml
     set:
