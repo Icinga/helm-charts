@@ -512,7 +512,7 @@ icinga-kubernetes:
 
 global:
   api:
-    # host:  # only needed if Icinga2 runs out of cluster
+    # host:  # only needed if Icinga 2 runs out of cluster
     port: 5665
     users:
       credSecret: # Existing secret for director and icingaweb password

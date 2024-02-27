@@ -2,7 +2,7 @@
 
 The configuration for this chart is done via entries in `values.yaml` in the project's root directory. The following tables lists the configurable parameters of the chart and their default values.
 
-For configuration of Icinga2's different **features**, please see the section about [Icinga2 features](#icinga2-features).
+For configuration of Icinga 2's different **features**, please see the section about [Icinga 2 features](#icinga-2-features).
 
 For configuration of IcingaWeb2's different **modules**, please see the section about [IcingaWeb2 modules](#icingaweb2-modules).
 
@@ -33,8 +33,8 @@ These values are used by multiple (sub-)charts and therefore need to be set in t
 | --------- | ----------- | --------- | ------- |
 | `global.api.host` | Hostname of the Icinga 2 API | `string` | **not set** |
 | `global.api.port` | Port of the Icinga 2 API | `number` | `5665` |
-| `global.api.users.director.permissions` | Permissions of the Icinga2 API user for Director | `[]string` | `["*"]` |
-| `global.api.users.icingaweb.permissions` | Permissions of the Icinga2 API user for Icingaweb2 | `[]string` | `["*"]` |
+| `global.api.users.director.permissions` | Permissions of the Icinga 2 API user for Director | `[]string` | `["*"]` |
+| `global.api.users.icingaweb.permissions` | Permissions of the Icinga 2 API user for Icingaweb2 | `[]string` | `["*"]` |
 | `global.databases.<database>.database` | Name of the respective database | `string` | `<database>db`|
 | `global.databases.<database>.username.value` | Username for the respective database. Can be set from secret defined by `global.databases.<database>.credSecret` and `global.databases.<database>.username.secretKey` | `string` | **not set** |  |
 | `global.databases.<database>.password.value` | Password for the respective database. Can be set from secret defined by `global.databases.<database>.credSecret` and `global.databases.<database>.password.secretKey` | `string` | **not set** |  |
@@ -53,34 +53,34 @@ These values are used by multiple (sub-)charts and therefore need to be set in t
 | `global.redis.host` | Hostname of the Redis instance | `string` | **not set** |
 | `global.redis.port` | Port of the Redis instance | `number` | **not set** |
 
-### Icinga2 values
+### Icinga 2 values
 
-These values are used by the Icinga2 sub-chart. For configuration of Icinga2's different **features**, please see the section about [Icinga2 features](#icinga2-features).
+These values are used by the Icinga 2 sub-chart. For configuration of Icinga 2's different **features**, please see the section about [Icinga 2 features](#icinga-2-features).
 
 | Parameter | Description | Data Type | Default |
 | --------- | ----------- | --------- | ------- |
-| `icinga2.image.repository` | Repository of the Icinga2 image | `string` | `icinga/icinga2` |
-| `icinga2.image.tag` | Tag of the Icinga2 image | `string` | `2.13.7` |
-| `icinga2.image.pullPolicy` | Pull policy of the Icinga2 image | `string` | `IfNotPresent` |
-| `icinga2.imagePullSecrets` | Pull secrets of the Icinga2 image | `[]string` | `[]` |
-| `icinga2.nameOverride` | Name override of the Icinga2 deployment | `string` | `""` |
-| `icinga2.fullnameOverride` | Fullname override of the Icinga2 deployment | `string` | `""` |
-| `icinga2.service.type` | Type of the Icinga2 service | `string` | `ClusterIP` |
-| `icinga2.service.port` | Port of the Icinga2 service | `number` | `5665` |
-| `icinga2.ingress.enabled` | Whether or not to deploy an ingress for Icinga2 | `boolean` | `false` |
-| `icinga2.ingress.className` | Class name of the Icinga2 ingress | `string` | `""` |
-| `icinga2.ingress.annotations` | Annotations of the Icinga2 ingress | `map[string]string` | `{}` |
-| `icinga2.ingress.hosts[].host` | Host of the Icinga2 ingress | `string` | **not set** |
-| `icinga2.ingress.hosts[].paths[].path` | Path of the Icinga2 ingress | `string` | `/` |
-| `icinga2.ingress.hosts[].paths[].pathType` | Path type of the Icinga2 ingress | `string` | `ImplementationSpecific` |
-| `icinga2.ingress.tls[].hosts[]` | Hosts of the Icinga2 ingress | `[]string` | **not set** |
-| `icinga2.ingress.tls[].secretName` | Secret name of the Icinga2 ingress | `string` | **not set** |
-| `icinga2.config.node_name` | Name of the Icinga2 node | `string` | `icinga2-master` |
-| `icinga2.config.zone_name` | Name of the Icinga2 zone | `string` | `master` |
+| `icinga2.image.repository` | Repository of the Icinga 2 image | `string` | `icinga/icinga2` |
+| `icinga2.image.tag` | Tag of the Icinga 2 image | `string` | `2.13.7` |
+| `icinga2.image.pullPolicy` | Pull policy of the Icinga 2 image | `string` | `IfNotPresent` |
+| `icinga2.imagePullSecrets` | Pull secrets of the Icinga 2 image | `[]string` | `[]` |
+| `icinga2.nameOverride` | Name override of the Icinga 2 deployment | `string` | `""` |
+| `icinga2.fullnameOverride` | Fullname override of the Icinga 2 deployment | `string` | `""` |
+| `icinga2.service.type` | Type of the Icinga 2 service | `string` | `ClusterIP` |
+| `icinga2.service.port` | Port of the Icinga 2 service | `number` | `5665` |
+| `icinga2.ingress.enabled` | Whether or not to deploy an ingress for Icinga 2 | `boolean` | `false` |
+| `icinga2.ingress.className` | Class name of the Icinga 2 ingress | `string` | `""` |
+| `icinga2.ingress.annotations` | Annotations of the Icinga 2 ingress | `map[string]string` | `{}` |
+| `icinga2.ingress.hosts[].host` | Host of the Icinga 2 ingress | `string` | **not set** |
+| `icinga2.ingress.hosts[].paths[].path` | Path of the Icinga 2 ingress | `string` | `/` |
+| `icinga2.ingress.hosts[].paths[].pathType` | Path type of the Icinga 2 ingress | `string` | `ImplementationSpecific` |
+| `icinga2.ingress.tls[].hosts[]` | Hosts of the Icinga 2 ingress | `[]string` | **not set** |
+| `icinga2.ingress.tls[].secretName` | Secret name of the Icinga 2 ingress | `string` | **not set** |
+| `icinga2.config.node_name` | Name of the Icinga 2 node | `string` | `icinga2-master` |
+| `icinga2.config.zone_name` | Name of the Icinga 2 zone | `string` | `master` |
 | `icinga2.config.disable_confd` | Disables the `include_recursive "conf.d"` directive in icinga2.conf | `boolean` | `true` |
 | `icinga2.config.ticket_salt.value` | Salt used to generate API tickets for satellites and agents. Can be set from secret specified in `icinga2.config.ticket_salt.credSecret` and `icinga2.config.ticket_salt.secretKey` | `string` | **not set** |
 | `icinga2.features.<feature>.enabled` | Whether or not the respective feature should be enabled | `boolean` | **varies** |
-| `icinga2.persistence.enabled` | Whether or not the Icinga2 deployment should use a persistent volume | `boolean` | `false` |
+| `icinga2.persistence.enabled` | Whether or not the Icinga 2 deployment should use a persistent volume | `boolean` | `false` |
 | `icinga2.persistence.size` | Size of the persistent volume | `string` | `5Gi` |
 | `icinga2.persistence.accessMode` | Access mode of the persistent volume | `string` | `ReadWriteOnce` |
 | `icinga2.persistence.storageClass` | Storage class of the persistent volume | `string` | **not set** |
@@ -88,16 +88,16 @@ These values are used by the Icinga2 sub-chart. For configuration of Icinga2's d
 | `icinga2.persistence.subPath` | Subpath of the persistent volume | `string` | **not set** |
 | `icinga2.persistence.matchLabels` | Labels to match for the persistent volume | `map[string]string` | `{}` |
 | `icinga2.persistence.matchExpressions` | Expressions to match for the persistent volume | `[]map[string]string` | `[]`|
-| `icinga2.resources` | Resources of the Icinga2 deployment | `map[string]string` | `{}` |
-| `icinga2.nodeSelector` | Node selector of the Icinga2 deployment | `map[string]string` | `{}` |
-| `icinga2.tolerations` | Tolerations of the Icinga2 deployment | `[]map[string]string` | `[]` |
-| `icinga2.affinity` | Affinity of the Icinga2 deployment | `map[string]string` | `{}` |
-| `icinga2.serviceAccount.create` | Whether or not to create a service account for the Icinga2 deployment | `boolean` | `false` |
-| `icinga2.serviceAccount.annotations` | Annotations of the Icinga2 service account | `map[string]string` | `{}` |
-| `icinga2.serviceAccount.name` | Name of the Icinga2 service account | `string` |  `""` |
-| `icinga2.podAnnotations` | Annotations of the Icinga2 pods | `map[string]string` | `{}` |
-| `icinga2.podSecurityContext.fsGroup` | Filesystem group of the Icinga2 pods | `number` | `5665` |
-| `icinga2.podSecurityContext` | Security context of the Icinga2 pods | `map[string]string` | `{}` |
+| `icinga2.resources` | Resources of the Icinga 2 deployment | `map[string]string` | `{}` |
+| `icinga2.nodeSelector` | Node selector of the Icinga 2 deployment | `map[string]string` | `{}` |
+| `icinga2.tolerations` | Tolerations of the Icinga 2 deployment | `[]map[string]string` | `[]` |
+| `icinga2.affinity` | Affinity of the Icinga 2 deployment | `map[string]string` | `{}` |
+| `icinga2.serviceAccount.create` | Whether or not to create a service account for the Icinga 2 deployment | `boolean` | `false` |
+| `icinga2.serviceAccount.annotations` | Annotations of the Icinga 2 service account | `map[string]string` | `{}` |
+| `icinga2.serviceAccount.name` | Name of the Icinga 2 service account | `string` |  `""` |
+| `icinga2.podAnnotations` | Annotations of the Icinga 2 pods | `map[string]string` | `{}` |
+| `icinga2.podSecurityContext.fsGroup` | Filesystem group of the Icinga 2 pods | `number` | `5665` |
+| `icinga2.podSecurityContext` | Security context of the Icinga 2 pods | `map[string]string` | `{}` |
 
 ### IcingaDB values
 
@@ -161,9 +161,9 @@ These values are used by the IcingaWeb2 sub-chart. For configuration of Icingawe
 | `icingaweb2.podSecurityContext` | Security context of the IcingaWeb2 pods | `map[string]string` | `{}` |
 | `icingaweb2.securityContext` | Security context of the IcingaWeb2 container | `map[string]string` | `{}` |
 
-## Icinga2 Features
+## Icinga 2 Features
 
-The feature set of Icinga2 supported by this Helmchart is **opinionated**. We deliberately chose to omit some features, either because they are listed as **deprecated** in the official documentation or just have no real use-case when run on Kubernetes. Below is a list of currently supported features, with links to the official documentation, if available:
+The feature set of Icinga 2 supported by this Helmchart is **opinionated**. We deliberately chose to omit some features, either because they are listed as **deprecated** in the official documentation or just have no real use-case when run on Kubernetes. Below is a list of currently supported features, with links to the official documentation, if available:
 
 - `api` [Documentation](https://icinga.com/docs/icinga-2/latest/doc/12-icinga2-api/#icinga2-api)
 - `checker`

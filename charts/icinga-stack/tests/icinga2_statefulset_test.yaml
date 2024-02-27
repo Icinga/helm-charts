@@ -1,8 +1,8 @@
-suite: "[Icinga2] StatefulSet"
+suite: "[Icinga 2] StatefulSet"
 templates:
   - ../charts/icinga2/templates/statefulset.yaml
 tests:
-  - it: deploys an Icinga2 StatefulSet without persistence and with ticket_salt provided as value
+  - it: deploys an Icinga 2 StatefulSet without persistence and with ticket_salt provided as value
     values:
       - required_values.yaml
     release:
@@ -53,7 +53,7 @@ tests:
             name: ICINGA_ICINGAWEB_API_PASSWORD
             value: "icingaweb-insecurepassword"
 
-  - it: deploys an Icinga2 StatefulSet without persistence and with ticket_salt provided as secret
+  - it: deploys an Icinga 2 StatefulSet without persistence and with ticket_salt provided as secret
     values:
       - required_values_secrets.yaml
     release:
@@ -122,7 +122,7 @@ tests:
                 name: "api-users"
                 key: "icingaweb-password"
 
-  - it: failed deployment of Icinga2 StatefulSet due to partial secret definition
+  - it: failed deployment of Icinga 2 StatefulSet due to partial secret definition
     values:
       - required_values_secrets.yaml
     set:
@@ -141,7 +141,7 @@ tests:
       - failedTemplate:
           errorMessage: "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.credSecret and .Values.global.api.users.director.password.secretKey"
   
-  - it: deploys an Icinga2 StatefulSet with persistence
+  - it: deploys an Icinga 2 StatefulSet with persistence
     values:
       - required_values.yaml
     set:
@@ -176,7 +176,7 @@ tests:
             emptyDir: {}
           any: true
 
-  - it: failed deployment of an Icinga2 StatefulSet due to missing ticket_salt
+  - it: failed deployment of an Icinga 2 StatefulSet due to missing ticket_salt
     values:
       - required_values.yaml
     set:
@@ -189,7 +189,7 @@ tests:
       - failedTemplate:
           errorMessage: "Icinga TicketSalt not set. Either set .Values.config.ticket_salt.value or .Values.config.ticket_salt.credSecret and .Values.config.ticket_salt.secretKey"
 
-  - it: deploys an Icinga2 StatefulSet with elasticsearch values
+  - it: deploys an Icinga 2 StatefulSet with elasticsearch values
     values:
       - required_values.yaml
     set:
@@ -232,7 +232,7 @@ tests:
             name: ICINGA_ELASTICSEARCH_PASSWORD
             value: "elastic-password"
 
-  - it: deploys an Icinga2 StatefulSet with elasticsearch secrets
+  - it: deploys an Icinga 2 StatefulSet with elasticsearch secrets
     values:
       - required_values.yaml
     set:
@@ -282,7 +282,7 @@ tests:
                 name: "icinga-elasticsearch"
                 key: "elastic-password"
 
-  - it: deploys an Icinga2 StatefulSet with elasticsearch secrets with tls
+  - it: deploys an Icinga 2 StatefulSet with elasticsearch secrets with tls
     values:
       - required_values.yaml
     set:
@@ -356,7 +356,7 @@ tests:
               - key: "elastic-key-key"
                 path: "cert.key"
 
-  - it: deploys an Icinga2 StatefulSet with gelf secrets with tls
+  - it: deploys an Icinga 2 StatefulSet with gelf secrets with tls
     values:
       - required_values.yaml
     set:
@@ -409,7 +409,7 @@ tests:
               - key: "gelf-key-key"
                 path: "cert.key"
 
-  - it: deploys an Icinga2 StatefulSet with icingadb password value
+  - it: deploys an Icinga 2 StatefulSet with icingadb password value
     values:
       - required_values.yaml
     set:
@@ -443,7 +443,7 @@ tests:
             name: ICINGA_ICINGADB_PASSWORD
             value: "icingadb-password"
 
-  - it: deploys an Icinga2 StatefulSet with icingadb secrets with tls
+  - it: deploys an Icinga 2 StatefulSet with icingadb secrets with tls
     values:
       - required_values.yaml
     set:
@@ -510,7 +510,7 @@ tests:
               - key: "icingadb-crl-key"
                 path: "crl.pem"
 
-  - it: deploys an Icinga2 StatefulSet with influxdb2 values
+  - it: deploys an Icinga 2 StatefulSet with influxdb2 values
     values:
       - required_values.yaml
     set:
@@ -546,7 +546,7 @@ tests:
             name: ICINGA_INFLUXDB2_AUTH_TOKEN
             value: "influxdb2_auth_token"
 
-  - it: deploys an Icinga2 StatefulSet with influxdb2 secrets
+  - it: deploys an Icinga 2 StatefulSet with influxdb2 secrets
     values:
       - required_values.yaml
     set:
@@ -586,7 +586,7 @@ tests:
                 name: "icinga-influxdb2"
                 key: "authToken"
 
-  - it: deploys an Icinga2 StatefulSet with influxdb2 secrets with ssl
+  - it: deploys an Icinga 2 StatefulSet with influxdb2 secrets with ssl
     values:
       - required_values.yaml
     set:
@@ -651,7 +651,7 @@ tests:
               - key: "influxdb2-key-key"
                 path: "cert.key"
 
-  - it: failed deployment of an Icinga2 StatefulSet with influxdb2 due to missing auth_token
+  - it: failed deployment of an Icinga 2 StatefulSet with influxdb2 due to missing auth_token
     values:
       - required_values.yaml
     set:
@@ -668,7 +668,7 @@ tests:
       - failedTemplate:
           errorMessage: "Icinga InfluxDB2 auth_token not set. Either set .Values.features.influxdb2.auth_token.value or .Values.features.influxdb2.credSecret and .Values.features.influxdb2.auth_token.secretKey"
 
-  - it: deploys an Icinga2 StatefulSet with influxdb values
+  - it: deploys an Icinga 2 StatefulSet with influxdb values
     values:
       - required_values.yaml
     set:
@@ -726,7 +726,7 @@ tests:
             name: ICINGA_INFLUXDB_BASIC_AUTH_PASSWORD
             value: "influxdb-basic-auth-password"
             
-  - it: deploys an Icinga2 StatefulSet with influxdb secrets
+  - it: deploys an Icinga 2 StatefulSet with influxdb secrets
     values:
       - required_values.yaml
     set:
@@ -797,7 +797,7 @@ tests:
                 name: "icinga-influxdb"
                 key: "basic-auth-password"
             
-  - it: deploys an Icinga2 StatefulSet with influxdb secrets with ssl
+  - it: deploys an Icinga 2 StatefulSet with influxdb secrets with ssl
     values:
       - required_values.yaml
     set:
@@ -892,7 +892,7 @@ tests:
               - key: "influxdb-key-key"
                 path: "cert.key"
 
-  - it: deploys an Icinga2 StatefulSet with extra environment variables
+  - it: deploys an Icinga 2 StatefulSet with extra environment variables
     values:
       - required_values.yaml
     set:
