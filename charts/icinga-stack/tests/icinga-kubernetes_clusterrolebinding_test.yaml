@@ -1,0 +1,37 @@
+suite: "[Icinga Kubernetes] ClusterRoleBinding creation"
+templates:
+  - ../charts/icinga-kubernetes/templates/clusterrolebinding.yaml
+tests:
+  - it: creates a ClusterRoleBinding if enabled
+    values:
+      - required_values.yaml
+    set:
+      icinga-kubernetes:
+        rbac:
+          create: true
+    release:
+      name: my-icinga
+      namespace: my-namespace
+    asserts:
+      - containsDocument:
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: my-icinga-icinga-kubernetes
+      - equal:
+          path: roleRef.apiGroup
+          value: rbac.authorization.k8s.io
+      - equal:
+          path: roleRef.kind
+          value: ClusterRole
+      - equal:
+          path: roleRef.name
+          value: my-icinga-icinga-kubernetes
+      - contains:
+          path: subjects
+          content:
+            kind: ServiceAccount
+            name: my-icinga-icinga-kubernetes
+            namespace: my-namespace
+
