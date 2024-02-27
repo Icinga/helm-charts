@@ -1,4 +1,4 @@
-suite: "[Icingaweb2] Ingress creation"
+suite: "[Icinga Web] Ingress creation"
 templates:
   - ../charts/icingaweb2/templates/ingress.yaml
 tests:

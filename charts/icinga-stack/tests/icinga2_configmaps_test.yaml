@@ -1,8 +1,8 @@
-suite: "[Icinga2] Configmaps"
+suite: "[Icinga 2] Configmaps"
 templates:
   - ../charts/icinga2/templates/configmaps.yaml
 tests:
-  - it: Icinga2 configmap ticket_salt and api-users test
+  - it: Icinga 2 configmap ticket_salt and api-users test
     values:
       - required_values.yaml
     release:
@@ -24,7 +24,7 @@ tests:
           pattern: password = getenv\("ICINGA_ICINGAWEB_API_PASSWORD"\)
         documentIndex: 0
 
-  - it: Icinga2 configmap elasticsearch test
+  - it: Icinga 2 configmap elasticsearch test
     values:
       - required_values.yaml
     set:
@@ -52,7 +52,7 @@ tests:
           pattern: password = getenv\("ICINGA_ELASTICSEARCH_PASSWORD"\)
         documentIndex: 1
 
-  - it: Icinga2 configmap elasticsearch tls test
+  - it: Icinga 2 configmap elasticsearch tls test
     values:
       - required_values.yaml
     set:
@@ -97,7 +97,7 @@ tests:
           pattern: key_path = "/etc/icinga2-pki/elastic/cert.key"
         documentIndex: 1
 
-  - it: Icinga2 configmap elasticsearch tls failure
+  - it: Icinga 2 configmap elasticsearch tls failure
     values:
       - required_values.yaml
     set:
@@ -118,7 +118,7 @@ tests:
       - failedTemplate:
           errorMessage: "Elasticsearch cert secrets not set. Set .Values.features.elasticsearch.tlsSecret, .Values.features.elasticsearch.caSecretKey, .Values.features.elasticsearch.certSecretKey and .Values.features.elasticsearch.keySecretKey"
 
-  - it: Icinga2 configmap gelf tls test
+  - it: Icinga 2 configmap gelf tls test
     values:
       - required_values.yaml
     set:
@@ -150,7 +150,7 @@ tests:
           pattern: key_path = "/etc/icinga2-pki/gelf/cert.key"
         documentIndex: 1
 
-  - it: Icinga2 configmap gelf tls failure
+  - it: Icinga 2 configmap gelf tls failure
     values:
       - required_values.yaml
     set:
@@ -167,7 +167,7 @@ tests:
       - failedTemplate:
           errorMessage: "GELF cert secrets not set. Set .Values.features.gelf.tlsSecret, .Values.features.gelf.caSecretKey, .Values.features.gelf.certSecretKey and .Values.features.gelf.keySecretKey"
 
-  - it: Icinga2 configmap icingadb test without password
+  - it: Icinga 2 configmap icingadb test without password
     values:
       - required_values.yaml
     set:
@@ -187,7 +187,7 @@ tests:
         documentIndex: 1
         not: true
 
-  - it: Icinga2 configmap icingadb test with password
+  - it: Icinga 2 configmap icingadb test with password
     values:
       - required_values.yaml
     set:
@@ -209,7 +209,7 @@ tests:
           pattern: password = getenv\("ICINGA_ICINGADB_PASSWORD"\)
         documentIndex: 1
 
-  - it: Icinga2 configmap icingadb tls test
+  - it: Icinga 2 configmap icingadb tls test
     values:
       - required_values.yaml
     set:
@@ -246,7 +246,7 @@ tests:
           pattern: crl_path = "/etc/icinga2-pki/icingadb/crl.pem"
         documentIndex: 1
 
-  - it: Icinga2 configmap icingadb tls failure
+  - it: Icinga 2 configmap icingadb tls failure
     values:
       - required_values.yaml
     set:
@@ -265,7 +265,7 @@ tests:
       - failedTemplate:
           errorMessage: "icingadb cert secrets not set. Set .Values.features.icingadb.tlsSecret, .Values.features.icingadb.caSecretKey, .Values.features.icingadb.certSecretKey, .Values.features.icingadb.keySecretKey and .Values.features.icingadb.crlSecretKey"
 
-  - it: Icinga2 configmap influxdb2 ssl test
+  - it: Icinga 2 configmap influxdb2 ssl test
     values:
       - required_values.yaml
     set:
@@ -297,7 +297,7 @@ tests:
           pattern: ssl_key = "/etc/icinga2-pki/influxdb2/cert.key"
         documentIndex: 1
 
-  - it: Icinga2 configmap influxdb2 tls failure
+  - it: Icinga 2 configmap influxdb2 tls failure
     values:
       - required_values.yaml
     set:
@@ -316,7 +316,7 @@ tests:
       - failedTemplate:
           errorMessage: "influxdb2 cert secrets not set. Set .Values.features.influxdb2.tlsSecret, .Values.features.influxdb2.caSecretKey, .Values.features.influxdb2.certSecretKey and .Values.features.influxdb2.keySecretKey"
 
-  - it: Icinga2 configmap influxdb ssl test
+  - it: Icinga 2 configmap influxdb ssl test
     values:
       - required_values.yaml
     set:
@@ -348,7 +348,7 @@ tests:
           pattern: ssl_key = "/etc/icinga2-pki/influxdb/cert.key"
         documentIndex: 1
 
-  - it: Icinga2 configmap influxdb tls failure
+  - it: Icinga 2 configmap influxdb tls failure
     values:
       - required_values.yaml
     set:
@@ -367,7 +367,7 @@ tests:
       - failedTemplate:
           errorMessage: "influxdb cert secrets not set. Set .Values.features.influxdb.tlsSecret, .Values.features.influxdb.caSecretKey, .Values.features.influxdb.certSecretKey and .Values.features.influxdb.keySecretKey"
 
-  - it: Icinga2 configmap influxdb2 test
+  - it: Icinga 2 configmap influxdb2 test
     values:
       - required_values.yaml
     set:
@@ -389,7 +389,7 @@ tests:
           pattern: auth_token = getenv\("ICINGA_INFLUXDB2_AUTH_TOKEN"\)
         documentIndex: 1
 
-  - it: Icinga2 configmap influxdb credentials from secret
+  - it: Icinga 2 configmap influxdb credentials from secret
     values:
       - required_values.yaml
     set:
@@ -417,7 +417,7 @@ tests:
           pattern: password = getenv\("ICINGA_INFLUXDB_PASSWORD"\)
         documentIndex: 1
 
-  - it: Icinga2 configmap influxdb credentials from value
+  - it: Icinga 2 configmap influxdb credentials from value
     values:
       - required_values.yaml
     set:
@@ -444,7 +444,7 @@ tests:
           pattern: password = getenv\("ICINGA_INFLUXDB_PASSWORD"\)
         documentIndex: 1
         
-  - it: Icinga2 configmap influxdb basic auth credentials from secret
+  - it: Icinga 2 configmap influxdb basic auth credentials from secret
     values:
       - required_values.yaml
     set:

@@ -135,8 +135,8 @@ tests:
       - failedTemplate:
           errorMessage: "director password not set. Set either .Values.global.databases.director.password.value or .Values.global.databases.director.credSecret and .Values.global.databases.director.password.secretKey"
 
-  # IcingaDB DB
-  - it: deploys an IcingaDB database StatefulSet using values
+  # Icinga DB DB
+  - it: deploys an Icinga DB database StatefulSet using values
     documentIndex: 2
     values:
       - required_values.yaml
@@ -160,7 +160,7 @@ tests:
             name: MARIADB_PASSWORD
             value: insecureicingadbpassword
 
-  - it: deploys an IcingaDB database StatefulSet using secrets
+  - it: deploys an Icinga DB database StatefulSet using secrets
     documentIndex: 2
     values:
       - required_values_secrets.yaml
@@ -191,7 +191,7 @@ tests:
                 key: password
 
   # IcingaWeb DB
-  - it: deploys an Icingaweb2 database StatefulSet using values
+  - it: deploys an Icinga Web database StatefulSet using values
     documentIndex: 4
     values:
       - required_values.yaml
@@ -215,7 +215,7 @@ tests:
             name: MARIADB_PASSWORD
             value: insecureicingaweb2password
 
-  - it: deploys an Icingaweb2 database StatefulSet using secrets
+  - it: deploys an Icinga Web database StatefulSet using secrets
     documentIndex: 4
     values:
       - required_values_secrets.yaml

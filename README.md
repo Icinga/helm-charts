@@ -1,17 +1,17 @@
-# Icinga2 Kubernetes Helm Charts
+# Icinga Kubernetes Helm Charts
 
-This repository serves as a central repository to host all Icinga2 related Helm charts.
+This repository serves as a central repository to host all Icinga related Helm charts.
 
-[Icinga2](https://icinga.com) is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
+[Icinga](https://icinga.com) is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
 
 [Helm](https://helm.sh) is a tool for managing Kubernetes charts. Charts are packages of pre-configured Kubernetes resources.
 
 ### Add Helm repository
 
-First you need to add the Icinga2 Helm repository to your Helm installation. Helm repositories are similar to package repositories in Linux distributions as in they contain different available packages of 
+First you need to add the Icinga Helm repository to your Helm installation. Helm repositories are similar to package repositories in Linux distributions as in they contain different available packages of 
 Kubernetes manifests for users to consume.
 
-The Icinga2 Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following command:
+The Icinga Helm repository is hosted on GitHub Pages and can be added to your Helm installation by running the following command:
 
 ```console
 helm repo add icinga https://icinga.github.io/helm-charts
