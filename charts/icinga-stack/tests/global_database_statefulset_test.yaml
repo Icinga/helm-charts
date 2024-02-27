@@ -81,6 +81,11 @@ tests:
               secretKey: username
             password:
               secretKey: password
+          kubernetes:
+            username:
+              value: kubernetes
+            password:
+              value: insecurekubernetespassword
     release:
       name: my-icinga
     asserts:
@@ -242,7 +247,7 @@ tests:
 
   # Icinga Kubernetes DB
   - it: deploys an Icinga Kubernetes database StatefulSet using values
-    documentIndex: 8
+    documentIndex: 6
     values:
       - required_values.yaml
     release:
