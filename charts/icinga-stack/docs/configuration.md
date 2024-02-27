@@ -147,7 +147,7 @@ These values are used by the IcingaWeb2 sub-chart. For configuration of Icingawe
 | `icingaweb2.ingress.tls[].hosts` | Hosts of the IcingaWeb2 ingress | `[]string` | **not set** |
 | `icingaweb2.ingress.tls[].secretName` | Secret name of the IcingaWeb2 ingress | `string` | **not set** |
 | `icingaweb2.auth.type` | Type of the IcingaWeb2 authentication | `string` | `db` |
-| `icingaweb2.auth.admin_user` | Admin user of the IcingaWeb2 authentication | `string` | `icingaweb` |
+| `icingaweb2.auth.admin_user` | Admin user of the IcingaWeb2 authentication | `string` | `icingaadmin` |
 | `icingaweb2.auth.admin_password.value` | Admin password of the IcingaWeb2 authentication. Can be set from secret specified in `icingaweb2.auth.admin_password.credSecret` and `icingaweb2.auth.admin_password.secretKey` | `string` | **not set** |
 | `icingaweb2.modules.<module>.enabled` | Whether or not to enable the IcingaWeb2 module | `boolean` | **varies** |
 | `icingaweb2.resources` | Resources of the IcingaWeb2 deployment | `map[string]string` | `{}` |

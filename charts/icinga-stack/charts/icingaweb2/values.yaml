@@ -33,7 +33,7 @@ ingress:
 auth:
   type: db
   #resource: # Add the name of the db resource used by Icinga Web 2 here
-  admin_user: icingaweb
+  admin_user: icingaadmin
   admin_password:
     value: # Add a password here
     credSecret: # Or use existing secret
