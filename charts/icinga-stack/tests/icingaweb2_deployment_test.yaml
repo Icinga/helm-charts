@@ -18,7 +18,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: icingaweb.enabledModules
-            value: director,icingadb,incubator,
+            value: director,icingadb,incubator,kubernetes,
           any: true
       - contains:
           path: spec.template.spec.containers[0].env
@@ -50,7 +50,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: icingaweb.enabledModules
-            value: director,icingadb,incubator,x509,
+            value: director,icingadb,incubator,kubernetes,x509,
           any: true
   
   - it: deploys an Icinga Web deployment with minimal configuration using secrets
@@ -69,7 +69,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: icingaweb.enabledModules
-            value: director,icingadb,incubator,
+            value: director,icingadb,incubator,kubernetes,
           any: true
       - contains:
           path: spec.template.spec.containers[0].env
@@ -104,7 +104,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: icingaweb.enabledModules
-            value: director,graphite,icingadb,incubator,
+            value: director,graphite,icingadb,incubator,kubernetes,
           any: true
 
   - it: deploys an Icinga Web deployment with graphite, user/password from value
