@@ -135,4 +135,8 @@
 - name: icingaweb.modules.x509.config.backend.resource
   value: {{ .Values.global.databases.x509.database | quote }}
 {{- end }}
+{{- if .Values.modules.kubernetes.enabled }}
+- name: icingaweb.modules.kubernetes.config.database.resource
+  value: {{ .Values.global.databases.kubernetes.database | quote }}
+{{- end }}
 {{- end -}}
