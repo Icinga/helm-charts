@@ -10,6 +10,7 @@ fullnameOverride: ""
 service:
   type: ClusterIP
   port: 5665
+  annotations: {}
 
 ingress:
   enabled: false
