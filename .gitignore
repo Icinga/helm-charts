@@ -1,2 +1,5 @@
 TODOS.md
 __snapshot__/
+
+# ignore downloaded dependencies (typically .tar.gz)
+charts/icinga-stack/charts/ 
