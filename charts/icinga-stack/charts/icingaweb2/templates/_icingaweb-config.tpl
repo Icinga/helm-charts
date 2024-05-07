@@ -36,7 +36,10 @@
       name: {{ .Values.auth.admin_password.credSecret | quote }}
       key: {{ .Values.auth.admin_password.secretKey | quote }}
 {{- else }}
-{{ fail "Icinga Web auth admin password not set. Set either .Values.icingaweb2.auth.admin_password.value or .Values.icingaweb2.auth.admin_password.credSecret and .Values.icingaweb2.auth.admin_password.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: icingaweb2
+      key: auth_password
 {{- end}}
 - name: icingaweb.config.global.config_resource
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
