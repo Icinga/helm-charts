@@ -58,15 +58,13 @@ spec:
               (icingacli director kickstart required && icingacli director kickstart run && icingacli director config deploy) || true
               icingacli director daemon run
           env:
-            - name: icingaweb.2.auth.admon_password.value
-              valueFrom:
-                secretKeyRef:
-                  name: icingaweb2
-                  key: auth_password 
             - name: icingaweb.enabledModules
               value: {{ include "icingaweb2.enabledModules" . }}
             {{- include "icingaweb2.config" . | indent 12 }}
             {{- include "icingaweb2.resources" . | indent 12 }}
+          envFrom:
+            - secretRef:
+                name: icingaweb2
           volumeMounts:
             - name: data
               mountPath: /data
