@@ -1,6 +1,6 @@
 For easy access to icingaweb2 you can do following:
 
-    kubectl port-forward svc/icinga-icingaweb2 8080:8080
+    kubectl port-forward svc/{{ .Release.Name }}-icingaweb2 -n {{ .Release.Namespace }} 8080:8080
 
 Open the browser on http://localhost:8080 to access icingaweb2.
 
@@ -8,4 +8,4 @@ Afterwards you will be asked to login. The username is always icingaadmin
 
 In case you didn't define a password in the helm installation a random password will be generated. You can find the password by running:
 
-    kubectl get secret icingaweb2 -o jsonpath='{.data.auth_password}' | base64 -d
+    kubectl get secret icingaweb2 -n {{ .Release.Namespace }} -o jsonpath='{.data.auth_password}' | base64 -d 
