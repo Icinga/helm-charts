@@ -59,10 +59,7 @@ spec:
                 secretKeyRef:
                   name: database.{{$resource}}
                   key: {{$resource}}_password
-              {{- end }}
-          envFrom:
-            - secretRef:
-                name: database.director            
+              {{- end }}    
           volumeMounts:
             {{- if $settings.persistence.enabled }}
             - name: data
