@@ -20,8 +20,32 @@ database:
     database: kubernetes
 
     # Database user.
+    {{- if and .Values.global.databases.kubernetes.username .Values.global.databases.kubernetes.username.value }}
     user: {{ .Values.global.databases.kubernetes.username.value }}
+    {{- else if and .Values.global.databases.kubernetes.username .Values.global.databases.kubernetes.credSecret .Values.global.databases.kubernetes.username.secretKey }}
+    valueFrom:
+    secretKeyRef:
+        name: {{ .Values.global.databases.kubernetes.credSecret }}
+        key: {{ .Values.global.databases.kubernetes.username.secretKey }}
+    {{- else }}
+    valueFrom:
+    secretKeyRef:
+        name: database.kubernetes
+        key: kubernetes_username
+    {{- end }}
 
     # Database password.
+    {{- if and .Values.global.databases.kubernetes.password .Values.global.databases.kubernetes.password.value }}
     password: {{ .Values.global.databases.kubernetes.password.value }}
+    {{- else if and .Values.global.databases.kubernetes.password .Values.global.databases.kubernetes.credSecret .Values.global.databases.kubernetes.password.secretKey }}
+    valueFrom:
+    secretKeyRef:
+        name: {{ .Values.global.databases.kubernetes.credSecret }}
+        key: {{ .Values.global.databases.kubernetes.username.secretKey }}
+    {{- else }}
+    valueFrom:
+    secretKeyRef:
+        name: database.kubernetes
+        key: kubernetes_username
+    {{- end }}   
 {{- end -}}
