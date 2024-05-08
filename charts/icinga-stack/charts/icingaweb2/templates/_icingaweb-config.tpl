@@ -19,7 +19,10 @@
       name: {{ .Values.global.api.users.credSecret | quote }}
       key: {{ .Values.global.api.users.director.password.secretKey | quote }}
 {{- else }}
-{{ fail "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.credSecret and .Values.global.api.users.director.password.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: api.director
+      key: director_password
 {{- end }}
 {{- end }}
 {{- end }}
@@ -36,7 +39,10 @@
       name: {{ .Values.auth.admin_password.credSecret | quote }}
       key: {{ .Values.auth.admin_password.secretKey | quote }}
 {{- else }}
-{{ fail "Icinga Web auth admin password not set. Set either .Values.icingaweb2.auth.admin_password.value or .Values.icingaweb2.auth.admin_password.credSecret and .Values.icingaweb2.auth.admin_password.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: icingaweb2
+      key: auth_password
 {{- end}}
 - name: icingaweb.config.global.config_resource
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
@@ -76,7 +82,10 @@
       name: {{ .Values.global.api.users.credSecret | quote }}
       key: {{ .Values.global.api.users.icingaweb.password.secretKey | quote }}
 {{- else }}
-{{ fail "icingaweb API user password not set. Set either .Values.global.api.users.icingaweb.password.value or .Values.global.api.users.credSecret and .Values.global.api.users.icingaweb.password.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: api.icingaweb
+      key: icingaweb_password
 {{- end }}
 {{- end }}
 {{- if .Values.modules.audit.enabled }}

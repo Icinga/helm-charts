@@ -8,7 +8,10 @@
       name: {{ .Values.config.ticket_salt.credSecret | quote }}
       key: {{ .Values.config.ticket_salt.secretKey | quote }}
   {{- else }}
-    {{ fail "Icinga TicketSalt not set. Either set .Values.config.ticket_salt.value or .Values.config.ticket_salt.credSecret and .Values.config.ticket_salt.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: icinga2
+      key: ticket_salt
   {{- end }}
 {{- range $user, $settings := .Values.global.api.users }}
 {{- if ne $user "credSecret" }} # skip credSecret key
@@ -21,7 +24,10 @@
       name: {{ $.Values.global.api.users.credSecret | quote }}
       key: {{ $settings.password.secretKey | quote }}
 {{- else }}
-{{ fail (print $user " api user password not set. Set either .Values.global.api.users." $user ".password.value or .Values.global.api.users.credSecret and .Values.global.api.users." $user ".password.secretKey") }}
+  valueFrom:
+    secretKeyRef:
+      name: api.{{$user}}
+      key: {{$user}}_password
 {{- end }}
 {{- end }}
 {{- end }}

@@ -48,7 +48,10 @@ spec:
                   name: {{ .Values.global.databases.icingadb.credSecret | quote }}
                   key: {{ .Values.global.databases.icingadb.username.secretKey | quote }}
               {{- else }}
-              {{ fail ".Values.global.databases.icingadb.username not set. Set either .Values.global.databases.icingadb.username.value or .Values.global.databases.icingadb.credSecret and .Values.global.databases.icingadb.username.secretKey" }}
+              valueFrom:
+                secretKeyRef:
+                  name: database.icingadb
+                  key: icingadb_username
               {{- end }}
             - name: ICINGADB_DATABASE_PASSWORD
               {{- if and .Values.global.databases.icingadb.password .Values.global.databases.icingadb.password.value }}
@@ -59,7 +62,10 @@ spec:
                   name: {{ .Values.global.databases.icingadb.credSecret | quote }}
                   key: {{ .Values.global.databases.icingadb.password.secretKey | quote }}
               {{- else }}
-              {{ fail ".Values.global.databases.icingadb.password not set. Set either .Values.global.databases.icingadb.password.value or .Values.global.databases.icingadb.credSecret and .Values.global.databases.icingadb.password.secretKey" }}
+              valueFrom:
+                secretKeyRef:
+                  name: database.icingadb
+                  key: icingadb_password
               {{- end }}
             - name: ICINGADB_DATABASE_DATABASE
               value: {{ .Values.global.databases.icingadb.database | default "mysql" | quote }}
