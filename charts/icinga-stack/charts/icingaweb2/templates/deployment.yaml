@@ -40,6 +40,9 @@ spec:
               value: {{ include "icingaweb2.enabledModules" . }}
             {{- include "icingaweb2.config" . | indent 12 }} # TODO: Job for x509 migrations
             {{- include "icingaweb2.resources" . | indent 12 }}
+          envFrom:
+            - secretRef:
+                name: icingaweb2
           volumeMounts:
             - name: data
               mountPath: /data
