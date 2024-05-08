@@ -19,7 +19,10 @@
       name: {{ .Values.global.api.users.credSecret | quote }}
       key: {{ .Values.global.api.users.director.password.secretKey | quote }}
 {{- else }}
-{{ fail "director api user password not set. Set either .Values.global.api.users.director.password.value or .Values.global.api.users.credSecret and .Values.global.api.users.director.password.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: api.director
+      key: director_password
 {{- end }}
 {{- end }}
 {{- end }}
@@ -79,7 +82,10 @@
       name: {{ .Values.global.api.users.credSecret | quote }}
       key: {{ .Values.global.api.users.icingaweb.password.secretKey | quote }}
 {{- else }}
-{{ fail "icingaweb API user password not set. Set either .Values.global.api.users.icingaweb.password.value or .Values.global.api.users.credSecret and .Values.global.api.users.icingaweb.password.secretKey" }}
+  valueFrom:
+    secretKeyRef:
+      name: api.icingaweb
+      key: icingaweb_password
 {{- end }}
 {{- end }}
 {{- if .Values.modules.audit.enabled }}

@@ -24,7 +24,10 @@
       name: {{ $.Values.global.api.users.credSecret | quote }}
       key: {{ $settings.password.secretKey | quote }}
 {{- else }}
-{{ fail (print $user " api user password not set. Set either .Values.global.api.users." $user ".password.value or .Values.global.api.users.credSecret and .Values.global.api.users." $user ".password.secretKey") }}
+  valueFrom:
+    secretKeyRef:
+      name: api.{{$user}}
+      key: {{$user}}_password
 {{- end }}
 {{- end }}
 {{- end }}
