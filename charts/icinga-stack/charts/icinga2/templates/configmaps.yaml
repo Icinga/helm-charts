@@ -11,7 +11,7 @@ data:
   {{- if .Values.features.api.enabled }}
   api-users.conf: |
     {{- range $user, $settings := .Values.global.api.users }}
-    {{- if ne $user "credSecret" }} # skip key credSecret
+    {{- if and (ne $user "credSecret") $settings.enabled }} # skip credSecret key and disabled users
     {{- $permissions := $settings.permissions | default (list "*") }}
     object ApiUser {{ $user | quote }} {
       password = getenv("{{ print "ICINGA_" $user "_API_PASSWORD" | upper }}")
