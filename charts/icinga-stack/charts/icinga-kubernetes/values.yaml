@@ -2,8 +2,8 @@ enabled: true
 
 image:
   repository: icinga/icinga-kubernetes
-  tag: edge
-  pullPolicy: Always
+  tag: 0.2.0
+  pullPolicy: IfNotPresent
 
 rbac:
   create: true
