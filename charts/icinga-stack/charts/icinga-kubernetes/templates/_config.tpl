@@ -17,7 +17,7 @@ database:
     port: {{ .Values.global.databases.kubernetes.port | default 3306 }}
 
     # Database name.
-    database: kubernetes
+    database: {{ .Values.global.databases.kubernetes.database.value }}
 
     # Database user.
     user: {{ .Values.global.databases.kubernetes.username.value }}
