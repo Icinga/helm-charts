@@ -27,19 +27,23 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+replicas: 1
+
 config:
-  node_name: icinga2-master
   zone_name: master
+  create_endpoints: true
   ticket_salt:
     value: # Add random (long!) string here
     credSecret: # Or use existing secret
     secretKey:
   disable_confd: true
+  endpoints: []
+  zones: []
 
 features:
-  # The features are configured as described in the official documentation 
+  # The features are configured as described in the official documentation
   # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
-  # Only some features are enabled by default; Some are missing, for more information 
+  # Only some features are enabled by default; Some are missing, for more information
   # see this project's README.md
   # `Optional` settings for each features are commented out, all other settings are required when enabling
   # a feature.
@@ -58,7 +62,7 @@ features:
     # acl_allow_origin:
     #   - example.com
     #   - agent1.example.com
-    # environment: "" 
+    # environment: ""
 
   # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
   checker:
@@ -128,7 +132,7 @@ features:
     enabled: true
     # credSecret: # used for credentials
     # tlsSecret: # used for certificates
-    # password: 
+    # password:
     #   value: password # Specify password
     #   secretKey: password # Or use existing secret
     # enable_tls: false
@@ -223,7 +227,7 @@ features:
           service = "$service.name$"
         }
       }
-    
+
   # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#filelogger
   mainlog:
     enabled: false
@@ -282,7 +286,7 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-  
+
 nodeSelector: {}
 
 tolerations: []
