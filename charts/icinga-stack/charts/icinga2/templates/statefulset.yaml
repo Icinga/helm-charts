@@ -41,7 +41,7 @@ spec:
             - name: api
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          command:
+          args:
             - icinga2
             - daemon
           volumeMounts:
