@@ -2,7 +2,7 @@ enabled: true
 
 image:
   repository: icinga/icinga-kubernetes
-  tag: 0.2.0
+  tag: 0.3.0
   pullPolicy: IfNotPresent
 
 rbac:
