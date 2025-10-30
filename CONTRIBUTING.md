@@ -25,7 +25,7 @@ Charts can be templated locally using `helm template <path-to-chart` from `chart
 
 > [!NOTE]
 > Some values might be required for templating to succeed.
-> Simple dummy values are provided in [`charts/icinga-stack/tests/required-values.yaml`](./charts/icinga-stack/tests/required-values.yaml) for all charts.
+> Simple dummy values are provided in [`charts/icinga-stack/tests/required-values.yaml`](./charts/icinga-stack/tests/required_values.yaml) for all charts.
 
 ```sh
 $ cd charts/icinga-stack
@@ -36,11 +36,11 @@ $ helm template ./charts/icinga2 -f tests/required-values.yaml > icinga2-manifes
 
 ### Deploying the chart(s) locally
 
-Charts can be installed and upgraded locally `helm install .` from their respective root directories:
+Charts can be installed and upgraded locally using `helm install .` from their respective root directories:
 
 > [!NOTE]
 > Some values might be required for templating to succeed.
-> Simple dummy values are provided in [`charts/icinga-stack/tests/required-values.yaml`](./charts/icinga-stack/tests/required-values.yaml) for all charts.
+> Simple dummy values are provided in [`charts/icinga-stack/tests/required_values.yaml`](./charts/icinga-stack/tests/required_values.yaml) for all charts.
 
 ```sh
 $ helm install <release> . -f tests/required-values.yaml
