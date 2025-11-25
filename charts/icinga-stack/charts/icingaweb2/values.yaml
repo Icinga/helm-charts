@@ -2,7 +2,7 @@ enabled: true
 
 image:
   repository: icinga/icingaweb2
-  tag: 2.12.1
+  tag: 2.12.6
   pullPolicy: Always
 
 imagePullSecrets: []
