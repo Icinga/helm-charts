@@ -2,9 +2,9 @@ apiVersion: v2
 name: icinga2
 description: Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
 maintainers:
-  - name: Daniel Bodky
-    email: daniel.bodky@netways.de
-    url: https://github.com/mocdaniel
+  - name: Icinga GmbH
+    email: info@icinga.com
+    url: https://icinga.com
 
 # A chart can be either an 'application' or a 'library' chart.
 #
