@@ -1,6 +1,6 @@
 image:
   repository: icinga/icinga2
-  tag: 2.13.10
+  tag: 2.15.1
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

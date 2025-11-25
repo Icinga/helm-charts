@@ -1,7 +1,7 @@
 icinga2:
   image:
     repository: icinga/icinga2
-    tag: 2.13.10
+    tag: 2.15.1
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
@@ -311,7 +311,7 @@ icingadb:
 
   image:
     repository: icinga/icingadb
-    tag: 1.1.1
+    tag: 1.5.0
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
@@ -365,7 +365,7 @@ icingaweb2:
 
   image:
     repository: icinga/icingaweb2
-    tag: 2.12.1
+    tag: 2.12.6
     pullPolicy: Always
 
   imagePullSecrets: []
@@ -504,7 +504,7 @@ icinga-kubernetes:
 
   image:
     repository: icinga/icinga-kubernetes
-    tag: 0.3.0
+    tag: 0.4.0
     pullPolicy: IfNotPresent
 
   rbac:
