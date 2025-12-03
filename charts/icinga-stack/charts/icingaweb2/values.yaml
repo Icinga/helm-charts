@@ -1,4 +1,19 @@
-enabled: true
+auth:
+  type: db
+  #resource: # Add the name of the db resource used by Icinga Web 2 here
+  admin_user: icingaadmin
+  admin_password:
+    value: # Add a password here
+    credSecret: # Or use existing secret
+    secretKey:
+
+icingaweb2:
+  auth:
+    admin_password:
+      credSecret: my-icinga-secret
+      secretKey: admin-password
+
+
 
 image:
   repository: icinga/icingaweb2
@@ -30,14 +45,14 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-auth:
-  type: db
-  #resource: # Add the name of the db resource used by Icinga Web 2 here
-  admin_user: icingaadmin
-  admin_password:
-    value: # Add a password here
-    credSecret: # Or use existing secret
-    secretKey:
+# auth:
+#   type: db
+#   #resource: # Add the name of the db resource used by Icinga Web 2 here
+#   admin_user: icingaadmin
+#   admin_password:
+#     value: # Add a password here
+#     credSecret: # Or use existing secret
+#     secretKey:
 
 modules:
   audit:
@@ -134,3 +149,17 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+persistence:
+    config:
+      enabled: false
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    data:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    monitoring:
+      enabled: false
+      accessMode: ReadWriteOnce
+      size: 1Gi
