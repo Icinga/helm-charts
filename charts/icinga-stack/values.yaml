@@ -257,14 +257,66 @@ icinga2:
       # facility: FacilityUser
 
   persistence:
-    enabled: false
-    size: 5Gi
-    accessMode: ReadWriteOnce
-    # storageClass: ""
-    # volumeName: ""
-    # subPath: ""
-    matchLabels: {}
-    matchExpressions: []
+    init:
+      enabled: false
+      size: 5Gi
+      accessMode: ReadWriteOnce
+      mountPath: /data-init/etc/icinga2
+      # storageClass: ""
+      # volumeName: ""
+      matchLabels: {}
+      matchExpressions: []
+
+
+    containers:
+      enabled: false
+      data:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        mountPath: /data
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+        constants:
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        mountPath: /etc/icinga2/constants
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+      datainit:
+        enabled: false
+        size: 10Gi
+        accessMode: ReadWriteMany
+        mountPath: /data-init/etc/icinga2
+        # storageClass: ""
+        # volumeName: ""
+        matchLabels: {}
+        matchExpressions: []
+      plugins:
+        enabled: false
+        size: 10Gi
+        accessMode: ReadWriteMany
+        mountPath: /usr/lib/nagios/plugins
+        # storageClass: ""
+        # volumeName: ""
+        matchLabels: {}
+        matchExpressions: []
+      pluginscontrib:
+        enabled: false
+        size: 10Gi
+        accessMode: ReadWriteMany
+        mountPath: /usr/lib/nagios/pluginscontrib
+        # storageClass: ""
+        # volumeName: ""
+        matchLabels: {}
+        matchExpressions: []
+
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -412,6 +464,8 @@ icingaweb2:
         enabled: false
         format: json
         path: /var/log/icingaweb2/audit.json
+    monitoring:
+      enabled: false
 
     businessprocess: {}  # TODO add parsing of existing processes later
 
@@ -499,6 +553,20 @@ icingaweb2:
 
   extraEnvVars: []
 
+  persistence:
+    config:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    dataIcinga:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    monitoring:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 1Gi
+
 icinga-kubernetes:
   enabled: true
 
@@ -541,7 +609,7 @@ global:
         value: # Set username
         secretKey: # Or specify secret key
       password:
-        value: # Add a password here
+        value:  # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
@@ -560,10 +628,10 @@ global:
       database: icingadb
       credSecret: # Existing secret name for username and password
       username:
-        value: # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
-        value: # Add a password here
+        value:  # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
@@ -582,10 +650,10 @@ global:
       database: icingaweb2db
       credSecret: # Existing secret name for username and password
       username:
-        value: # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
-        value: # Add a password here
+        value:  # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
@@ -604,7 +672,7 @@ global:
       database: x509db
       credSecret: # Existing secret name for username and password
       username:
-        value: # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
         value: # Add a password here
@@ -627,10 +695,10 @@ global:
       database: kubernetes
       credSecret: # Existing secret name for username and password
       username:
-        value: # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
-        value: # Add a password here
+        value:   # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
