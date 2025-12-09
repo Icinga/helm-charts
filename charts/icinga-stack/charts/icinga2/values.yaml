@@ -1,9 +1,3 @@
-global:
-  api:
-    users: []
-  redis:      
-    enabled: true
-
 image:
   repository: icinga/icinga2
   tag: 2.15.1
@@ -37,12 +31,12 @@ config:
   node_name: icinga2-master
   zone_name: master
   ticket_salt:
-    value: ciao
+    value: # Add random (long!) string here
     credSecret: # Or use existing secret
     secretKey:
   disable_confd: true
 
-features: 
+features:
   # The features are configured as described in the official documentation 
   # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
   # Only some features are enabled by default; Some are missing, for more information 
@@ -268,46 +262,14 @@ features:
     # facility: FacilityUser
 
 persistence:
-  enabled: true
-  data:
-    enabled: true
-    size: 5Gi
-    accessMode: ReadWriteOnce
-    # storageClass: ""
-    # volumeName: ""
-    # subPath: ""
-    matchLabels: {}
-    matchExpressions: []
-  constants:
-    enabled: true
-    size: 10Gi
-    accessMode: ReadWriteMany
-    mountPath: /data-init/etc/icinga2
-    # storageClass: ""
-    # volumeName: ""
-    # subPath: ""
-    matchLabels: {}
-    matchExpressions: []
-  plugins:
-    enabled: true
-    size: 10Gi
-    accessMode: ReadWriteMany
-    mountPath: /usr/lib/nagios/plugins
-    # storageClass: ""
-    # volumeName: ""
-    # subPath: ""
-    matchLabels: {}
-    matchExpressions: []
-  pluginscontrib:
-    enabled: true
-    size: 10Gi
-    accessMode: ReadWriteMany
-    mountPath: /usr/lib/nagios/pluginscontrib
-    # storageClass: ""
-    # volumeName: ""
-    # subPath: ""
-    matchLabels: {}
-    matchExpressions: []
+  enabled: false
+  size: 5Gi
+  accessMode: ReadWriteOnce
+  # storageClass: ""
+  # volumeName: ""
+  # subPath: ""
+  matchLabels: {}
+  matchExpressions: []
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

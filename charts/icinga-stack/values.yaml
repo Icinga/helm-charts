@@ -258,26 +258,37 @@ icinga2:
 
   persistence:
     init:
+      enabled: false
+      size: 5Gi
+      accessMode: ReadWriteOnce
+      mountPath: /data-init/etc/icinga2
+      # storageClass: ""
+      # volumeName: ""
+      matchLabels: {}
+      matchExpressions: []
+
 
     containers:
+      enabled: false
       data:
-      size: 5Gi
-      accessMode: ReadWriteOnce
-      mountPath: /data
-      # storageClass: ""
-      # volumeName: ""
-      # subPath: ""
-      matchLabels: {}
-      matchExpressions: []
-      constants:
-      size: 5Gi
-      accessMode: ReadWriteOnce
-      mountPath: /etc/icinga2/constants
-      # storageClass: ""
-      # volumeName: ""
-      # subPath: ""
-      matchLabels: {}
-      matchExpressions: []
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        mountPath: /data
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+        constants:
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        mountPath: /etc/icinga2/constants
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
       datainit:
         enabled: false
         size: 10Gi
@@ -297,7 +308,7 @@ icinga2:
         matchLabels: {}
         matchExpressions: []
       pluginscontrib:
-        enabled: true
+        enabled: false
         size: 10Gi
         accessMode: ReadWriteMany
         mountPath: /usr/lib/nagios/pluginscontrib
