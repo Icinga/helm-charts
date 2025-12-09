@@ -32,7 +32,7 @@ icinga2:
     node_name: icinga2-master
     zone_name: master
     ticket_salt:
-      value:  CiaoMondo1234 # Add random (long!) string here
+      value:  # Add random (long!) string here
       credSecret: # Or use existing secret
       secretKey:
     disable_confd: true
@@ -260,7 +260,6 @@ icinga2:
     init:
 
     containers:
-    - name: data
       data:
       size: 5Gi
       accessMode: ReadWriteOnce
@@ -270,8 +269,7 @@ icinga2:
       # subPath: ""
       matchLabels: {}
       matchExpressions: []
-    - name: constants
-      data:
+      constants:
       size: 5Gi
       accessMode: ReadWriteOnce
       mountPath: /etc/icinga2/constants
@@ -280,33 +278,33 @@ icinga2:
       # subPath: ""
       matchLabels: {}
       matchExpressions: []
-      # constants:
-      #   enabled: false
-      #   size: 10Gi
-      #   accessMode: ReadWriteMany
-      #   mountPath: /data-init/etc/icinga2
-      #   # storageClass: ""
-      #   # volumeName: ""
-      #   matchLabels: {}
-      #   matchExpressions: []
-      # plugins:
-      #   enabled: false
-      #   size: 10Gi
-      #   accessMode: ReadWriteMany
-      #   mountPath: /usr/lib/nagios/plugins
-      #   # storageClass: ""
-      #   # volumeName: ""
-      #   matchLabels: {}
-      #   matchExpressions: []
-      # pluginsContrib:
-      #   enabled: true
-      #   size: 10Gi
-      #   accessMode: ReadWriteMany
-      #   mountPath: /usr/lib/nagios/pluginscontrib
-      #   # storageClass: ""
-      #   # volumeName: ""
-      #   matchLabels: {}
-      #   matchExpressions: []
+      datainit:
+        enabled: false
+        size: 10Gi
+        accessMode: ReadWriteMany
+        mountPath: /data-init/etc/icinga2
+        # storageClass: ""
+        # volumeName: ""
+        matchLabels: {}
+        matchExpressions: []
+      plugins:
+        enabled: false
+        size: 10Gi
+        accessMode: ReadWriteMany
+        mountPath: /usr/lib/nagios/plugins
+        # storageClass: ""
+        # volumeName: ""
+        matchLabels: {}
+        matchExpressions: []
+      pluginscontrib:
+        enabled: true
+        size: 10Gi
+        accessMode: ReadWriteMany
+        mountPath: /usr/lib/nagios/pluginscontrib
+        # storageClass: ""
+        # volumeName: ""
+        matchLabels: {}
+        matchExpressions: []
 
 
   resources: {}
@@ -440,7 +438,7 @@ icingaweb2:
     #resource: # Add the name of the db resource used by Icinga Web 2 here
     admin_user: icingaadmin
     admin_password:
-      value: pippococa # Add a password here
+      value: # Add a password here
       credSecret:
       secretKey:
 
@@ -580,14 +578,14 @@ global:
       credSecret: # Existing secret for director and icingaweb password
       director:
         password:
-          value: pippococa # Add a password here
+          value: # Add a password here
           secretKey: # Or specify secret key
         permissions:
         - "*"
 
       icingaweb:
         password:
-          value: pippococa# Add a password here
+          value: # Add a password here
           secretKey:  # Or specify secret key
         permissions:
         - "*"
@@ -597,10 +595,10 @@ global:
       database: directordb
       credSecret: # Existing secret name for username and password
       username:
-        value: pippococa# Set username
+        value: # Set username
         secretKey: # Or specify secret key
       password:
-        value: pippococa # Add a password here
+        value:  # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
@@ -619,10 +617,10 @@ global:
       database: icingadb
       credSecret: # Existing secret name for username and password
       username:
-        value: pippococa # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
-        value: pippococa # Add a password here
+        value:  # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
@@ -641,10 +639,10 @@ global:
       database: icingaweb2db
       credSecret: # Existing secret name for username and password
       username:
-        value: pippococa # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
-        value: # Add a password here
+        value:  # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com
@@ -663,7 +661,7 @@ global:
       database: x509db
       credSecret: # Existing secret name for username and password
       username:
-        value: pippococa # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
         value: # Add a password here
@@ -686,10 +684,10 @@ global:
       database: kubernetes
       credSecret: # Existing secret name for username and password
       username:
-        value: pippococa # Set username
+        value:  # Set username
         secretKey: # Or specify secret key
       password:
-        value: # Add a password here
+        value:   # Add a password here
         secretKey: # Or specify secret key
       enabled: true
       # host: mariadb.example.com

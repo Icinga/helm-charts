@@ -298,7 +298,7 @@ persistence:
     # subPath: ""
     matchLabels: {}
     matchExpressions: []
-  pluginsContrib:
+  pluginscontrib:
     enabled: true
     size: 10Gi
     accessMode: ReadWriteMany

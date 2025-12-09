@@ -47,9 +47,6 @@ spec:
           volumeMounts:
             - name: {{ include "icinga2.fullname" . }}-data
               mountPath: /data
-              {{- if .Values.persistence.container.subPath }}
-              subPath: {{ .Values.persistence.container.subPath }}
-              {{- end }}
             - name: {{ include "icinga2.fullname" . }}-features
               mountPath: /etc/icinga2/features-enabled
             {{- range .Values.persistence.container }}
@@ -78,7 +75,7 @@ spec:
               value: "1"
             - name: ICINGA_DISABLE_CONFD
               value: {{ .Values.config.disable_confd | int | quote }}
-            {{- include "icinga2.envSecrets" . | nindent 12 }}
+          {{- include "icinga2.envSecrets" . | nindent 12 }}
           volumeMounts:
           {{- range .Values.persistence.init}}
             - name: {{ include "icinga2.fullname" . }}-data
@@ -86,16 +83,17 @@ spec:
               {{- if .Values.persistence.init.subPath }}
               subPath: {{ .Values.persistence.init.subPath }}
               {{- end }}
-            {{- include "icinga2.secretMounts" . | indent 12 }}
+          {{- include "icinga2.secretMounts" . | indent 12 }}
+          {{- end }}
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-      {{- range .Values.persistence }}
-      {{- if .enabled }}
-        - name: {{ include "icinga2.fullname" $ }}-{{ .name }}
+      {{- range $name, $p := .Values.persistence }}
+      {{- if and (kindIs "map" $p) (eq (get $p "enabled") true) }}
+        - name: {{ include "icinga2.fullname" $ }}-{{ $name }}
           persistentVolumeClaim:
-            claimName: {{ include "icinga2.fullname" $ }}-{{ .name }}
+            claimName: {{ include "icinga2.fullname" $ }}-{{ $name }}
       {{- end }}
       {{- end }}
         - name: {{ include "icinga2.fullname" . }}-features
@@ -105,7 +103,7 @@ spec:
           configMap:
             name: {{ include "icinga2.fullname" . }}-config
     
-        {{- include "icinga2.secretVolumes" . | indent 8 }}
+      {{- include "icinga2.secretVolumes" . | indent 8 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -120,33 +118,35 @@ spec:
       {{- end }}
   {{- if .Values.persistence }}
   volumeClaimTemplates:
-  {{- range .Values.persistence }}
+  {{- range $name, $p := .Values.persistence }}
+  {{- if and (kindIs "map" $p) (eq (get $p "enabled") true) }}
     - metadata:
-      name: {{ include "icinga2.fullname" $ }}-{{ .name }}
+        name: {{ include "icinga2.fullname" $ }}-{{ $name }}
       spec:
         accessModes:
-          - {{ .accessMode | quote }}
+          - {{ (get $p "accessMode") | quote }}
         resources:
           requests:
-            storage: {{ .size }}
-        {{- if .volumeName }}
-        volumeName: {{ .volumeName }}
+            storage: {{ get $p "size" }}
+        {{- if (get $p "volumeName") }}
+        volumeName: {{ get $p "volumeName" }}
         {{- end }}
-        {{- if .storageClass }}
-        {{- if (eq "-" .storageClass) }}
+        {{- if (get $p "storageClass") }}
+        {{- if (eq "-" (get $p "storageClass")) }}
         storageClassName: ""
         {{- else }}
-        storageClassName: {{ .storageClass }}
+        storageClassName: {{ get $p "storageClass" }}
         {{- end }}
         {{- end }}
         selector:
-        {{- if .matchLabels }}
+        {{- if (get $p "matchLabels") }}
           matchLabels:
-            {{- toYaml .matchLabels | nindent 12 }}
+            {{- toYaml (get $p "matchLabels") | nindent 12 }}
         {{- end }}
-        {{- if .matchExpressions }}
+        {{- if (get $p "matchExpressions") }}
           matchExpressions:
-            {{- toYaml .matchExpressions | nindent 12 }}
+            {{- toYaml (get $p "matchExpressions") | nindent 12 }}
         {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}
