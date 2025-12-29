@@ -6,7 +6,7 @@ metadata:
     {{- include "icinga2.labels" . | nindent 4 }}
 spec:
   serviceName: {{ include "icinga2.fullname" . }}
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       {{- include "icinga2.selectorLabels" . | nindent 6 }}
@@ -31,6 +31,26 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: ICINGA_CN
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['statefulset.kubernetes.io/pod-name']
+            - name: POD_INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
+            - name: ICINGA_ZONE
+              value: {{ .Values.config.zone_name }}
+            # {{- if and (hasKey .Values.config "node_setup") .Values.config.node_setup.endpoint }}
+            # - name: ICINGA_ENDPOINT
+            #   value: {{ .Values.config.node_setup.endpoint }}
+            #   {{- if .Values.config.node_setup.host -}}
+            #     ,{{ .Values.config.node_setup.host }}
+            #   {{- end }}
+            #   {{- if .Values.config.node_setup.port -}}
+            #     ,{{ .Values.config.node_setup.port }}
+            #   {{- end }}
+            # {{- end }}
             - name: ICINGA_DISABLE_CONFD
               value: {{ .Values.config.disable_confd | int | quote }}
             {{- include "icinga2.envSecrets" . | nindent 12 }}
@@ -61,15 +81,76 @@ spec:
         - name: {{ .Chart.Name }}-bootstrapper
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if and (hasKey .Values.config "node_setup") (not .Values.config.is_master) }}
+          command:
+            - bash
+            - -c
           args:
-            - icinga2
-            - daemon
-            - -C
+            - |
+              set -eu
+              mkdir -p /data/var/lib/icinga2/certs /data/var/cache/icinga2
+              CA_PATH="/var/lib/icinga2/certs/ca.crt"
+              CRT_PATH="/var/lib/icinga2/certs/${ICINGA_CN}.crt"
+              KEY_PATH="/var/lib/icinga2/certs/${ICINGA_CN}.key"
+              CSR_PATH="/var/lib/icinga2/certs/${ICINGA_CN}.key"
+              icinga2 pki save-cert --host o-mgmt-master-0 --trustedcert /tmp/trusted.crt
+              if ! [ -r /var/lib/icinga2/certs/ca.crt ] || ! icinga2 pki verify --cert /tmp/trusted.crt --ca "${CA_PATH}"; then
+                  openssl s_client -connect "o-mgmt-master-0:5665" -showcerts </dev/null 2>/dev/null | awk '
+                      /-----BEGIN CERTIFICATE-----/ {in_cert=1; cert=""}
+                      in_cert {cert = cert $0 "\n"}
+                      /-----END CERTIFICATE-----/ {in_cert=0; certs[++i]=cert}
+                      END {print certs[i] > "/var/lib/icinga2/certs/ca.crt"}'
+              fi
+              if ! [ -r "${CRT_PATH}" ] \
+                  || ! icinga2 pki verify --cert "${CRT_PATH}" --ca "${CA_PATH}" \
+                  || ! icinga2 pki verify --cert "${CRT_PATH}" --cn "${ICINGA_CN}"; then
+                  TICKET="$(icinga2 pki ticket --cn ${ICINGA_CN} --salt "${ICINGA_TICKET_SALT}")"
+                  icinga2 pki new-cert --cn "${ICINGA_CN}" --key "${KEY_PATH}" --cert "${CRT_PATH}"
+                  icinga2 pki request --key "${KEY_PATH}" --cert "${CRT_PATH}" --ca "${CA_PATH}" --trustedcert /tmp/trusted.crt --host "${ICINGA_PARENT_HOST}" --ticket "${TICKET}"
+              fi
+              export ICINGA_TRUSTEDCERT="$(cat /tmp/trusted.crt)"
+              export ICINGA_CACERT="$(cat "${CA_PATH}")"
+              exec /entrypoint icinga2 daemon -C
+          {{- end }}
           env:
             - name: ICINGA_CN
-              value: {{ .Values.config.node_name | quote }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['statefulset.kubernetes.io/pod-name']
+            - name: POD_INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
+            {{- if .Values.config.is_master }}
             - name: ICINGA_MASTER
               value: "1"
+            {{- end }}
+            - name: ICINGA_ZONE
+              value: {{ .Values.config.zone_name }}
+            {{- if hasKey .Values.config "node_setup" }}
+            {{- if .Values.config.node_setup.endpoint }}
+            - name: ICINGA_ENDPOINT
+              {{- if typeIs "string" .Values.config.node_setup.endpoint -}}
+              value: {{ .Values.config.node_setup.endpoint }}
+              {{- else }}
+              value: {{ .Values.config.node_setup.endpoint.name }}
+              {{- if .Values.config.node_setup.endpoint.host -}}
+                ,{{ .Values.config.node_setup.endpoint.host }}
+              {{- end }}
+              {{- if .Values.config.node_setup.endpoint.port -}}
+                ,{{ .Values.config.node_setup.endpoint.port }}
+              {{- end }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.config.node_setup.parent_host }}
+            - name: ICINGA_PARENT_HOST
+              value: {{ .Values.config.node_setup.parent_host }}
+            {{- end }}
+            {{- if .Values.config.node_setup.parent_host }}
+            - name: ICINGA_PARENT_ZONE
+              value: {{ .Values.config.node_setup.parent_zone }}
+            {{- end }}
+            {{- end }}
             - name: ICINGA_DISABLE_CONFD
               value: {{ .Values.config.disable_confd | int | quote }}
             {{- include "icinga2.envSecrets" . | nindent 12 }}

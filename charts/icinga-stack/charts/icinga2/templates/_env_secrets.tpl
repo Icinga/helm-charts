@@ -11,7 +11,7 @@
     {{ fail "Icinga TicketSalt not set. Either set .Values.config.ticket_salt.value or .Values.config.ticket_salt.credSecret and .Values.config.ticket_salt.secretKey" }}
   {{- end }}
 {{- range $user, $settings := .Values.global.api.users }}
-{{- if ne $user "credSecret" }} # skip credSecret key
+{{- if and (ne $user "credSecret") $settings.enabled }} # skip credSecret key and disabled users
 - name: {{ print "ICINGA_" $user "_API_PASSWORD" | upper }}
 {{- if and $settings.password $settings.password.value }}
   value: {{ $settings.password.value | quote }}

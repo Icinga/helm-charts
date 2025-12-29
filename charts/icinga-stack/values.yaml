@@ -28,14 +28,18 @@ icinga2:
     #    hosts:
     #      - chart-example.local
 
+  replicas: 1
+
   config:
-    node_name: icinga2-master
     zone_name: master
+    create_endpoints: true
     ticket_salt:
       value:  # Add random (long!) string here
       credSecret: # Or use existing secret
       secretKey:
     disable_confd: true
+    endpoints: []
+    zones: []
 
   features:
     # The features are configured as described in the official documentation
@@ -520,6 +524,7 @@ global:
     users:
       credSecret: # Existing secret for director and icingaweb password
       director:
+        enabled: true
         password:
           value: # Add a password here
           secretKey: # Or specify secret key
@@ -527,6 +532,7 @@ global:
         - "*"
 
       icingaweb:
+        enabled: true
         password:
           value: # Add a password here
           secretKey:  # Or specify secret key
